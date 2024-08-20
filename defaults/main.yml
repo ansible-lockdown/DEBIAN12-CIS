@@ -44,7 +44,7 @@ deb12cis_legacy_boot: false
 ## Benchmark name used by audting control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
-benchmark_version: 'v1.0.1'
+benchmark_version: '1.0.1'
 
 benchmark: DEBIAN12-CIS
 
