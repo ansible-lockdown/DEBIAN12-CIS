@@ -290,7 +290,9 @@
       loop: "{{ prelim_interactive_users_home.stdout_lines }}"
 
     - name: "7.2.9 | PATCH | Ensure local interactive user home directories are configured | Set other ACL"
-      when: not system_is_container
+      when:
+        - not system_is_container
+        - "'acl' in ansible_facts.packages"
       ansible.posix.acl:
         path: "{{ item }}"
         default: true
