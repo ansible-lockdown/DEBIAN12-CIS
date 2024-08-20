@@ -278,7 +278,9 @@
 
     # set default ACLs so the homedir has an effective umask of 0027
     - name: "7.2.9 | PATCH | Ensure local interactive user home directories are configured | Set group ACL"
-      when: not system_is_container
+      when:
+        - not system_is_container
+        - "'acl' in ansible_facts.packages"
       ansible.posix.acl:
         path: "{{ item }}"
         default: true
