@@ -22,6 +22,7 @@
       ansible.builtin.package:
         name: git
         state: present
+        update_cache: true
 
     - name: Pre Audit Setup | Retrieve audit content files from git
       ansible.builtin.git:
