@@ -1,0 +1,118 @@
+---
+
+- name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+  when:
+    - deb12cis_rule_1_5_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - sysctl
+    - rule_1.5.1
+    - NIST800-53R5_CM-6
+  block:
+    - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+      ansible.builtin.set_fact:
+        deb12cis_sysctl_update: true
+
+    - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+      ansible.builtin.debug:
+        msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
+
+- name: "1.5.2 | PATCH | Ensure ptrace_scope is restricted"
+  when:
+    - deb12cis_rule_1_5_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - sysctl
+    - rule_1.5.2
+    - NIST800-53R5_CM-6
+  block:
+    - name: "1.5.2 | PATCH | Ensure ptrace_scope is restricted"
+      ansible.builtin.set_fact:
+        deb12cis_sysctl_update: true
+
+    - name: "1.5.2 | PATCH | Ensure ptrace_scope is restricted"
+      ansible.builtin.debug:
+        msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
+
+- name: "1.5.3 | PATCH | Ensure core dumps are restricted"
+  when:
+    - deb12cis_rule_1_5_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.5.3
+    - coredump
+    - NIST800-53R5_CM-6
+  block:
+    - name: "1.5.3 | PATCH | Ensure core dumps are restricted | kernel sysctl"
+      ansible.posix.sysctl:
+        name: fs.suid_dumpable
+        value: '0'
+        state: present
+        sysctl_file: "{{ deb12cis_sysctl_kernel_conf }}"
+        reload: true
+        sysctl_set: true
+        ignoreerrors: true
+
+    - name: "1.5.3 | PATCH | Ensure core dumps are restricted | security limits"
+      ansible.builtin.lineinfile:
+        path: /etc/security/limits.d/99_zero_core.conf
+        regexp: '^\* hard core'
+        line: '* hard core 0'
+        create: true
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: "1.5.3 | PATCH | Ensure core dumps are restricted | sysctl.conf"
+      ansible.builtin.lineinfile:
+        path: /etc/sysctl.conf
+        regexp: '^fs.suid_dumpable'
+        line: fs.suid_dumpable=0
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Reload sysctl
+
+    - name: "1.5.3 | PATCH | Ensure core dumps are restricted | coredump.conf"
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/coredump.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        create: true
+        owner: root
+        group: root
+        mode: '0644'
+      loop:
+        - { regexp: '^Storage', line: 'Storage=none' }
+        - { regexp: '^ProcessSizeMax', line: 'ProcessSizeMax=0' }
+
+- name: "1.5.4 | PATCH | Ensure prelink is not installed"
+  when:
+    - deb12cis_rule_1_5_4
+    - "'prelink' in ansible_facts.packages"
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.5.4
+    - prelink
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-3
+    - NIST800-53R5_CM-6
+  block:
+    - name: "1.5.4 | PATCH | Ensure prelink is not installed | Restore binaries to normal"
+      ansible.builtin.shell: prelink -ua
+      changed_when: false
+      failed_when: false
+
+    - name: "1.5.4 | PATCH | Ensure prelink is not installed| Remove prelink package"
+      ansible.builtin.package:
+        name: prelink
+        state: absent
+        purge: "{{ deb12cis_purge_apt }}"

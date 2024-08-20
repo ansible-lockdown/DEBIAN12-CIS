@@ -1,0 +1,90 @@
+---
+
+- name: "2.2.1 | PATCH | Ensure NIS Client is not installed"
+  when:
+    - deb12cis_rule_2_2_1
+    - not deb12cis_nis_server
+  tags:
+    - level1-server
+    - level1-workstation
+    - rule_2.2.1
+    - nis
+  ansible.builtin.package:
+    name: nis
+    state: absent
+    purge: "{{ deb12cis_purge_apt }}"
+
+- name: "2.2.2 | PATCH | Ensure rsh client is not installed"
+  when:
+    - deb12cis_rule_2_2_2
+    - not deb12cis_rsh_client
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_2.2.2
+    - rsh
+  ansible.builtin.package:
+    name: rsh-client
+    state: absent
+    purge: "{{ deb12cis_purge_apt }}"
+
+- name: "2.2.3 | PATCH | Ensure talk client is not installed"
+  when:
+    - deb12cis_rule_2_2_3
+    - not deb12cis_talk_client
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_2.2.3
+    - talk
+  ansible.builtin.package:
+    name: talk
+    state: absent
+    purge: "{{ deb12cis_purge_apt }}"
+
+- name: "2.2.4 | PATCH | Ensure telnet client is not installed"
+  when:
+    - deb12cis_rule_2_2_4
+    - not deb12cis_telnet_client
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_2.2.4
+    - telnet
+  ansible.builtin.package:
+    name: telnet
+    state: absent
+    purge: "{{ deb12cis_purge_apt }}"
+
+- name: "2.2.5 | PATCH | Ensure ldap client is not installed"
+  when:
+    - deb12cis_rule_2_2_5
+    - not deb12cis_ldap_clients_required
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_2.2.5
+    - ldap
+  ansible.builtin.package:
+    name: ldap-utils
+    state: absent
+    purge: "{{ deb12cis_purge_apt }}"
+
+- name: "2.2.6 | PATCH | Ensure ftp is not installed"
+  when:
+    - deb12cis_rule_2_2_6
+    - not deb12cis_ftp_client
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_2.2.6
+    - ftp
+  ansible.builtin.package:
+    name: ftp
+    state: absent
+    purge: "{{ deb12cis_purge_apt }}"

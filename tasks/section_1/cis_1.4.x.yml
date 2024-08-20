@@ -1,0 +1,52 @@
+---
+
+- name: "1.4.1 | PATCH | Ensure bootloader password is set"
+  when:
+    - deb12cis_set_boot_pass
+    - deb12cis_rule_1_4_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - grub
+    - patch
+    - rule_1.4.1
+    - NIST800-53R5_AC-3
+  block:
+    - name: "1.4.1 | PATCH | Ensure bootloader password is set"
+      ansible.builtin.template:
+        src: etc/grub.d/00_user.j2
+        dest: "{{ deb12cis_grub_user_file }}"
+        owner: root
+        group: root
+        mode: '0755'
+      notify: Update-grub
+
+    - name: "1.4.1 | PATCH | Ensure bootloader password is set | allow unrestricted boot"
+      when: not deb12cis_ask_passwd_to_boot
+      ansible.builtin.lineinfile:
+        path: "/etc/grub.d/10_linux"
+        regexp: '(^CLASS="--class gnu-linux --class gnu --class os).*"$'
+        line: '\g<1> --unrestricted"'
+        backrefs: true
+      notify: Update-grub
+
+- name: "1.4.2 | PATCH | Ensure access to bootloader config is configured "
+  when:
+    - deb12cis_rule_1_4_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - grub
+    - patch
+    - rule_1.4.2
+    - NIST800-53R5_AC-3
+  block:
+    - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured "
+      ansible.builtin.file:
+        path: /boot/grub/grub.cfg
+        owner: root
+        group: root
+        mode: 'u-x,go-rwx'
+        state: touch
+        modification_time: preserve
+        access_time: preserve

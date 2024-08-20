@@ -1,0 +1,155 @@
+---
+
+- name: |
+    "6.3.4.1 | PATCH | Ensure audit log files mode is configured"
+    "6.3.4.2 | PATCH | Ensure only authorized users own audit log files"
+    "6.3.4.3 | PATCH | Ensure only authorized groups are assigned ownership of audit log files"
+  when:
+    - deb12cis_rule_6_3_4_1 or
+      deb12cis_rule_6_3_4_2 or
+      deb12cis_rule_6_3_4_3
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.3.4.1
+    - rule_6.3.4.2
+    - rule_6.3.4.3
+    - NIST800-53R5_AU-3
+  ansible.builtin.file:
+    path: "{{ prelim_auditd_logfile.stdout }}"
+    mode: 'o-x,g-wx,o-rwx'
+    owner: root
+    group: root
+
+- name: "6.3.4.4 | PATCH | Ensure the audit log file directory mode is configured"
+  when:
+    - deb12cis_rule_6_3_4_4
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.3.4.4
+    - NIST800-53R5_AU-3
+  ansible.builtin.file:
+    path: "{{ prelim_auditd_logfile.stdout | dirname }}"
+    state: directory
+    mode: 'g-w,o-rwx'
+
+- name: "6.3.4.5 | PATCH | Ensure audit configuration files mode is configured"
+  when:
+    - deb12cis_rule_6_3_4_5
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.3.4.5
+    - NIST800-53R5_AU-3
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: 'u-x,g-wx,o-rwx'
+  failed_when: deb12cis_6_3_4_5_file_list.state not in '[ file, absent ]'
+  register: deb12cis_6_3_4_5_file_list
+  loop: "{{ prelim_auditd_conf_files.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: "6.3.4.6 | PATCH | Ensure audit configuration files are owned by root"
+  when:
+    - deb12cis_rule_6_3_4_6
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.3.4.6
+    - NIST800-53R5_AU-3
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: root
+  loop: "{{ prelim_auditd_conf_files.files | default([]) }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: "6.3.4.7 | PATCH | Ensure audit configuration files belong to group root"
+  when:
+    - deb12cis_rule_6_3_4_7
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.3.4.7
+    - NIST800-53R5_AU-3
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    group: root
+  loop: "{{ prelim_auditd_conf_files.files | default([]) }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: "6.3.4.8 | PATCH | Ensure audit tools mode is configured"
+  when:
+    - deb12cis_rule_6_3_4_8
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.3.4.8
+    - NIST800-53R5_AU-3
+  ansible.builtin.file:
+    path: "{{ item }}"
+    mode: 'go-w'
+  loop:
+    - /sbin/auditctl
+    - /sbin/aureport
+    - /sbin/ausearch
+    - /sbin/autrace
+    - /sbin/auditd
+    - /sbin/augenrules
+
+- name: "6.3.4.9 | PATCH | Ensure audit tools are owned by root"
+  when:
+    - deb12cis_rule_6_3_4_9
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.3.4.9
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+  loop:
+    - /sbin/auditctl
+    - /sbin/aureport
+    - /sbin/ausearch
+    - /sbin/autrace
+    - /sbin/auditd
+    - /sbin/augenrules
+
+- name: "6.3.4.10 | PATCH | Ensure audit tools belong to group root"
+  when:
+    - deb12cis_rule_6_3_4_10
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.3.4.10
+    - NIST800-53R5_AU-3
+  ansible.builtin.file:
+    path: "{{ item }}"
+    group: root
+  loop:
+    - /sbin/auditctl
+    - /sbin/aureport
+    - /sbin/ausearch
+    - /sbin/autrace
+    - /sbin/auditd
+    - /sbin/augenrules

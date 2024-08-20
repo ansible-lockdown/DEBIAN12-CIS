@@ -1,0 +1,668 @@
+## metadata for benchmark Debian 12
+
+## metadata for Audit benchmark
+benchmark_version: '1.0.1'
+
+# If run via script this is discovered and set
+host_os_distribution: Debian
+
+#  timeout for each command to run where set - default = 10seconds/10000ms
+timeout_ms: {{ audit_cmd_timeout }}
+
+# Sections
+deb12cis_section1: {{ deb12cis_section1 }}
+deb12cis_section2: {{ deb12cis_section2 }}
+deb12cis_section3: {{ deb12cis_section3 }}
+deb12cis_section4: {{ deb12cis_section4 }}
+deb12cis_section5: {{ deb12cis_section5 }}
+deb12cis_section6: {{ deb12cis_section6 }}
+deb12cis_section7: {{ deb12cis_section7 }}
+
+deb12cis_level_1: {{ deb12cis_level_1 }}
+deb12cis_level_2: {{ deb12cis_level_2 }}
+
+deb12cis_selinux_disable: {{ deb12cis_selinux_disable }}
+
+#  to enable rules that may have IO impact on a system e.g. full filesystem scans or CPU heavy
+run_heavy_tests: {{ audit_run_heavy_tests }}
+
+#  True is BIOS based system else set to false
+deb12cis_legacy_boot: {{ deb12cis_legacy_boot }}
+
+deb12cis_set_boot_pass: {{ deb12cis_set_boot_pass }}
+
+# Section 1 is Initial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
+# Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
+# Filesystem kernel modules
+deb12cis_rule_1_1_1_1: {{ deb12cis_rule_1_1_1_1 }}
+deb12cis_rule_1_1_1_2: {{ deb12cis_rule_1_1_1_2 }}
+deb12cis_rule_1_1_1_3: {{ deb12cis_rule_1_1_1_3 }}
+deb12cis_rule_1_1_1_4: {{ deb12cis_rule_1_1_1_4 }}
+deb12cis_rule_1_1_1_5: {{ deb12cis_rule_1_1_1_5 }}
+deb12cis_rule_1_1_1_6: {{ deb12cis_rule_1_1_1_6 }}
+deb12cis_rule_1_1_1_7: {{ deb12cis_rule_1_1_1_7 }}
+deb12cis_rule_1_1_1_8: {{ deb12cis_rule_1_1_1_8 }}
+
+# Filesystems
+# /tmp
+deb12cis_rule_1_1_2_1_1: {{ deb12cis_rule_1_1_2_1_1 }}
+deb12cis_rule_1_1_2_1_2: {{ deb12cis_rule_1_1_2_1_2 }}
+deb12cis_rule_1_1_2_1_3: {{ deb12cis_rule_1_1_2_1_3 }}
+deb12cis_rule_1_1_2_1_4: {{ deb12cis_rule_1_1_2_1_4 }}
+# /dev/shm
+deb12cis_rule_1_1_2_2_1: {{ deb12cis_rule_1_1_2_2_1 }}
+deb12cis_rule_1_1_2_2_2: {{ deb12cis_rule_1_1_2_2_2 }}
+deb12cis_rule_1_1_2_2_3: {{ deb12cis_rule_1_1_2_2_3 }}
+deb12cis_rule_1_1_2_2_4: {{ deb12cis_rule_1_1_2_2_4 }}
+# /home
+deb12cis_rule_1_1_2_3_1: {{ deb12cis_rule_1_1_2_3_1 }}
+deb12cis_rule_1_1_2_3_2: {{ deb12cis_rule_1_1_2_3_2 }}
+deb12cis_rule_1_1_2_3_3: {{ deb12cis_rule_1_1_2_3_3 }}
+# /var
+deb12cis_rule_1_1_2_4_1: {{ deb12cis_rule_1_1_2_4_1 }}
+deb12cis_rule_1_1_2_4_2: {{ deb12cis_rule_1_1_2_4_2 }}
+deb12cis_rule_1_1_2_4_3: {{ deb12cis_rule_1_1_2_4_3 }}
+# /var/tmp
+deb12cis_rule_1_1_2_5_1: {{ deb12cis_rule_1_1_2_5_1 }}
+deb12cis_rule_1_1_2_5_2: {{ deb12cis_rule_1_1_2_5_2 }}
+deb12cis_rule_1_1_2_5_3: {{ deb12cis_rule_1_1_2_5_3 }}
+deb12cis_rule_1_1_2_5_4: {{ deb12cis_rule_1_1_2_5_4 }}
+# /var/log
+deb12cis_rule_1_1_2_6_1: {{ deb12cis_rule_1_1_2_6_1 }}
+deb12cis_rule_1_1_2_6_2: {{ deb12cis_rule_1_1_2_6_2 }}
+deb12cis_rule_1_1_2_6_3: {{ deb12cis_rule_1_1_2_6_3 }}
+deb12cis_rule_1_1_2_6_4: {{ deb12cis_rule_1_1_2_6_4 }}
+# /var/log/audit
+deb12cis_rule_1_1_2_7_1: {{ deb12cis_rule_1_1_2_7_1 }}
+deb12cis_rule_1_1_2_7_2: {{ deb12cis_rule_1_1_2_7_2 }}
+deb12cis_rule_1_1_2_7_3: {{ deb12cis_rule_1_1_2_7_3 }}
+deb12cis_rule_1_1_2_7_4: {{ deb12cis_rule_1_1_2_7_4 }}
+
+# Package Mgmt
+# Config Pkg Repos
+deb12cis_rule_1_2_1_1: {{ deb12cis_rule_1_2_1_1 }}
+deb12cis_rule_1_2_1_2: {{ deb12cis_rule_1_2_1_2 }}
+# Package updates
+deb12cis_rule_1_2_2_1: {{ deb12cis_rule_1_2_2_1 }}
+
+# apparmor
+deb12cis_rule_1_3_1_1: {{ deb12cis_rule_1_3_1_1 }}
+deb12cis_rule_1_3_1_2: {{ deb12cis_rule_1_3_1_2 }}
+deb12cis_rule_1_3_1_3: {{ deb12cis_rule_1_3_1_3 }}
+deb12cis_rule_1_3_1_4: {{ deb12cis_rule_1_3_1_4 }}
+
+# Bootloader
+deb12cis_rule_1_4_1: {{ deb12cis_rule_1_4_1 }}
+deb12cis_rule_1_4_2: {{ deb12cis_rule_1_4_2 }}
+
+# Additional Process Hardening
+deb12cis_rule_1_5_1: {{ deb12cis_rule_1_5_1 }}
+deb12cis_rule_1_5_2: {{ deb12cis_rule_1_5_2 }}
+deb12cis_rule_1_5_3: {{ deb12cis_rule_1_5_3 }}
+deb12cis_rule_1_5_4: {{ deb12cis_rule_1_5_4 }}
+
+# Command line warning banners
+deb12cis_rule_1_6_1: {{ deb12cis_rule_1_6_1 }}
+deb12cis_rule_1_6_2: {{ deb12cis_rule_1_6_2 }}
+deb12cis_rule_1_6_3: {{ deb12cis_rule_1_6_3 }}
+deb12cis_rule_1_6_4: {{ deb12cis_rule_1_6_4 }}
+deb12cis_rule_1_6_5: {{ deb12cis_rule_1_6_5 }}
+deb12cis_rule_1_6_6: {{ deb12cis_rule_1_6_6 }}
+
+# Gnome Display Manager
+deb12cis_rule_1_7_1: {{ deb12cis_rule_1_7_1 }}
+deb12cis_rule_1_7_2: {{ deb12cis_rule_1_7_2 }}
+deb12cis_rule_1_7_3: {{ deb12cis_rule_1_7_3 }}
+deb12cis_rule_1_7_4: {{ deb12cis_rule_1_7_4 }}
+deb12cis_rule_1_7_5: {{ deb12cis_rule_1_7_5 }}
+deb12cis_rule_1_7_6: {{ deb12cis_rule_1_7_6 }}
+deb12cis_rule_1_7_7: {{ deb12cis_rule_1_7_7 }}
+deb12cis_rule_1_7_8: {{ deb12cis_rule_1_7_8 }}
+deb12cis_rule_1_7_9: {{ deb12cis_rule_1_7_9 }}
+deb12cis_rule_1_7_10: {{ deb12cis_rule_1_7_10 }}
+
+# Section 2 rules are controling Services (Special Purpose Services, and service clients)
+## Configure Server Services
+deb12cis_rule_2_1_1: {{ deb12cis_rule_2_1_1 }}
+deb12cis_rule_2_1_2: {{ deb12cis_rule_2_1_2 }}
+deb12cis_rule_2_1_3: {{ deb12cis_rule_2_1_3 }}
+deb12cis_rule_2_1_4: {{ deb12cis_rule_2_1_4 }}
+deb12cis_rule_2_1_5: {{ deb12cis_rule_2_1_5 }}
+deb12cis_rule_2_1_6: {{ deb12cis_rule_2_1_6 }}
+deb12cis_rule_2_1_7: {{ deb12cis_rule_2_1_7 }}
+deb12cis_rule_2_1_8: {{ deb12cis_rule_2_1_8 }}
+deb12cis_rule_2_1_9: {{ deb12cis_rule_2_1_9 }}
+deb12cis_rule_2_1_10: {{ deb12cis_rule_2_1_10 }}
+deb12cis_rule_2_1_11: {{ deb12cis_rule_2_1_11 }}
+deb12cis_rule_2_1_12: {{ deb12cis_rule_2_1_12 }}
+deb12cis_rule_2_1_13: {{ deb12cis_rule_2_1_13 }}
+deb12cis_rule_2_1_14: {{ deb12cis_rule_2_1_14 }}
+deb12cis_rule_2_1_15: {{ deb12cis_rule_2_1_15 }}
+deb12cis_rule_2_1_16: {{ deb12cis_rule_2_1_16 }}
+deb12cis_rule_2_1_17: {{ deb12cis_rule_2_1_17 }}
+deb12cis_rule_2_1_18: {{ deb12cis_rule_2_1_18 }}
+deb12cis_rule_2_1_19: {{ deb12cis_rule_2_1_19 }}
+deb12cis_rule_2_1_20: {{ deb12cis_rule_2_1_20 }}
+deb12cis_rule_2_1_21: {{ deb12cis_rule_2_1_21 }}
+deb12cis_rule_2_1_22: {{ deb12cis_rule_2_1_22 }}
+
+## Configure Client Services
+deb12cis_rule_2_2_1: {{ deb12cis_rule_2_2_1 }}
+deb12cis_rule_2_2_2: {{ deb12cis_rule_2_2_2 }}
+deb12cis_rule_2_2_3: {{ deb12cis_rule_2_2_3 }}
+deb12cis_rule_2_2_4: {{ deb12cis_rule_2_2_4 }}
+deb12cis_rule_2_2_5: {{ deb12cis_rule_2_2_5 }}
+deb12cis_rule_2_2_6: {{ deb12cis_rule_2_2_6 }}
+
+## Configure Time Synchronization
+deb12cis_rule_2_3_1_1: {{ deb12cis_rule_2_3_1_1 }}
+# timesyncd
+deb12cis_rule_2_3_2_1: {{ deb12cis_rule_2_3_2_1 }}
+deb12cis_rule_2_3_2_2: {{ deb12cis_rule_2_3_2_2 }}
+# chrony
+deb12cis_rule_2_3_3_1: {{ deb12cis_rule_2_3_3_1 }}
+deb12cis_rule_2_3_3_2: {{ deb12cis_rule_2_3_3_2 }}
+deb12cis_rule_2_3_3_3: {{ deb12cis_rule_2_3_3_3 }}
+
+## Job Schedulers
+### cron
+deb12cis_rule_2_4_1_1: {{ deb12cis_rule_2_4_1_1 }}
+deb12cis_rule_2_4_1_2: {{ deb12cis_rule_2_4_1_2 }}
+deb12cis_rule_2_4_1_3: {{ deb12cis_rule_2_4_1_3 }}
+deb12cis_rule_2_4_1_4: {{ deb12cis_rule_2_4_1_4 }}
+deb12cis_rule_2_4_1_5: {{ deb12cis_rule_2_4_1_5 }}
+deb12cis_rule_2_4_1_6: {{ deb12cis_rule_2_4_1_6 }}
+deb12cis_rule_2_4_1_7: {{ deb12cis_rule_2_4_1_7 }}
+deb12cis_rule_2_4_1_8: {{ deb12cis_rule_2_4_1_8 }}
+### at
+deb12cis_rule_2_4_2_1: {{ deb12cis_rule_2_4_2_1 }}
+
+# Section 3 Network
+## Network Devices
+deb12cis_rule_3_1_1: {{ deb12cis_rule_3_1_1 }}
+deb12cis_rule_3_1_2: {{ deb12cis_rule_3_1_2 }}
+deb12cis_rule_3_1_3: {{ deb12cis_rule_3_1_3 }}
+## Network Kernel Modules
+deb12cis_rule_3_2_1: {{ deb12cis_rule_3_2_1 }}
+deb12cis_rule_3_2_2: {{ deb12cis_rule_3_2_2 }}
+deb12cis_rule_3_2_3: {{ deb12cis_rule_3_2_3 }}
+deb12cis_rule_3_2_4: {{ deb12cis_rule_3_2_4 }}
+# Network Kernel Parameters
+deb12cis_rule_3_3_1: {{ deb12cis_rule_3_3_1 }}
+deb12cis_rule_3_3_2: {{ deb12cis_rule_3_3_2 }}
+deb12cis_rule_3_3_3: {{ deb12cis_rule_3_3_3 }}
+deb12cis_rule_3_3_4: {{ deb12cis_rule_3_3_4 }}
+deb12cis_rule_3_3_5: {{ deb12cis_rule_3_3_5 }}
+deb12cis_rule_3_3_6: {{ deb12cis_rule_3_3_6 }}
+deb12cis_rule_3_3_7: {{ deb12cis_rule_3_3_7 }}
+deb12cis_rule_3_3_8: {{ deb12cis_rule_3_3_8 }}
+deb12cis_rule_3_3_9: {{ deb12cis_rule_3_3_9 }}
+deb12cis_rule_3_3_10: {{ deb12cis_rule_3_3_10 }}
+deb12cis_rule_3_3_11: {{ deb12cis_rule_3_3_11 }}
+
+## Section 4 Host Based Firewall
+# 4.1 Configure UncomplicatedFirewall
+deb12cis_rule_4_1_1: {{ deb12cis_rule_4_1_1 }}
+deb12cis_rule_4_1_2: {{ deb12cis_rule_4_1_2 }}
+deb12cis_rule_4_1_3: {{ deb12cis_rule_4_1_3 }}
+deb12cis_rule_4_1_4: {{ deb12cis_rule_4_1_4 }}
+deb12cis_rule_4_1_5: {{ deb12cis_rule_4_1_5 }}
+deb12cis_rule_4_1_6: {{ deb12cis_rule_4_1_6 }}
+deb12cis_rule_4_1_7: {{ deb12cis_rule_4_1_7 }}
+# 4.2 Configure nftables
+deb12cis_rule_4_2_1: {{ deb12cis_rule_4_2_1 }}
+deb12cis_rule_4_2_2: {{ deb12cis_rule_4_2_2 }}
+deb12cis_rule_4_2_3: {{ deb12cis_rule_4_2_3 }}
+deb12cis_rule_4_2_4: {{ deb12cis_rule_4_2_4 }}
+deb12cis_rule_4_2_5: {{ deb12cis_rule_4_2_5 }}
+deb12cis_rule_4_2_6: {{ deb12cis_rule_4_2_6 }}
+deb12cis_rule_4_2_7: {{ deb12cis_rule_4_2_7 }}
+deb12cis_rule_4_2_8: {{ deb12cis_rule_4_2_8 }}
+deb12cis_rule_4_2_9: {{ deb12cis_rule_4_2_9 }}
+deb12cis_rule_4_2_10: {{ deb12cis_rule_4_2_10 }}
+# Configure iptables software
+deb12cis_rule_4_3_1_1: {{ deb12cis_rule_4_3_1_1 }}
+deb12cis_rule_4_3_1_2: {{ deb12cis_rule_4_3_1_2 }}
+deb12cis_rule_4_3_1_3: {{ deb12cis_rule_4_3_1_3 }}
+
+# Configure IPv4 iptables
+deb12cis_rule_4_3_2_1: {{ deb12cis_rule_4_3_2_1 }}
+deb12cis_rule_4_3_2_2: {{ deb12cis_rule_4_3_2_2 }}
+deb12cis_rule_4_3_2_3: {{ deb12cis_rule_4_3_2_3 }}
+deb12cis_rule_4_3_2_4: {{ deb12cis_rule_4_3_2_4 }}
+# Configure IPv5 iptables
+deb12cis_rule_4_3_3_1: {{ deb12cis_rule_4_3_3_1 }}
+deb12cis_rule_4_3_3_2: {{ deb12cis_rule_4_3_3_2 }}
+deb12cis_rule_4_3_3_3: {{ deb12cis_rule_4_3_3_3 }}
+deb12cis_rule_4_3_3_4: {{ deb12cis_rule_4_3_3_4 }}
+
+## Section 5 Access Control
+# 5.1 Configure SSH Server
+deb12cis_rule_5_1_1: {{ deb12cis_rule_5_1_1 }}
+deb12cis_rule_5_1_2: {{ deb12cis_rule_5_1_2 }}
+deb12cis_rule_5_1_3: {{ deb12cis_rule_5_1_3 }}
+deb12cis_rule_5_1_4: {{ deb12cis_rule_5_1_4 }}
+deb12cis_rule_5_1_5: {{ deb12cis_rule_5_1_5 }}
+deb12cis_rule_5_1_6: {{ deb12cis_rule_5_1_6 }}
+deb12cis_rule_5_1_7: {{ deb12cis_rule_5_1_7 }}
+deb12cis_rule_5_1_8: {{ deb12cis_rule_5_1_8 }}
+deb12cis_rule_5_1_9: {{ deb12cis_rule_5_1_9 }}
+deb12cis_rule_5_1_10: {{ deb12cis_rule_5_1_10 }}
+deb12cis_rule_5_1_11: {{ deb12cis_rule_5_1_11 }}
+deb12cis_rule_5_1_12: {{ deb12cis_rule_5_1_12 }}
+deb12cis_rule_5_1_13: {{ deb12cis_rule_5_1_13 }}
+deb12cis_rule_5_1_14: {{ deb12cis_rule_5_1_14 }}
+deb12cis_rule_5_1_15: {{ deb12cis_rule_5_1_15 }}
+deb12cis_rule_5_1_16: {{ deb12cis_rule_5_1_16 }}
+deb12cis_rule_5_1_17: {{ deb12cis_rule_5_1_17 }}
+deb12cis_rule_5_1_18: {{ deb12cis_rule_5_1_18 }}
+deb12cis_rule_5_1_19: {{ deb12cis_rule_5_1_19 }}
+deb12cis_rule_5_1_20: {{ deb12cis_rule_5_1_20 }}
+deb12cis_rule_5_1_21: {{ deb12cis_rule_5_1_21 }}
+deb12cis_rule_5_1_22: {{ deb12cis_rule_5_1_22 }}
+# 5.2 Configure privilege escalation
+deb12cis_rule_5_2_1: {{ deb12cis_rule_5_2_1 }}
+deb12cis_rule_5_2_2: {{ deb12cis_rule_5_2_2 }}
+deb12cis_rule_5_2_3: {{ deb12cis_rule_5_2_3 }}
+deb12cis_rule_5_2_4: {{ deb12cis_rule_5_2_4 }}
+deb12cis_rule_5_2_5: {{ deb12cis_rule_5_2_5 }}
+deb12cis_rule_5_2_6: {{ deb12cis_rule_5_2_6 }}
+deb12cis_rule_5_2_7: {{ deb12cis_rule_5_2_7 }}
+# 5.3.1 Configure PAM software packages
+deb12cis_rule_5_3_1_1: {{ deb12cis_rule_5_3_1_1 }}
+deb12cis_rule_5_3_1_2: {{ deb12cis_rule_5_3_1_2 }}
+deb12cis_rule_5_3_1_3: {{ deb12cis_rule_5_3_1_3 }}
+# 5.3.2 Configure pam-auth-update profiles
+deb12cis_rule_5_3_2_1: {{ deb12cis_rule_5_3_2_1 }}
+deb12cis_rule_5_3_2_2: {{ deb12cis_rule_5_3_2_2 }}
+deb12cis_rule_5_3_2_3: {{ deb12cis_rule_5_3_2_3 }}
+deb12cis_rule_5_3_2_4: {{ deb12cis_rule_5_3_2_4 }}
+# 5.3.3.1 Configure pam_faillock module
+deb12cis_rule_5_3_3_1_1: {{ deb12cis_rule_5_3_3_1_1 }}
+deb12cis_rule_5_3_3_1_2: {{ deb12cis_rule_5_3_3_1_2 }}
+deb12cis_rule_5_3_3_1_3: {{ deb12cis_rule_5_3_3_1_3 }}
+# 5.3.3.2 Configure pam_quality module
+deb12cis_rule_5_3_3_2_1: {{ deb12cis_rule_5_3_3_2_1 }}
+deb12cis_rule_5_3_3_2_2: {{ deb12cis_rule_5_3_3_2_2 }}
+deb12cis_rule_5_3_3_2_3: {{ deb12cis_rule_5_3_3_2_3 }}
+deb12cis_rule_5_3_3_2_4: {{ deb12cis_rule_5_3_3_2_4 }}
+deb12cis_rule_5_3_3_2_5: {{ deb12cis_rule_5_3_3_2_5 }}
+deb12cis_rule_5_3_3_2_6: {{ deb12cis_rule_5_3_3_2_6 }}
+deb12cis_rule_5_3_3_2_7: {{ deb12cis_rule_5_3_3_2_7 }}
+deb12cis_rule_5_3_3_2_8: {{ deb12cis_rule_5_3_3_2_8 }}
+# 5.3.3.3 Configure pam_history module
+# This are added as part of 5.3.2.4 using jinja2 template
+deb12cis_rule_5_3_3_3_1: {{ deb12cis_rule_5_3_3_3_1 }}
+deb12cis_rule_5_3_3_3_2: {{ deb12cis_rule_5_3_3_3_2 }}
+deb12cis_rule_5_3_3_3_3: {{ deb12cis_rule_5_3_3_3_3 }}
+# 5.3.3.4 Configure pam_unix module
+deb12cis_rule_5_3_3_4_1: {{ deb12cis_rule_5_3_3_4_1 }}
+deb12cis_rule_5_3_3_4_2: {{ deb12cis_rule_5_3_3_4_2 }}
+deb12cis_rule_5_3_3_4_3: {{ deb12cis_rule_5_3_3_4_3 }}
+deb12cis_rule_5_3_3_4_4: {{ deb12cis_rule_5_3_3_4_4 }}
+# 5.4 User Accounts and Environment
+# 5.4.1 Configure shadow password suite parameters
+deb12cis_rule_5_4_1_1: {{ deb12cis_rule_5_4_1_1 }}
+deb12cis_rule_5_4_1_2: {{ deb12cis_rule_5_4_1_2 }}
+deb12cis_rule_5_4_1_3: {{ deb12cis_rule_5_4_1_3 }}
+deb12cis_rule_5_4_1_4: {{ deb12cis_rule_5_4_1_4 }}
+deb12cis_rule_5_4_1_5: {{ deb12cis_rule_5_4_1_5 }}
+deb12cis_rule_5_4_1_6: {{ deb12cis_rule_5_4_1_6 }}
+# 5.4.2 Configure root and system accounts and environment
+deb12cis_rule_5_4_2_1: {{ deb12cis_rule_5_4_2_1 }}
+deb12cis_rule_5_4_2_2: {{ deb12cis_rule_5_4_2_2 }}
+deb12cis_rule_5_4_2_3: {{ deb12cis_rule_5_4_2_3 }}
+deb12cis_rule_5_4_2_4: {{ deb12cis_rule_5_4_2_4 }}
+deb12cis_rule_5_4_2_5: {{ deb12cis_rule_5_4_2_5 }}
+deb12cis_rule_5_4_2_6: {{ deb12cis_rule_5_4_2_6 }}
+deb12cis_rule_5_4_2_7: {{ deb12cis_rule_5_4_2_7 }}
+deb12cis_rule_5_4_2_8: {{ deb12cis_rule_5_4_2_8 }}
+# 5.4.2 Configure user default environment
+deb12cis_rule_5_4_3_1: {{ deb12cis_rule_5_4_3_1 }}
+deb12cis_rule_5_4_3_2: {{ deb12cis_rule_5_4_3_2 }}
+deb12cis_rule_5_4_3_3: {{ deb12cis_rule_5_4_3_3 }}
+
+## Section 6
+# 6.1 Configure Filesystem Integrity Checking
+deb12cis_rule_6_1_1: {{ deb12cis_rule_6_1_1 }}
+deb12cis_rule_6_1_2: {{ deb12cis_rule_6_1_2 }}
+# 6.2.1.1 Configure systemd-journald service
+deb12cis_rule_6_2_1_1_1: {{ deb12cis_rule_6_2_1_1_1 }}
+deb12cis_rule_6_2_1_1_2: {{ deb12cis_rule_6_2_1_1_2 }}
+deb12cis_rule_6_2_1_1_3: {{ deb12cis_rule_6_2_1_1_3 }}
+deb12cis_rule_6_2_1_1_4: {{ deb12cis_rule_6_2_1_1_4 }}
+deb12cis_rule_6_2_1_1_5: {{ deb12cis_rule_6_2_1_1_5 }}
+deb12cis_rule_6_2_1_1_6: {{ deb12cis_rule_6_2_1_1_6 }}
+# 6.2.1.2 Configure systemd-journald service
+deb12cis_rule_6_2_1_2_1: {{ deb12cis_rule_6_2_1_2_1 }}
+deb12cis_rule_6_2_1_2_2: {{ deb12cis_rule_6_2_1_2_2 }}
+deb12cis_rule_6_2_1_2_3: {{ deb12cis_rule_6_2_1_2_3 }}
+deb12cis_rule_6_2_1_2_4: {{ deb12cis_rule_6_2_1_2_4 }}
+# 6.2.2 Configure Logfiles
+deb12cis_rule_6_2_2_1: {{ deb12cis_rule_6_2_2_1 }}
+# 6.3.1 Configure auditd Service
+deb12cis_rule_6_3_1_1: {{ deb12cis_rule_6_3_1_1 }}
+deb12cis_rule_6_3_1_2: {{ deb12cis_rule_6_3_1_2 }}
+deb12cis_rule_6_3_1_3: {{ deb12cis_rule_6_3_1_3 }}
+deb12cis_rule_6_3_1_4: {{ deb12cis_rule_6_3_1_4 }}
+# 6.3.2 Configure data retention
+deb12cis_rule_6_3_2_1: {{ deb12cis_rule_6_3_2_1 }}
+deb12cis_rule_6_3_2_2: {{ deb12cis_rule_6_3_2_2 }}
+deb12cis_rule_6_3_2_3: {{ deb12cis_rule_6_3_2_3 }}
+deb12cis_rule_6_3_2_4: {{ deb12cis_rule_6_3_2_4 }}
+# 6.3.3 Configure auditd rules
+deb12cis_rule_6_3_3_1: {{ deb12cis_rule_6_3_3_1 }}
+deb12cis_rule_6_3_3_2: {{ deb12cis_rule_6_3_3_2 }}
+deb12cis_rule_6_3_3_3: {{ deb12cis_rule_6_3_3_3 }}
+deb12cis_rule_6_3_3_4: {{ deb12cis_rule_6_3_3_4 }}
+deb12cis_rule_6_3_3_5: {{ deb12cis_rule_6_3_3_5 }}
+deb12cis_rule_6_3_3_6: {{ deb12cis_rule_6_3_3_6 }}
+deb12cis_rule_6_3_3_7: {{ deb12cis_rule_6_3_3_7 }}
+deb12cis_rule_6_3_3_8: {{ deb12cis_rule_6_3_3_8 }}
+deb12cis_rule_6_3_3_9: {{ deb12cis_rule_6_3_3_9 }}
+deb12cis_rule_6_3_3_10: {{ deb12cis_rule_6_3_3_10 }}
+deb12cis_rule_6_3_3_11: {{ deb12cis_rule_6_3_3_11 }}
+deb12cis_rule_6_3_3_12: {{ deb12cis_rule_6_3_3_12 }}
+deb12cis_rule_6_3_3_13: {{ deb12cis_rule_6_3_3_13 }}
+deb12cis_rule_6_3_3_14: {{ deb12cis_rule_6_3_3_14 }}
+deb12cis_rule_6_3_3_15: {{ deb12cis_rule_6_3_3_15 }}
+deb12cis_rule_6_3_3_16: {{ deb12cis_rule_6_3_3_16 }}
+deb12cis_rule_6_3_3_17: {{ deb12cis_rule_6_3_3_17 }}
+deb12cis_rule_6_3_3_18: {{ deb12cis_rule_6_3_3_18 }}
+deb12cis_rule_6_3_3_19: {{ deb12cis_rule_6_3_3_19 }}
+deb12cis_rule_6_3_3_20: {{ deb12cis_rule_6_3_3_20 }}
+deb12cis_rule_6_3_3_21: {{ deb12cis_rule_6_3_3_21 }}
+# 6.3.4 Configure audit file access
+deb12cis_rule_6_3_4_1: {{ deb12cis_rule_6_3_4_1 }}
+deb12cis_rule_6_3_4_2: {{ deb12cis_rule_6_3_4_2 }}
+deb12cis_rule_6_3_4_3: {{ deb12cis_rule_6_3_4_3 }}
+deb12cis_rule_6_3_4_4: {{ deb12cis_rule_6_3_4_4 }}
+deb12cis_rule_6_3_4_5: {{ deb12cis_rule_6_3_4_5 }}
+deb12cis_rule_6_3_4_6: {{ deb12cis_rule_6_3_4_6 }}
+deb12cis_rule_6_3_4_7: {{ deb12cis_rule_6_3_4_7 }}
+deb12cis_rule_6_3_4_8: {{ deb12cis_rule_6_3_4_8 }}
+deb12cis_rule_6_3_4_9: {{ deb12cis_rule_6_3_4_9 }}
+deb12cis_rule_6_3_4_10: {{ deb12cis_rule_6_3_4_10 }}
+
+## Section 7
+# 7.1 System File Permissions
+deb12cis_rule_7_1_1: {{ deb12cis_rule_7_1_1 }}
+deb12cis_rule_7_1_2: {{ deb12cis_rule_7_1_2 }}
+deb12cis_rule_7_1_3: {{ deb12cis_rule_7_1_3 }}
+deb12cis_rule_7_1_4: {{ deb12cis_rule_7_1_4 }}
+deb12cis_rule_7_1_5: {{ deb12cis_rule_7_1_5 }}
+deb12cis_rule_7_1_6: {{ deb12cis_rule_7_1_6 }}
+deb12cis_rule_7_1_7: {{ deb12cis_rule_7_1_7 }}
+deb12cis_rule_7_1_8: {{ deb12cis_rule_7_1_8 }}
+deb12cis_rule_7_1_9: {{ deb12cis_rule_7_1_9 }}
+deb12cis_rule_7_1_10: {{ deb12cis_rule_7_1_10 }}
+deb12cis_rule_7_1_11: {{ deb12cis_rule_7_1_11 }}
+deb12cis_rule_7_1_12: {{ deb12cis_rule_7_1_12 }}
+deb12cis_rule_7_1_13: {{ deb12cis_rule_7_1_13 }}
+# 7.2 Local User and Group Settings
+deb12cis_rule_7_2_1: {{ deb12cis_rule_7_2_1 }}
+deb12cis_rule_7_2_2: {{ deb12cis_rule_7_2_2 }}
+deb12cis_rule_7_2_3: {{ deb12cis_rule_7_2_3 }}
+deb12cis_rule_7_2_4: {{ deb12cis_rule_7_2_4 }}
+deb12cis_rule_7_2_5: {{ deb12cis_rule_7_2_5 }}
+deb12cis_rule_7_2_6: {{ deb12cis_rule_7_2_6 }}
+deb12cis_rule_7_2_7: {{ deb12cis_rule_7_2_7 }}
+deb12cis_rule_7_2_8: {{ deb12cis_rule_7_2_8 }}
+deb12cis_rule_7_2_9: {{ deb12cis_rule_7_2_9 }}
+deb12cis_rule_7_2_10: {{ deb12cis_rule_7_2_10 }}
+
+############
+
+# Section 1
+
+# Whether or not to run tasks related to auditing/patching the desktop environment
+deb12cis_gui: {{ deb12cis_desktop_required }}
+
+## Controls 1.3.1.3 and 1.3.1.4 Ensure all AppArmor Profiles are in enforce (1.3.1.3/4) or complain (1.3.1.3) mode
+
+# This variable disables the implementation of rules 1.3.1.3 and 1.3.1.4
+# regarding enforcing profiles or putting them in complain mode
+deb12cis_apparmor_disable: {{ deb12cis_apparmor_disable }}
+
+# Warning Banner Content (issue, issue.net, motd)
+deb12cis_warning_banner: {{ deb12cis_warning_banner }}
+# End Banner
+
+# 1.8 Gnome Desktop
+deb12cis_dconf_db_name: {{ deb12cis_dconf_db_name }}
+
+# Section 2
+# Service configuration
+# Options are
+# Service
+# - false - removes package
+# - true - leaves package installed
+# Mask
+# - false - leaves service in current status
+# - true - sets service name to masked
+deb12cis_autofs_services: {{ deb12cis_autofs_services }}
+deb12cis_autofs_mask: {{ deb12cis_autofs_mask }}
+deb12cis_avahi_server: {{ deb12cis_avahi_server }}
+deb12cis_avahi_mask: {{ deb12cis_avahi_mask }}
+deb12cis_dhcp_server: {{ deb12cis_dhcp_server }}
+deb12cis_dhcp_mask: {{ deb12cis_dhcp_mask }}
+deb12cis_dns_server: {{ deb12cis_dns_server }}
+deb12cis_dns_mask: {{ deb12cis_dns_mask }}
+deb12cis_dnsmasq_server: {{ deb12cis_dnsmasq_server }}
+deb12cis_dnsmasq_mask: {{ deb12cis_dnsmasq_mask }}
+deb12cis_samba_server: {{ deb12cis_samba_server }}
+deb12cis_samba_mask: {{ deb12cis_samba_mask }}
+deb12cis_ftp_server: {{ deb12cis_ftp_server }}
+deb12cis_ftp_mask: {{ deb12cis_ftp_mask }}
+deb12cis_ldap_server: {{ deb12cis_ldap_server }}
+deb12cis_ldap_mask: {{ deb12cis_ldap_mask }}
+deb12cis_message_server: {{ deb12cis_message_server }}  # This is for messaging dovecot and cyrus-imap
+deb12cis_message_mask: {{ deb12cis_message_mask }}
+deb12cis_nfs_server: {{ deb12cis_nfs_server }}
+deb12cis_nfs_mask: {{ deb12cis_nfs_mask }}
+deb12cis_nis_server: {{ deb12cis_nis_server }}  # set to mask if nis client required
+deb12cis_nis_mask: {{ deb12cis_nis_mask }}
+deb12cis_print_server: {{ deb12cis_print_server }}  # replaces cups
+deb12cis_print_mask: {{ deb12cis_print_mask }}
+deb12cis_rpc_server: {{ deb12cis_rpc_server }}
+deb12cis_rpc_mask: {{ deb12cis_rpc_mask }}
+deb12cis_rsync_server: {{ deb12cis_rsync_server }}
+deb12cis_rsync_mask: {{ deb12cis_rsync_mask }}
+deb12cis_snmp_server: {{ deb12cis_snmp_server }}
+deb12cis_snmp_mask: {{ deb12cis_snmp_mask }}
+deb12cis_telnet_server: {{ deb12cis_telnet_server }}
+deb12cis_telnet_mask: {{ deb12cis_telnet_mask }}
+deb12cis_tftp_server: {{ deb12cis_tftp_server }}
+deb12cis_tftp_mask: {{ deb12cis_tftp_mask }}
+deb12cis_squid_server: {{ deb12cis_squid_server }}
+deb12cis_squid_mask: {{ deb12cis_squid_mask }}
+deb12cis_apache2_server: {{ deb12cis_apache2_server }}
+deb12cis_apache2_mask: {{ deb12cis_apache2_mask }}
+deb12cis_nginx_server: {{ deb12cis_nginx_server }}
+deb12cis_nginx_mask: {{ deb12cis_nginx_mask }}
+deb12cis_xinetd_server: {{ deb12cis_xinetd_server }}
+deb12cis_xinetd_mask: {{ deb12cis_xinetd_mask }}
+deb12cis_xwindow_server: {{ deb12cis_xwindow_server }}  # will remove mask not an option
+deb12cis_is_mail_server: {{ deb12cis_is_mail_server }}
+
+## Section 2.3 Service clients
+
+# Client Services
+deb12cis_nis_client_required: {{ deb12cis_nis_client_required }}  # Same package as NIS server
+deb12cis_rsh_client: {{ deb12cis_rsh_client }}
+deb12cis_talk_client: {{ deb12cis_talk_client }}
+deb12cis_telnet_client: {{ deb12cis_telnet_client }}
+deb12cis_ldap_clients_required: {{ deb12cis_ldap_clients_required }}
+deb12cis_ftp_client: {{ deb12cis_ftp_client }}
+
+#
+## Control 2.3.1.1
+# This variable choses the tool used for time synchronization
+# The two options are `chrony`and `systemd-timesyncd`.
+deb12cis_time_sync_tool: {{ deb12cis_time_sync_tool }}
+
+## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
+# The following variable represents a list of of time server pools used
+# for configuring chrony and timesyncd.
+# Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
+# The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
+# of the time synchronization mechanism you are using.
+deb12cis_time_pool_name:
+{% for pool in deb12cis_time_pool %}
+  - name: {{ pool.name }}
+    options: {{ pool.options }}
+{% endfor %}
+
+# The following variable represents a list of of time servers used
+# for configuring chrony and timesyncd
+# Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
+# The default setting for the `options` is `iburst` -- please refer to the documentation
+# of the time synchronization mechanism you are using.
+deb12cis_time_servers:
+{% for time_server in deb12cis_time_servers %}
+- name: {{ time_server.name }}
+  options: {{ time_server.options }}
+{% endfor %}
+
+# Section 3
+## Control 3.1.1 - Ensure system is checked to determine if IPv6 is enabled
+# This variable governs the mechanism of how the disabling of IPV6 is carried out.
+# Its possible values are `grub` and `sysctl`.
+deb12cis_ipv6_disable: grub
+
+## Control 3.1.3 - Ensure bluetooth Services are not in use
+# This control managed how the bluetooth service is managaed
+# Options are
+# true to leave installed if exists not changes take place
+# false - this removes the package
+# mask - if a dependancy for product so cannot be removed
+deb12cis_bluetooth_service: {{ deb12cis_bluetooth_service }}
+deb12cis_bluetooth_mask: {{ deb12cis_bluetooth_mask }}
+
+## IPv6 required
+deb12cis_ipv6_required: {{ deb12cis_ipv6_required }}
+
+## 3.2 System network parameters (host only OR host and router)
+deb12cis_is_router: {{ deb12cis_is_router }}
+
+## Section 3.4
+
+## Controls 4.1.x, 4.2.x, and 4.3.x - Firewall configuration
+# This variable represents the toggle for which firewall package is used.
+# The options that have an effect on the system are `ufw` and `iptables`.
+# The option `nftables` is also possible, but will only result in a message,
+# that `nftables` has been chosen; all settings have to be carried out manually.
+# Any other value, e.g. `none` will skip all firewall-related controls.
+deb12cis_firewall_package: {{ deb12cis_firewall_package }}
+
+
+# Section 5
+
+deb12cis_ssh_strong_ciphers:
+  - aes256-gcm@openssh.com
+  - aes128-gcm@openssh.com
+  - aes256-ctr
+  - aes192-ctr
+  - aes128-ctr
+deb12cis_ssh_weak_ciphers:
+  - 3des-cbc
+  - aes128-cbc
+  - aes192-cbc
+  - aes256-cbc
+  - arcfour
+  - chacha20-poly1305@openssh.com
+  - arcfour128
+  - arcfour256
+  - blowfish-cbc
+  - cast128-cbc
+  - rijndael-cbc@lysator.liu.se
+
+deb12cis_ssh_strong_macs:
+  - hmac-sha1
+  - hmac-sha2-256
+  #  - hmac-sha2-384  # hashed out seen as bad ssh2 MAC
+  - hmac-sha2-512
+deb12cis_ssh_weak_macs:
+  - hmac-md5
+  - hmac-md5-96
+  - hmac-ripemd160
+  - hmac-sha1-96
+  - umac-64@openssh.com
+  - umac-128@openssh.com
+  - hmac-md5-etm@openssh.com
+  - hmac-md5-96-etm@openssh.com
+  - hmac-ripemd160-etm@openssh.com
+  - hmac-sha1-etm@openssh.com
+  - hmac-sha1-96-etm@openssh.com
+  - umac-64-etm@openssh.com
+  - umac-128-etm@openssh.com
+  - hmac-sha2-512-etm@openssh.com
+  - hmac-sha2-256-etm@openssh.com
+
+deb12cis_ssh_strong_kex:
+  - ecdh-sha2-nistp256
+  - ecdh-sha2-nistp384
+  - ecdh-sha2-nistp521
+  - diffie-hellman-group-exchange-sha256
+  - diffie-hellman-group14-sha256
+  - diffie-hellman-group16-sha512
+  - diffie-hellman-group18-sha512
+deb12cis_ssh_weak_kex:
+  - diffie-hellman-group1-sha1
+  - diffie-hellman-group14-sha1
+  - diffie-hellman-group-exchange-sha1
+
+deb12cis_sshd_config_file: /etc/ssh/sshd_config
+
+## 5.1.4 Note the following to understand precedence and layout , comma seperated
+deb12cis_sshd_allowusers: {{ deb12cis_sshd_allow_users }}
+deb12cis_sshd_allowgroups: {{ deb12cis_sshd_allow_groups }}
+deb12cis_sshd_denyusers: {{ deb12cis_sshd_deny_users }}
+deb12cis_sshd_denygroups: {{ deb12cis_sshd_deny_groups }}
+
+deb12cis_ssh_clientaliveinterval: {{ deb12cis_sshd_client_alive_interval }}
+deb12cis_ssh_clientalivecountmax: {{ deb12cis_sshd_client_alive_count_max }}
+
+## 5.2.7 set sugroup if differs from wheel
+deb12cis_sugroup: {{ deb12cis_sugroup }}
+
+
+## 5.3.3.2.3 Set option used for password complexity
+# either mincall or credits - enabling to check for one option in settings
+deb12cis_passwd_complex_option: {{ deb12cis_passwd_complex_option }}
+
+## 5.4.1.x login.defs password settings
+deb12cis_pass_max_days: {{ deb12cis_pass_max_days }}
+deb12cis_pass_min_days: {{ deb12cis_pass_min_days }}
+deb12cis_pass_warn_age: {{ deb12cis_pass_warn_age }}
+
+# Section 6
+
+# Control 6.1.x
+
+# aide setup via - cron, timer
+deb12cis_aide_scan: {{ deb12cis_aide_scan }}
+
+## Logging 6.2.x.x
+
+## syslog
+## change to rsyslog/ journald or other
+deb12cis_syslog: {{ deb12cis_syslog }}
+
+# Control 6.2.3. x
+## Set if host is a logserver
+deb12cis_is_syslog_server: {{ deb12cis_system_is_log_server }}
+
+# Log server settings
+deb12cis_remote_log_host: {{ deb12cis_remote_log_host }}
+deb12cis_remote_log_port: {{ deb12cis_remote_log_port }}
+deb12cis_remote_log_protocol: {{ deb12cis_remote_log_protocol }}
+deb12cis_remote_log_retrycount: {{ deb12cis_remote_log_retrycount }}
+deb12cis_remote_log_queuesize: {{ deb12cis_remote_log_queuesize }}
+
+# 6.3 If using auditd
+deb12cis_auditd: {{ deb12cis_rule_6_3_1_1 }}
+
+
+# Control 7.1.12
+deb12cis_exclude_unowned_search_path: \({{deb12cis_exclude_unowned_search_path}}\)

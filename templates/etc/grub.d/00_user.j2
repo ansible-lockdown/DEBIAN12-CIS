@@ -1,0 +1,8 @@
+## Ansible controlled file
+# Added as part of ansible-lockdown CIS baseline
+# provided by MindPointGroup LLC
+
+cat <<EOF
+set superusers="{{ deb12cis_grub_user }}"
+password_pbkdf2 {{ deb12cis_grub_user }} {{ deb12cis_bootloader_password_hash }}
+EOF

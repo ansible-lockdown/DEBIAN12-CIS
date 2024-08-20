@@ -1,0 +1,74 @@
+---
+
+- name: "6.1.1 | PATCH | Ensure AIDE is installed"
+  when:
+    - deb12cis_config_aide
+    - deb12cis_rule_6_1_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - aide
+    - patch
+    - rule_6.1.1
+    - NIST800-53R5_AU-2
+  block:
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed"
+      ansible.builtin.package:
+        name: aide-common
+        state: present
+      register: aide_installed
+
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB"
+      when: aide_installed.changed  # noqa: no-handler
+      block:
+        - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB"
+          ansible.builtin.shell: /usr/sbin/aideinit
+
+        - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB | Wait for file before continuing"
+          ansible.builtin.wait_for:
+            path: /var/lib/aide/aide.db.new
+
+        - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB |copy AIDE DB"
+          ansible.builtin.copy:
+            src: /var/lib/aide/aide.db.new
+            dest: /var/lib/aide/aide.db
+            remote_src: true
+
+- name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked"
+  when:
+    - deb12cis_rule_6_1_2
+    - not system_is_ec2
+  tags:
+    - level1-server
+    - level1-workstation
+    - aide
+    - file_integrity
+    - patch
+    - rule_6.1.2
+    - NIST800-53R5_AU-2
+  block:
+    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked"
+      when: deb12cis_aide_scan == "cron"
+      ansible.builtin.cron:
+        name: Run AIDE integrity check
+        cron_file: "{{ deb12cis_aide_cron['cron_file'] }}"
+        user: "{{ deb12cis_aide_cron['cron_user'] }}"
+        minute: "{{ deb12cis_aide_cron['aide_minute'] | default('0') }}"
+        hour: "{{ deb12cis_aide_cron['aide_hour'] | default('5') }}"
+        day: "{{ deb12cis_aide_cron['aide_day'] | default('*') }}"
+        month: "{{ deb12cis_aide_cron['aide_month'] | default('*') }}"
+        weekday: "{{ deb12cis_aide_cron['aide_weekday'] | default('*') }}"
+        job: "{{ deb12cis_aide_cron['aide_job'] }}"
+
+    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
+      when: deb12cis_aide_scan == "timer"
+      ansible.builtin.systemd:
+        name: aidecheck.service
+        enabled: true
+
+    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
+      when: deb12cis_aide_scan == "timer"
+      ansible.builtin.systemd:
+        name: aidecheck.timer
+        state: running
+        enabled: true

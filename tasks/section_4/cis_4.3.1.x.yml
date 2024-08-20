@@ -1,0 +1,50 @@
+---
+
+- name: "4.3.1.1 | PATCH | Ensure iptables packages are installed"
+  when:
+    - deb12cis_rule_4_3_1_1
+    - deb12cis_firewall_package == "iptables"
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_4.3.1.1
+    - iptables
+    - NIST800-53R5_CA-9
+    - NIST800-53R5_SC-7
+  ansible.builtin.package:
+    name: ['iptables', 'iptables-persistent']
+    state: present
+
+- name: "4.3.1.2 | PATCH | Ensure nftables is not installed with iptables"
+  when:
+    - deb12cis_rule_4_3_1_2
+    - deb12cis_firewall_package == "iptables"
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_4.3.1.2
+    - iptables
+    - NIST800-53R5_CA-9
+    - NIST800-53R5_CM-7
+  ansible.builtin.package:
+    name: nftables
+    state: absent
+    purge: "{{ deb12cis_purge_apt }}"
+
+- name: "4.3.1.3 | PATCH | Ensure ufw is uninstalled or disabled with iptables"
+  when:
+    - deb12cis_rule_4_3_1_3
+    - deb12cis_firewall_package == "iptables"
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_4.3.1.3
+    - iptables
+    - NIST800-53R5_CA-9
+    - NIST800-53R5_CM-7
+  ansible.builtin.package:
+    name: ufw
+    state: absent

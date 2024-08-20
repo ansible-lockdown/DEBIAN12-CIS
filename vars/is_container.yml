@@ -1,0 +1,89 @@
+---
+
+# File to skip controls if container
+# Based on standard image no changes
+# it expected all pkgs required for the container are alreday installed
+
+## controls
+
+# Firewall
+deb12cis_firewall: None
+
+# SElinux
+deb12cis_selinux_disable: true
+
+## Related individual rules
+# Aide
+deb12cis_rule_1_4_1: false
+deb12cis_rule_1_4_2: false
+
+# auditd
+deb12cis_rule_4_1_1_1: false
+deb12cis_rule_4_1_2_1: false
+deb12cis_rule_4_1_2_2: false
+deb12cis_rule_4_1_2_3: false
+
+# time sync
+deb12cis_rule_2_2_1_1: false
+deb12cis_rule_2_2_1_2: false
+
+# cron
+deb12cis_rule_5_1_1: false
+deb12cis_rule_5_1_2: false
+deb12cis_rule_5_1_3: false
+deb12cis_rule_5_1_4: false
+deb12cis_rule_5_1_5: false
+deb12cis_rule_5_1_6: false
+deb12cis_rule_5_1_7: false
+deb12cis_rule_5_1_8: false
+
+# crypto
+deb12cis_rule_1_10: false
+
+# grub
+deb12cis_rule_1_5_1: false
+deb12cis_rule_1_5_2: false
+deb12cis_rule_1_5_3: false
+
+## mounts
+# /tmp
+deb12cis_rule_1_1_2: false
+deb12cis_rule_1_1_3: false
+deb12cis_rule_1_1_4: false
+deb12cis_rule_1_1_5: false
+# /var
+deb12cis_rule_1_1_6: false
+# /var/tmp
+deb12cis_rule_1_1_7: false
+deb12cis_rule_1_1_8: false
+deb12cis_rule_1_1_9: false
+deb12cis_rule_1_1_10: false
+# /var/log
+deb12cis_rule_1_1_11: false
+# /var/log/audit
+deb12cis_rule_1_1_12: false
+# /home
+deb12cis_rule_1_1_13: false
+deb12cis_rule_1_1_14: false
+# /dev/shm
+deb12cis_rule_1_1_15: false
+deb12cis_rule_1_1_16: false
+deb12cis_rule_1_1_17: false
+# usb-storage
+deb12cis_rule_1_1_23: false
+
+# logging
+deb12cis_rule_4_2_1_1: false
+deb12cis_rule_4_2_1_2: false
+deb12cis_rule_4_2_1_3: false
+deb12cis_rule_4_2_1_4: false
+deb12cis_rule_4_2_1_5: false
+deb12cis_rule_4_2_1_6: false
+deb12cis_rule_4_2_2_1: false
+deb12cis_rule_4_2_2_2: false
+deb12cis_rule_4_2_2_3: false
+
+# systemd
+
+# Users/passwords/accounts
+deb12cis_rule_5_5_2: false

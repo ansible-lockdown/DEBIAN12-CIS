@@ -1,0 +1,12 @@
+## This file is managed by Ansible, YOUR CHANGES WILL BE LOST!
+
+{% if deb12cis_rule_1_5_1 %}
+# Adress space randomise
+# CIS 1.5.1
+kernel.randomize_va_space = 2
+{% endif %}
+{% if deb12cis_rule_1_5_2 %}
+# Ptrace scope
+# CIS 1.5.2
+kernel.yama.ptrace_scope = 1
+{% endif %}

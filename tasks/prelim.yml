@@ -1,0 +1,236 @@
+---
+
+# Preliminary tasks that should always be run
+# List users in order to look files inside each home directory
+
+- name: "PRELIM | Include audit specific variables"
+  when:
+    - run_audit or audit_only
+    - setup_audit
+  tags:
+    - setup_audit
+    - run_audit
+  ansible.builtin.include_vars:
+    file: audit.yml
+
+- name: "PRELIM | Include pre-remediation audit tasks"
+  when:
+    - run_audit or audit_only
+    - setup_audit
+  tags:
+    - run_audit
+  ansible.builtin.import_tasks: pre_remediation_audit.yml
+
+- name: "PRELIM | AUDIT | Interactive Users"
+  tags:
+    - always
+  ansible.builtin.shell: >
+    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1 }'
+  changed_when: false
+  register: prelim_interactive_usernames
+
+- name: "PRELIM | AUDIT | Interactive User accounts home directories"
+  tags:
+    - always
+  ansible.builtin.shell: >
+    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
+  changed_when: false
+  register: prelim_interactive_users_home
+
+- name: "PRELIM | AUDIT | Interactive UIDs"
+  tags:
+    - always
+  ansible.builtin.shell: >
+    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
+  changed_when: false
+  register: prelim_interactive_uids
+
+- name: "PRELIM | AUDIT | Capture /etc/password variables"
+  ansible.builtin.include_tasks:
+    file: parse_etc_password.yml
+  tags:
+    - always
+
+- name: "PRELIM | PATCH | Ensure libselinux1 is installed"
+  when:
+    - '"libselinux1" not in ansible_facts.packages'
+  ansible.builtin.package:
+    name: libselinux1
+    state: present
+
+- name: "PRELIM | AUDIT | Section 1.1 | Create list of mount points"
+  tags:
+    - Always
+  ansible.builtin.set_fact:
+    mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+
+- name: "PRELIM | AUDIT | Set facts based on boot type"
+  block:
+    - name: "PRELIM | AUDIT | Check whether machine is UEFI-based"
+      ansible.builtin.stat:
+        path: /sys/firmware/efi
+      register: prelim_efi_boot
+
+    - name: "PRELIM | AUDIT | Set legacy boot and grub path | Bios"
+      when: not prelim_efi_boot.stat.exists
+      ansible.builtin.set_fact:
+        deb12cis_legacy_boot: true
+        grub2_path: /etc/grub2.cfg
+
+    - name: "PRELIM | AUDIT | Set grub fact | UEFI"
+      when: prelim_efi_boot.stat.exists
+      ansible.builtin.set_fact:
+        grub2_path: /etc/grub2-efi.cfg
+
+- name: "PRELIM | AUDIT | Wireless adapter pre-requisites"
+  when:
+    - deb12cis_rule_3_1_2
+    - not system_is_container
+  tags:
+    - always
+  block:
+    - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
+      ansible.builtin.shell: find /sys/class/net/*/ -type d -name wireless
+      register: prelim_wireless_adapters
+      changed_when: false
+      failed_when: prelim_wireless_adapters.rc not in [ 0, 1 ]
+
+    - name: "PRELIM | AUDIT | If wireless adapter present capture module"
+      when:
+        - prelim_wireless_adapters.rc == 0
+      ansible.builtin.shell: |
+        for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs -0 dirname);
+          do basename "$(readlink -f "$driverdir"/device/driver/module)";
+        done | sort -u
+      changed_when: false
+      failed_when: prelim_wireless_modules.rc not in [ 0, 1 ]
+      register: prelim_wireless_modules
+
+# Added to ensure ssh drop in file exists if not default /etc/ssh/sshd_config
+- name: "PRELIM | PATCH | SSH Config file is not exist"
+  when:
+    - deb12cis_sshd_config_file != '/etc/ssh/sshd_config'
+    - "'openssh-server' in ansible_facts.packages"
+  tags:
+    - ssh
+    - level1_server
+    - level1_workstation
+  ansible.builtin.file:
+    path: "{{ deb12cis_sshd_config_file }}"
+    owner: root
+    group: root
+    mode: '0600'
+    state: touch
+
+- name: "PRELIM | PATCH | 5.3.3.2.x ensure conf.d directory exists"
+  when:
+    - deb12cis_rule_5_3_3_2_1 or
+      deb12cis_rule_5_3_3_2_2 or
+      deb12cis_rule_5_3_3_2_3 or
+      deb12cis_rule_5_3_3_2_4 or
+      deb12cis_rule_5_3_3_2_5 or
+      deb12cis_rule_5_3_3_2_6 or
+      deb12cis_rule_5_3_3_2_7 or
+      deb12cis_rule_5_3_3_2_8
+  tags:
+    - always
+  ansible.builtin.file:
+    path: /etc/security/pwquality.conf.d/
+    owner: root
+    group: root
+    mode: '0750'
+    state: directory
+
+- name: "PRELIM | AUDIT | Gather UID 0 accounts other than root"
+  when: deb12cis_rule_5_4_2_1
+  tags:
+    - rule_5.4.2.1
+    - level1-server
+    - level1-workstation
+    - users
+  ansible.builtin.shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
+  changed_when: false
+  check_mode: false
+  register: prelim_uid_zero_accounts_except_root
+
+- name: "PRELIM | PATCH | Create journald config directory"
+  when:
+    - deb12cis_syslog == 'journald'
+    - deb12cis_rule_6_2_1_1_3 or
+      deb12cis_rule_6_2_1_1_4
+  tags: always
+  ansible.builtin.file:
+    path: /etc/systemd/journald.conf.d
+    state: directory
+
+# Carry out here to ensure conf file etc exist
+- name: "PRELIM | PATCH | Configure System Accounting (auditd)"
+  when:
+    - '"auditd" not in ansible_facts.packages'
+    - deb12cis_rule_6_3_1_1
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - rule_6.3.1.1
+    - auditd
+  ansible.builtin.package:
+    name: auditd
+    state: present
+  become: true
+
+- name: "PRELIM | AUDIT | Discover audit logfile"
+  when:
+    - deb12cis_rule_6_3_4_1 or
+      deb12cis_rule_6_3_4_2 or
+      deb12cis_rule_6_3_4_3 or
+      deb12cis_rule_6_3_4_4
+  tags: always
+  ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
+  changed_when: false
+  register: prelim_auditd_logfile
+
+- name: "PRELIM | AUDIT | Audit conf and rules files | list files"
+  when:
+    - deb12cis_rule_6_3_4_5 or
+      deb12cis_rule_6_3_4_6 or
+      deb12cis_rule_6_3_4_7
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_6.3.4.5
+    - rule_6.3.4.6
+    - rule_6.3.4.7
+  ansible.builtin.find:
+    path: /etc/audit
+    file_type: file
+    recurse: true
+    patterns: '*.conf,*.rules'
+  register: prelim_auditd_conf_files
+
+- name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
+  when: deb12cis_discover_int_uid
+  tags: always
+  block:
+    - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
+      ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+      changed_when: false
+      register: prelim_uid_min_id
+
+    - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
+      ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+      changed_when: false
+      register: prelim_uid_max_id
+
+    - name: "PRELIM | AUDIT | Set facts for interactive uid/gid"
+      ansible.builtin.set_fact:
+        prelim_min_int_uid: "{{ prelim_uid_min_id.stdout }}"
+        prelim_max_int_uid: "{{ prelim_uid_max_id.stdout }}"
+
+- name: "PRELIM | AUDIT | Gather the package facts after prelim"
+  tags:
+    - always
+  ansible.builtin.package_facts:
+    manager: auto
