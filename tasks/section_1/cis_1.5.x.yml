@@ -67,7 +67,7 @@
         create: true
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
 
     - name: "1.5.3 | PATCH | Ensure core dumps are restricted | sysctl.conf"
       ansible.builtin.lineinfile:
@@ -76,7 +76,7 @@
         line: fs.suid_dumpable=0
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       notify: Reload sysctl
 
     - name: "1.5.3 | PATCH | Ensure core dumps are restricted | coredump.conf"
@@ -87,7 +87,7 @@
         create: true
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       loop:
         - { regexp: '^Storage', line: 'Storage=none' }
         - { regexp: '^ProcessSizeMax', line: 'ProcessSizeMax=0' }

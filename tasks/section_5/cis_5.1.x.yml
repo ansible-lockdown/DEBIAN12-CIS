@@ -15,7 +15,7 @@
     path: /etc/ssh/sshd_config
     owner: root
     group: root
-    mode: '0600'
+    mode: 'u-x,go-rwx'
 
 - name: "5.1.2 | PATCH | Ensure permissions on sshd private host key files are configured"
   when:
@@ -69,7 +69,7 @@
         path: "{{ item.path }}"
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       with_items:
         - "{{ deb12cis_5_1_3_ssh_host_pub_keys.files }}"
       loop_control:

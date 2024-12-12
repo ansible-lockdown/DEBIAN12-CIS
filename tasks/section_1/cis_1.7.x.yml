@@ -78,7 +78,7 @@
         path: "{{ item }}"
         owner: root
         group: root
-        mode: '0755'
+        mode: 'u+x,go-w'
         state: directory
       loop:
         - /etc/dconf/db/{{ deb12cis_dconf_db_name }}.d
@@ -93,7 +93,7 @@
         create: true
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       loop:
         - { regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF }
         - { regexp: 'disable-user-list', line: 'disable-user-list=true', insertafter: '\[org\/gnome\/login-screen\]'}
@@ -107,7 +107,7 @@
         create: true
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       loop:
         - { regexp: '^user-db:user', line: 'user-db:user', insertafter: EOF }
         - { regexp: '^system-db:{{ deb12cis_dconf_db_name }}', line: 'system-db:{{ deb12cis_dconf_db_name }}', insertafter: 'user-db:user'}
@@ -141,7 +141,7 @@
         path: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d"
         owner: root
         group: root
-        mode: '0755'
+        mode: 'u+x,go-w'
         state: directory
       notify: Update dconf
 
@@ -151,7 +151,7 @@
         dest: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/00-screensaver"
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       notify: Update dconf
 
 - name: "1.7.5 | PATCH | Ensure GDM screen locks cannot be overridden"
@@ -171,7 +171,7 @@
         path: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/locks"
         owner: root
         group: root
-        mode: '0755'
+        mode: 'u+x,go-w'
         state: directory
       notify: Update dconf
 
@@ -181,7 +181,7 @@
         dest: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/locks/00-screensaver"
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       notify: Update dconf
 
 - name: "1.7.6 | PATCH | Ensure GDM automatic mounting of removable media is disabled"
@@ -205,7 +205,7 @@
         path: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d"
         owner: root
         group: root
-        mode: '0755'
+        mode: 'u+x,go-w'
         state: directory
       notify: Update dconf
 
@@ -215,7 +215,7 @@
         dest: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/00-media-automount"
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       notify: Update dconf
 
 - name: "1.7.7 | PATCH | Ensure GDM disabling automatic mounting of removable media is not overridden"
@@ -239,7 +239,7 @@
         path: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/locks"
         owner: root
         group: root
-        mode: '0755'
+        mode: 'u+x,go-w'
         state: directory
       notify: Update dconf
 
@@ -249,7 +249,7 @@
         dest: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/locks/00-automount_lock"
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       notify: Update dconf
 
 - name: "1.7.8 | PATCH | Ensure GDM autorun-never is enabled"
@@ -273,7 +273,7 @@
         path: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d"
         owner: root
         group: root
-        mode: '0755'
+        mode: 'u+x,go-w'
         state: directory
       notify: Update dconf
 
@@ -283,7 +283,7 @@
         dest: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/00-media-autorun"
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       notify: Update dconf
 
 - name: "1.7.9 | PATCH | Ensure GDM autorun-never is not overridden"
@@ -307,7 +307,7 @@
         path: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/locks"
         owner: root
         group: root
-        mode: '0755'
+        mode: 'u+x,go-w'
         state: directory
       notify: Update dconf
 
@@ -317,7 +317,7 @@
         dest: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/locks/00-autorun_lock"
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,go-wx'
       notify: Update dconf
 
 - name: "1.7.10 | PATCH | Ensure XDCMP is not enabled"

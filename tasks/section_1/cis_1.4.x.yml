@@ -18,7 +18,7 @@
         dest: "{{ deb12cis_grub_user_file }}"
         owner: root
         group: root
-        mode: '0755'
+        mode: 'u+x,go-w'
       notify: Update-grub
 
     - name: "1.4.1 | PATCH | Ensure bootloader password is set | allow unrestricted boot"
