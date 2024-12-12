@@ -137,14 +137,14 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: deb12cis_4_3_1_4_open_ports
+      register: discovered_ipv4_open_ports
 
     - name: "4.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of rules"
       ansible.builtin.command: iptables -L INPUT -v -n
       changed_when: false
       failed_when: false
       check_mode: false
-      register: deb12cis_4_3_2_4_current_rules
+      register: discovered_ipv4_iptables_current_rules
 
     - name: "4.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Warn about settings"
       ansible.builtin.debug:
@@ -152,37 +152,10 @@
           - "Warning!! Below is the list the open ports and current rules"
           - "Please create a rule for any open port that does not have a current rule"
           - "Open Ports:"
-          - "{{ deb12cis_4_3_2_4_open_ports.stdout_lines }}"
+          - "{{ discovered_ipv4_open_ports.stdout_lines }}"
           - "Current Rules:"
-          - "{{ deb12cis_4_3_2_4_current_rules.stdout_lines }}"
+          - "{{ discovered_ipv4_iptables_current_rules.stdout_lines }}"
 
     - name: "4.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Set warning count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
-
-# ---------------
-# ---------------
-# This is not a control however using the iptables module only writes to memory
-# if a reboot occurs that means changes can revert. This task will make the
-# above iptables settings permanent
-# ---------------
-# ---------------
-# - name: "Make IPTables persistent | Not a control"
-#   when:
-#     - deb12cis_firewall_package == "iptables"
-#     - deb12cis_save_iptables_cis_rules
-#     - deb12cis_rule_4_3_2_1 or
-#       deb12cis_rule_4_3_2_2 or
-#       deb12cis_rule_4_3_2_3 or
-#       deb12cis_rule_4_3_2_4
-#   block:
-#     - name: "Make IPTables persistent | Install iptables-persistent"
-#       ansible.builtin.package:
-#         name: iptables-persistent
-#         state: present
-
-#     - name: "Make IPTables persistent | Save to persistent files"
-#       ansible.builtin.shell: bash -c "iptables-save > /etc/iptables/rules.v4"
-#       changed_when: deb12cis_iptables_save.rc == 0
-#       failed_when: deb12cis_iptables_save.rc > 0
-#       register: deb12cis_iptables_save

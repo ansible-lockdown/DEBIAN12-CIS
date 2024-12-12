@@ -51,8 +51,8 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     mode: 'u-x,g-wx,o-rwx'
-  failed_when: deb12cis_6_3_4_5_file_list.state not in '[ file, absent ]'
-  register: deb12cis_6_3_4_5_file_list
+  failed_when: discovered_auditd_file_list.state not in '[ file, absent ]'
+  register: discovered_auditd_file_list
   loop: "{{ prelim_auditd_conf_files.files }}"
   loop_control:
     label: "{{ item.path }}"
@@ -104,13 +104,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     mode: 'go-w'
-  loop:
-    - /sbin/auditctl
-    - /sbin/aureport
-    - /sbin/ausearch
-    - /sbin/autrace
-    - /sbin/auditd
-    - /sbin/augenrules
+  loop: "{{ audit_bins }}"
 
 - name: "6.3.4.9 | PATCH | Ensure audit tools are owned by root"
   when:
@@ -125,13 +119,7 @@
     path: "{{ item }}"
     owner: root
     group: root
-  loop:
-    - /sbin/auditctl
-    - /sbin/aureport
-    - /sbin/ausearch
-    - /sbin/autrace
-    - /sbin/auditd
-    - /sbin/augenrules
+  loop: "{{ audit_bins }}"
 
 - name: "6.3.4.10 | PATCH | Ensure audit tools belong to group root"
   when:
@@ -146,10 +134,4 @@
   ansible.builtin.file:
     path: "{{ item }}"
     group: root
-  loop:
-    - /sbin/auditctl
-    - /sbin/aureport
-    - /sbin/ausearch
-    - /sbin/autrace
-    - /sbin/auditd
-    - /sbin/augenrules
+  loop: "{{ audit_bins }}"

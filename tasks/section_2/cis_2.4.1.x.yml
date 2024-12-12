@@ -137,10 +137,10 @@
     - name: "2.4.1.8 | PATCH | Ensure cron is restricted to authorized users | Check for cron.allow"
       ansible.builtin.stat:
         path: /etc/cron.allow
-      register: deb12cis_2_4_1_8_status
+      register: discovered_cron_allow_status
 
     - name: "2.4.1.8 | PATCH | Ensure cron is restricted to authorized users | Create cron.allow if doesn't exist"
-      when: not deb12cis_2_4_1_8_status.stat.exists
+      when: not discovered_cron_allow_status.stat.exists
       ansible.builtin.file:
         path: /etc/cron.allow
         owner: root
@@ -149,7 +149,7 @@
         state: touch
 
     - name: "2.4.1.8 | PATCH | Ensure cron is restricted to authorized users |  Update cron.allow if exists"
-      when: deb12cis_2_4_1_8_status.stat.exists
+      when: discovered_cron_allow_status.stat.exists
       ansible.builtin.file:
         path: /etc/cron.allow
         owner: root

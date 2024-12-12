@@ -67,29 +67,29 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: discover_ansible_user_password_set
+      register: prelim_ansible_user_password_set
 
     - name: "Check for local account {{ ansible_env.SUDO_USER }} | Check for local account"  # noqa name[template]
-      when: discover_ansible_user_password_set.stdout == "not found"
+      when: prelim_ansible_user_password_set.stdout == "not found"
       ansible.builtin.debug:
         msg: "No local account found for {{ ansible_env.SUDO_USER }} user. Skipping local account checks."
 
     - name: "Check local account"
       when:
-        - discover_ansible_user_password_set.stdout != "not found"
+        - prelim_ansible_user_password_set.stdout != "not found"
       block:
         - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"  # noqa name[template]
           ansible.builtin.assert:
             that:
-              - discover_ansible_user_password_set.stdout | length != 0
-              - discover_ansible_user_password_set.stdout != "!!"
+              - prelim_ansible_user_password_set.stdout | length != 0
+              - prelim_ansible_user_password_set.stdout != "!!"
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
             success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
 
         - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"  # noqa name[template]
           ansible.builtin.assert:
             that:
-              - not discover_ansible_user_password_set.stdout.startswith("!")
+              - not prelim_ansible_user_password_set.stdout.startswith("!")
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
             success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
 
@@ -107,11 +107,11 @@
     - name: "Ensure root password is set"
       ansible.builtin.shell: passwd -S root | grep 'root P'
       changed_when: false
-      register: discover_root_passwd_set
+      register: prelim_check_root_passwd_set
 
     - name: "Ensure root password is set"
       ansible.builtin.assert:
-        that: discover_root_passwd_set.rc == 0
+        that: prelim_check_root_passwd_set.rc == 0
         fail_msg: "You have rule 5.4.2.4 enabled this requires that you have a root password set"
         success_msg: "You have a root password set"
 

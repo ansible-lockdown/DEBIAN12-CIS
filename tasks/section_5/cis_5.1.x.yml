@@ -33,7 +33,7 @@
       ansible.builtin.find:
         paths: /etc/ssh
         patterns: 'ssh_host_*_key'
-      register: deb12cis_5_1_2_ssh_host_priv_keys
+      register: discovered_ssh_host_priv_keys
 
     - name: "5.1.2 | PATCH | Ensure permissions on sshd private host key files are configured | Set permissions"
       ansible.builtin.file:
@@ -42,7 +42,7 @@
         group: root
         mode: 'o-x,go-rwx'
       with_items:
-        - "{{ deb12cis_5_1_2_ssh_host_priv_keys.files }}"
+        - "{{ discovered_ssh_host_priv_keys.files }}"
       loop_control:
         label: "{{ item.path }}"
 
@@ -62,7 +62,7 @@
       ansible.builtin.find:
         paths: /etc/ssh
         patterns: 'ssh_host_*_key.pub'
-      register: deb12cis_5_1_3_ssh_host_pub_keys
+      register: discovered_ssh_host_pub_keys
 
     - name: "5.1.3 | PATCH | Ensure permissions on sshd public host key files are configured | Set permissions"
       ansible.builtin.file:
@@ -71,7 +71,7 @@
         group: root
         mode: 'u-x,go-wx'
       with_items:
-        - "{{ deb12cis_5_1_3_ssh_host_pub_keys.files }}"
+        - "{{ discovered_ssh_host_pub_keys.files }}"
       loop_control:
         label: "{{ item.path }}"
 

@@ -187,24 +187,24 @@
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
       failed_when: false
       changed_when: false
-      register: deb12_7_1_11_perms_results
+      register: discovered_worldwriteable_files
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
       when:
-        - deb12_7_1_11_perms_results.stdout_lines is defined
-        - deb12_7_1_11_perms_results.stdout_lines | length > 0
+        - discovered_worldwriteable_files.stdout_lines is defined
+        - discovered_worldwriteable_files.stdout_lines | length > 0
         - deb12cis_no_world_write_adjust
       ansible.builtin.file:
         path: '{{ item }}'
         mode: 'o-w'
         state: touch
-      loop: "{{ deb12_7_1_11_perms_results.stdout_lines }}"
+      loop: "{{ discovered_worldwriteable_files.stdout_lines }}"
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable directories add sticky bit"
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -o+w ! -perm -1002 2>/dev/null | xargs chmod a+t
-      failed_when: deb12cis_set_stickybit.rc not in [ 0, 123 ]
-      changed_when: deb12cis_set_stickybit.rc == 0
-      register: deb12cis_set_stickybit
+      failed_when: discovered_set_stickybit.rc not in [ 0, 123 ]
+      changed_when: discovered_set_stickybit.rc == 0
+      register: discovered_set_stickybit
 
 - name: "7.1.12 | PATCH | Ensure no files or directories without an owner and a group exist"
   when:

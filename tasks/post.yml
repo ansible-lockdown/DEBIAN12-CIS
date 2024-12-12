@@ -20,7 +20,6 @@
     owner: root
     group: root
     mode: 'u-x,go-rwx'
-  register: sysctl_updated
   notify: Reload sysctl
   loop:
     - 60-kernel_sysctl.conf

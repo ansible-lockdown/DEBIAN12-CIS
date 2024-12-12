@@ -65,16 +65,16 @@
       become: true
       changed_when: false
       failed_when: false
-      register: deb12cis_5_2_4_nopasswd
+      register: discovered_sudo_nopasswd
 
     - name: "5.2.4 | PATCH | Ensure users must provide password for escalation"
-      when: deb12cis_5_2_4_nopasswd.std | length > 0
+      when: discovered_sudo_nopasswd.std | length > 0
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: '^((?!#|{% for name in deb12cis_sudoers_exclude_nopasswd_list %}{{ name }}{% if not loop.last -%}|{%- endif -%}{% endfor %}).*)NOPASSWD(.*)'
         replace: '\1PASSWD\2'
         validate: '/usr/sbin/visudo -cf %s'
-      loop: "{{ deb12cis_5_2_4_nopasswd.stdout_lines }}"
+      loop: "{{ discovered_sudo_nopasswd.stdout_lines }}"
 
 - name: "5.2.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
   when:
@@ -92,16 +92,16 @@
       become: true
       changed_when: false
       failed_when: false
-      register: deb12cis_5_2_4_authenticate
+      register: discovered_sudo_reauthenticate
 
     - name: "5.2.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
-      when: deb12cis_5_2_4_authenticate.stdout | length > 0
+      when: discovered_sudo_reauthenticate.stdout | length > 0
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: '^([^#].*)!authenticate(.*)'
         replace: '\1authenticate\2'
         validate: '/usr/sbin/visudo -cf %s'
-      loop: "{{ deb12cis_5_2_4_authenticate.stdout_lines }}"
+      loop: "{{ discovered_sudo_reauthenticate.stdout_lines }}"
 
 - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly"
   when:
@@ -118,7 +118,7 @@
       ansible.builtin.shell: grep -is 'timestamp_timeout' /etc/sudoers /etc/sudoers.d/* | cut -d":" -f1 | uniq | sort
       changed_when: false
       failed_when: false
-      register: deb12cis_5_2_6_timeout_files
+      register: discovered_sudo_timeout_files
 
     - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if no results"
       ansible.builtin.lineinfile:
@@ -126,7 +126,7 @@
         regexp: 'Defaults timestamp_timeout='
         line: "Defaults timestamp_timeout={{ deb12cis_sudo_timestamp_timeout }}"
         validate: '/usr/sbin/visudo -cf %s'
-      when: deb12cis_5_2_6_timeout_files.stdout | length == 0
+      when: discovered_sudo_timeout_files.stdout | length == 0
 
     - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if has results"
       ansible.builtin.replace:
@@ -134,8 +134,8 @@
         regexp: 'timestamp_timeout=(\d+)'
         replace: "timestamp_timeout={{ deb12cis_sudo_timestamp_timeout }}"
         validate: '/usr/sbin/visudo -cf %s'
-      loop: "{{ deb12cis_5_2_6_timeout_files.stdout_lines }}"
-      when: deb12cis_5_2_6_timeout_files.stdout | length > 0
+      loop: "{{ discovered_sudo_timeout_files.stdout_lines }}"
+      when: discovered_sudo_timeout_files.stdout | length > 0
 
 - name: "5.2.7 | PATCH | Ensure access to the su command is restricted"
   when:
@@ -153,7 +153,7 @@
       ansible.builtin.group:
         name: "{{ deb12cis_sugroup }}"
         state: present
-      register: deb12cis_5_2_7_sugroup
+      register: discovered_sugroup
 
     - name: "5.2.7 | PATCH | Ensure access to the su command is restricted | remove users from group"
       ansible.builtin.lineinfile:
