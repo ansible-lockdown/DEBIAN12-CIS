@@ -162,6 +162,7 @@
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d
     state: directory
+    mode: 'u+x,go-w'
 
 # Carry out here to ensure conf file etc exist
 - name: "PRELIM | PATCH | Configure System Accounting (auditd)"

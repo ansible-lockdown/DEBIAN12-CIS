@@ -43,6 +43,7 @@
         path: /etc/modprobe.d/{{ item }}.conf
         regexp: '^(#)?install true(\\s|$)'
         line: install {{ item }} true
+        mode: 'u-x,go-wx'
         create: true
       loop: "{{ prelim_wireless_modules.stdout_lines }}"
 

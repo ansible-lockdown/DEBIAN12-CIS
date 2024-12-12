@@ -98,7 +98,8 @@
         - discovered_warn_days.stdout_lines | length > 0
         - item in prelim_interactive_usernames.stdout
         - deb12cis_force_user_warnage
-      ansible.builtin.shell: "chage --warndays {{ deb12cis_pass['warn_age'] }} {{ item }}"
+      ansible.builtin.command: "chage --warndays {{ deb12cis_pass['warn_age'] }} {{ item }}"
+      changed_when: true
       loop: "{{ discovered_warn_days.stdout_lines }}"
 
 - name: "5.4.1.4 | PATCH | Ensure strong password hashing algorithm is configured"
@@ -134,18 +135,20 @@
       register: deb12cis_5_4_1_5_inactive_settings
 
     - name: "5.4.1.5 | PATCH | Ensure inactive password lock is configured | Set default inactive setting"
-      ansible.builtin.shell: useradd -D -f {{ deb12cis_inactivelock_lock_days }}
       when: deb12cis_5_4_1_5_inactive_settings.stdout | length == 0
+      ansible.builtin.command: useradd -D -f {{ deb12cis_inactivelock_lock_days }}
+      changed_when: true
 
     - name: "5.4.1.5 | AUDIT | Ensure inactive password lock is 30 days or less | Getting user list"
-      ansible.builtin.shell: "awk -F: '/^[^#:]+:[^\\!\\*:]*:[^:]*:[^:]*:[^:]*:[^:]*:(\\s*|-1|3[1-9]|[4-9][0-9]|[1-9][0-9][0-9]+):[^:]*:[^:]*\\s*$/ {print $1}' /etc/shadow"
+      ansible.builtin.command: "awk -F: '/^[^#:]+:[^\\!\\*:]*:[^:]*:[^:]*:[^:]*:[^:]*:(\\s*|-1|3[1-9]|[4-9][0-9]|[1-9][0-9][0-9]+):[^:]*:[^:]*\\s*$/ {print $1}' /etc/shadow"
       changed_when: false
       check_mode: false
       register: deb12cis_5_4_1_5_user_list
 
     - name: "5.4.1.5 | PATCH | Ensure inactive password lock is 30 days or less | Apply Inactive setting to existing accounts"
       when: item in prelim_interactive_usernames.stdout
-      ansible.builtin.shell: chage --inactive {{ deb12cis_inactivelock_lock_days }} "{{ item }}"
+      ansible.builtin.command: chage --inactive {{ deb12cis_inactivelock_lock_days }} "{{ item }}"
+      changed_when: true
       loop: "{{ deb12cis_5_4_1_5_user_list.stdout_lines }}"
 
 - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past"
@@ -189,8 +192,9 @@
         - not deb12cis_futurepwchgdate_autofix
 
     - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Fix accounts with pw change in the future"
-      ansible.builtin.shell: passwd --expire {{ item }}
       when:
         - deb12cis_5_4_1_5_user_list.stdout | length > 0
         - deb12cis_futurepwchgdate_autofix
+      ansible.builtin.command: passwd --expire {{ item }}
+      changed_when: true
       loop: "{{ deb12cis_5_4_1_6_user_list.stdout_lines }}"

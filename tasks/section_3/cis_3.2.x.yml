@@ -18,6 +18,7 @@
         regexp: '^(#)?install dccp(\\s|$)'
         line: "{{ item }}"
         create: true
+        mode: 'u-x,go-wx'
       loop:
         - install dccp /bin/true
         - blacklist dccp
@@ -48,6 +49,7 @@
         regexp: '^(#)?install tipc(\\s|$)'
         line: "{{ item }}"
         create: true
+        mode: 'u-x,go-wx'
       loop:
         - install tipc /bin/true
         - blacklist tipc
@@ -78,6 +80,7 @@
         regexp: '^(#)?install rds(\\s|$)'
         line: "{{ item }}"
         create: true
+        mode: 'u-x,go-wx'
       loop:
         - install rds /bin/true
         - blacklist rds
@@ -108,6 +111,7 @@
         regexp: '^(#)?install sctp(\\s|$)'
         line: "{{ item }}"
         create: true
+        mode: 'u-x,go-wx'
       loop:
         - install sctp /bin/true
         - blacklist sctp

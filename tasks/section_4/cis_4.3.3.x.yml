@@ -126,14 +126,14 @@
     warn_control_id: '4.3.3.4'
   block:
     - name: "4.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Get list of open ports"
-      ansible.builtin.shell: ss -6tuln
+      ansible.builtin.command: ss -6tuln
       changed_when: false
       failed_when: false
       check_mode: false
       register: deb12cis_4_3_3_4_open_ports
 
     - name: "4.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Get list of rules"
-      ansible.builtin.shell: ip6tables -L INPUT -v -n
+      ansible.builtin.command: ip6tables -L INPUT -v -n
       changed_when: false
       failed_when: false
       check_mode: false

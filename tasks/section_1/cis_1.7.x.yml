@@ -31,13 +31,14 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
+  notify: Update dconf
   block:
     - name: "1.7.2 | PATCH | Ensure GDM login banner is configured | make directory"
       ansible.builtin.file:
         path: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d"
         owner: root
         group: root
-        mode: '0755'
+        mode: 'u+x,go-w'
         state: directory
 
     - name: "1.7.2 | PATCH | Ensure GDM login banner is configured | banner settings"
@@ -49,12 +50,11 @@
         create: true
         owner: root
         group: root
-        mode: '0644'
+        mode: 'u-x,gw-wx'
         loop:
           - { regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF }
           - { regexp: 'banner-message-enable', line: 'banner-message-enable=true', insertafter: '\[org\/gnome\/login-screen\]'}
           - { regexp: 'banner-message-text', line: "banner-message-text='{{ deb12cis_warning_banner | regex_replace('\n', ' ') | trim }}'", insertafter: 'banner-message-enable' }
-  notify: Update dconf
 
 - name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled"
   when:
@@ -71,6 +71,7 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
+  notify: Update dconf
   block:
     - name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled | make directories"
       ansible.builtin.file:
@@ -111,7 +112,6 @@
         - { regexp: '^user-db:user', line: 'user-db:user', insertafter: EOF }
         - { regexp: '^system-db:{{ deb12cis_dconf_db_name }}', line: 'system-db:{{ deb12cis_dconf_db_name }}', insertafter: 'user-db:user'}
         - { regexp: '^file-db:/usr/share/gdm/greeter-dconf-defaults', line: 'file-db:/usr/share/gdm/greeter-dconf-defaults', insertafter: 'system-db:{{ deb12cis_dconf_db_name }}'}
-  notify: Update dconf
 
 - name: "1.7.4 | PATCH | Ensure GDM screen locks when the user is idle"
   when:
@@ -131,6 +131,7 @@
         line: "{{ item.line }}"
         insertafter: "{{ item.after | default(omit) }}"
         create: true
+        mode: 'go-wx'
       loop:
         - { regexp: 'user-db:user', line: 'user-db:user' }
         - { regexp: 'system-db:{{ deb12cis_dconf_db_name }}', line: 'system-db:{{ deb12cis_dconf_db_name }}', after: '^user-db.*' }

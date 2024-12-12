@@ -15,7 +15,7 @@
     warn_control_id: '1.1.2.2.1'
   block:
     - name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition | check exists"
-      ansible.builtin.shell: mount -l | grep -w /dev/shm
+      ansible.builtin.command: findmnt -kn "{{ required_mount }}"
       changed_when: false
       register: deb12cis_1_1_2_2_1_mount_check
 

@@ -107,7 +107,7 @@
     - NIST800-53R5_CM-6
   block:
     - name: "1.5.4 | PATCH | Ensure prelink is not installed | Restore binaries to normal"
-      ansible.builtin.shell: prelink -ua
+      ansible.builtin.command: prelink -ua
       changed_when: false
       failed_when: false
 
