@@ -498,6 +498,15 @@ deb12cis_rule_7_2_10: true
 
 ## Section 1 vars
 
+## Control 1.1.1.8
+# We have found that some systems may have UAS kernel running and if it is
+# usb-storage will fail to be removed which is control 1.1.1.8. By default This
+# is set to false. By having this set to false control 1.1.1.8 will run but if UAS
+# Is loaded you will receive a warning message instead of usb-storage being removed
+# and the playbook will have to be re-run with this switch set to true.
+# Default: false
+deb12cis_uas_remove: false
+
 ## Ability to enabe debug on mounts to assist in troubleshooting
 # Mount point changes are set based upon facts created in Prelim
 # these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.

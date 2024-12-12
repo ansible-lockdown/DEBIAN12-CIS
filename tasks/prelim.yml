@@ -258,3 +258,45 @@
     - always
   ansible.builtin.package_facts:
     manager: auto
+
+- name: "Optional | PATCH | Check for UAS running for usb-storage"
+  when:
+    - deb12cis_rule_1_1_1_8
+  tags:
+    - level1-server
+    - level2-workstation
+    - patch
+    - always
+  block:
+    - name: "Optional | AUDIT | Check if UAS kernel module is running"
+      ansible.builtin.shell: "lsmod | grep uas"
+      changed_when: false
+      failed_when: false
+      ignore_errors: true
+      register: discovered_uas_status
+
+    - name: "Optional | PATCH | Remove UAS kernel module if running and not allowed"
+      when:
+        - discovered_uas_status.rc == 0
+        - deb12cis_uas_remove
+      notify: Update_Initramfs
+      block:
+        - name: "Optional | PATCH | Set UAS config"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/uas.conf
+            regexp: '^install uas'
+            line: 'install uas /bin/true'
+            create: true
+            mode: 'u-x,go-rwx'
+
+        - name: "Optional | PATCH | Blacklist uas"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            line: 'blacklist uas'
+            insertafter: EOF
+
+        - name: "Optional | PATCH | Remove uas module"
+          when: not system_is_container
+          community.general.modprobe:
+            name: uas
+            state: absent
