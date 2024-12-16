@@ -1,8 +1,7 @@
 ---
 
 - name: "6.2.1.1.1 | PATCH | Ensure journald service is enabled and active"
-  when:
-    - deb12cis_rule_6_2_1_1_1
+  when: deb12cis_rule_6_2_1_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -18,8 +17,7 @@
     state: started
 
 - name: "6.2.1.1.2 | PATCH | Ensure journald log file access is configured"
-  when:
-    - deb12cis_rule_6_2_1_1_2
+  when: deb12cis_rule_6_2_1_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -66,8 +64,7 @@
         warn_control_id: '6.2.1.1.2'
 
 - name: "6.2.1.1.3 | PATCH | Ensure journald log file rotation is configured"
-  when:
-    - deb12cis_rule_6_2_1_1_3
+  when: deb12cis_rule_6_2_1_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -100,8 +97,7 @@
         - '^(\s*MaxFileSec\s*=.*)'
 
 - name: "6.2.1.1.4 | PATCH | Ensure journald ForwardToSyslog is disabled"
-  when:
-    - deb12cis_rule_6_2_1_1_4
+  when: deb12cis_rule_6_2_1_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -128,8 +124,7 @@
         replace: '#\1'
 
 - name: "6.2.1.1.5 | PATCH | Ensure journald Storage is configured"
-  when:
-    - deb12cis_rule_6_2_1_1_5
+  when: deb12cis_rule_6_2_1_1_5
   tags:
     - level1-server
     - level1-workstation
@@ -155,8 +150,7 @@
         replace: '#\1'
 
 - name: "6.2.1.1.6 | PATCH | Ensure journald Compress is configured"
-  when:
-    - deb12cis_rule_6_2_1_1_6
+  when: deb12cis_rule_6_2_1_1_6
   tags:
     - level1-server
     - level1-workstation

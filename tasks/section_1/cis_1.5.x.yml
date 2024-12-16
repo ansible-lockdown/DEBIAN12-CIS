@@ -1,8 +1,7 @@
 ---
 
 - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
-  when:
-    - deb12cis_rule_1_5_1
+  when: deb12cis_rule_1_5_1
   tags:
     - level1-server
     - level1-workstation
@@ -20,8 +19,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
 
 - name: "1.5.2 | PATCH | Ensure ptrace_scope is restricted"
-  when:
-    - deb12cis_rule_1_5_2
+  when: deb12cis_rule_1_5_2
   tags:
     - level1-server
     - level1-workstation
@@ -39,8 +37,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
 
 - name: "1.5.3 | PATCH | Ensure core dumps are restricted"
-  when:
-    - deb12cis_rule_1_5_3
+  when: deb12cis_rule_1_5_3
   tags:
     - level1-server
     - level1-workstation
@@ -93,9 +90,7 @@
         - { regexp: '^ProcessSizeMax', line: 'ProcessSizeMax=0' }
 
 - name: "1.5.4 | PATCH | Ensure prelink is not installed"
-  when:
-    - deb12cis_rule_1_5_4
-    - "'prelink' in ansible_facts.packages"
+  when: deb12cis_rule_1_5_4
   tags:
     - level1-server
     - level1-workstation

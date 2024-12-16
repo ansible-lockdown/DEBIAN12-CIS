@@ -1,8 +1,7 @@
 ---
 
 - name: "5.4.1.1 | PATCH | Ensure password expiration is configured"
-  when:
-    - deb12cis_rule_5_4_1_1
+  when: deb12cis_rule_5_4_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -38,8 +37,7 @@
       loop: "{{ discovered_max_days.stdout_lines }}"
 
 - name: "5.4.1.2 | PATCH | Ensure minimum password days is configured"
-  when:
-    - deb12cis_rule_5_4_1_2
+  when: deb12cis_rule_5_4_1_2
   tags:
     - level2-server
     - level2-workstation
@@ -71,8 +69,7 @@
       loop: "{{ discovered_min_days.stdout_lines }}"
 
 - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured"
-  when:
-    - deb12cis_rule_5_4_1_3
+  when: deb12cis_rule_5_4_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -103,8 +100,7 @@
       loop: "{{ discovered_warn_days.stdout_lines }}"
 
 - name: "5.4.1.4 | PATCH | Ensure strong password hashing algorithm is configured"
-  when:
-    - deb12cis_rule_5_4_1_4
+  when: deb12cis_rule_5_4_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -118,8 +114,7 @@
     line: 'ENCRYPT_METHOD {{ deb12cis_passwd_hash_algo | upper }}'
 
 - name: "5.4.1.5 | PATCH | Ensure inactive password lock is configured"
-  when:
-    - deb12cis_rule_5_4_1_5
+  when: deb12cis_rule_5_4_1_5
   tags:
     - level1-server
     - level1-workstation
@@ -152,8 +147,7 @@
       loop: "{{ discovered_passwd_inactive_user_list.stdout_lines }}"
 
 - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past"
-  when:
-    - deb12cis_rule_5_4_1_6
+  when: deb12cis_rule_5_4_1_6
   tags:
     - level1-server
     - level1-workstation
@@ -178,18 +172,18 @@
       register: discovered_passwd_inactive_user_list
 
     - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | Alert on accounts with pw change in the future"
+      when:
+        - discovered_passwd_inactive_user_list.stdout | length > 0
+        - not deb12cis_futurepwchgdate_autofix
       ansible.builtin.debug:
         msg: "Warning!! The following accounts have the last PW change date in the future: {{ discovered_passwd_inactive_user_list.stdout_lines }}"
-      when:
-        - discovered_passwd_inactive_user_list.stdout | length > 0
-        - not deb12cis_futurepwchgdate_autofix
 
     - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | warning count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
       when:
         - discovered_passwd_inactive_user_list.stdout | length > 0
         - not deb12cis_futurepwchgdate_autofix
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
 
     - name: "5.4.1.6 | PATCH | Ensure all users last password change date is in the past | Fix accounts with pw change in the future"
       when:

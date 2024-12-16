@@ -33,8 +33,7 @@
 
 # Adding the allow OpenSSH rule while enabling ufw to allow ansible to run after enabling
 - name: "4.1.3 | PATCH | Ensure ufw service is enabled"
-  when:
-    - deb12cis_rule_4_1_3
+  when: deb12cis_rule_4_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -56,8 +55,7 @@
         state: started
 
 - name: "4.1.4 | PATCH | Ensure loopback traffic is configured"
-  when:
-    - deb12cis_rule_4_1_4
+  when: deb12cis_rule_4_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -96,8 +94,7 @@
       notify: Reload ufw
 
 - name: "4.1.5 | PATCH | Ensure ufw outbound connections are configured"
-  when:
-    - deb12cis_rule_4_1_5
+  when: deb12cis_rule_4_1_5
   tags:
     - level1-server
     - level1-workstation
@@ -124,8 +121,7 @@
       notify: Reload ufw
 
 - name: "4.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports"
-  when:
-    - deb12cis_rule_4_1_6
+  when: deb12cis_rule_4_1_6
   tags:
     - level1-server
     - level1-workstation
@@ -165,8 +161,7 @@
         file: warning_facts.yml
 
 - name: "4.1.7 | PATCH | Ensure ufw default deny firewall policy"
-  when:
-    - deb12cis_rule_4_1_7
+  when: deb12cis_rule_4_1_7
   tags:
     - level1-server
     - level1-workstation

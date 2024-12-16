@@ -51,10 +51,10 @@
         owner: root
         group: root
         mode: 'u-x,gw-wx'
-        loop:
-          - { regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF }
-          - { regexp: 'banner-message-enable', line: 'banner-message-enable=true', insertafter: '\[org\/gnome\/login-screen\]'}
-          - { regexp: 'banner-message-text', line: "banner-message-text='{{ deb12cis_warning_banner | regex_replace('\n', ' ') | trim }}'", insertafter: 'banner-message-enable' }
+      loop:
+        - { regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF }
+        - { regexp: 'banner-message-enable', line: 'banner-message-enable=true', insertafter: '\[org\/gnome\/login-screen\]'}
+        - { regexp: 'banner-message-text', line: "banner-message-text='{{ deb12cis_warning_banner | regex_replace('\n', ' ') | trim }}'", insertafter: 'banner-message-enable' }
 
 - name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled"
   when:

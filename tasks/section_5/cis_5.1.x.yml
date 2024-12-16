@@ -1,8 +1,7 @@
 ---
 
 - name: "5.1.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
-  when:
-    - deb12cis_rule_5_1_1
+  when: deb12cis_rule_5_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -18,8 +17,7 @@
     mode: 'u-x,go-rwx'
 
 - name: "5.1.2 | PATCH | Ensure permissions on sshd private host key files are configured"
-  when:
-    - deb12cis_rule_5_1_2
+  when: deb12cis_rule_5_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -47,8 +45,7 @@
         label: "{{ item.path }}"
 
 - name: "5.1.3 | PATCH | Ensure permissions on sshd public host key files are configured"
-  when:
-    - deb12cis_rule_5_1_3
+  when: deb12cis_rule_5_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -76,8 +73,7 @@
         label: "{{ item.path }}"
 
 - name: "5.1.4 | PATCH | Ensure sshd access is configured"
-  when:
-    - deb12cis_rule_5_1_4
+  when: deb12cis_rule_5_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -124,8 +120,7 @@
       notify: Restart sshd
 
 - name: "5.1.5 | PATCH | Ensure sshd Banner is configured"
-  when:
-    - deb12cis_rule_5_1_5
+  when: deb12cis_rule_5_1_5
   tags:
     - level1-server
     - level1-workstation
@@ -146,8 +141,7 @@
   notify: Restart sshd
 
 - name: "5.1.6 | PATCH | Ensure only strong Ciphers are used"
-  when:
-    - deb12cis_rule_5_1_6
+  when: deb12cis_rule_5_1_6
   tags:
     - level1-server
     - level1-workstation
@@ -164,8 +158,7 @@
   notify: Restart sshd
 
 - name: "5.1.7 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured"
-  when:
-    - deb12cis_rule_5_1_7
+  when: deb12cis_rule_5_1_7
   tags:
     - level1-server
     - level1-workstation
@@ -188,8 +181,7 @@
   notify: Restart sshd
 
 - name: "5.1.8 | PATCH | Ensure sshd DisableForwarding is enabled"
-  when:
-    - deb12cis_rule_5_1_8
+  when: deb12cis_rule_5_1_8
   tags:
     - level2-server
     - level1-workstation
@@ -205,8 +197,7 @@
   notify: Restart sshd
 
 - name: "5.1.9 | PATCH | Ensure sshd GSSAPIAuthentication is  is disabled"
-  when:
-    - deb12cis_rule_5_1_9
+  when: deb12cis_rule_5_1_9
   tags:
     - level2-server
     - level1-workstation
@@ -226,8 +217,7 @@
   notify: Restart sshd
 
 - name: "5.1.10 | PATCH | Ensure sshd HostbasedAuthentication is disabled"
-  when:
-    - deb12cis_rule_5_1_10
+  when: deb12cis_rule_5_1_10
   tags:
     - level1-server
     - level1-workstation
@@ -247,8 +237,7 @@
   notify: Restart sshd
 
 - name: "5.1.11 | PATCH | Ensure sshd IgnoreRhosts is enabled"
-  when:
-    - deb12cis_rule_5_1_11
+  when: deb12cis_rule_5_1_11
   tags:
     - level1-server
     - level1-workstation
@@ -268,8 +257,7 @@
   notify: Restart sshd
 
 - name: "5.1.12 | PATCH | Ensure sshd Kexslgorithms is configured"
-  when:
-    - deb12cis_rule_5_1_12
+  when: deb12cis_rule_5_1_12
   tags:
     - level1-server
     - level1-workstation
@@ -286,8 +274,7 @@
   notify: Restart sshd
 
 - name: "5.1.13 | PATCH | Ensure sshd LoginGraceTime is configured"
-  when:
-    - deb12cis_rule_5_1_13
+  when: deb12cis_rule_5_1_13
   tags:
     - level1-server
     - level1-workstation
@@ -304,8 +291,7 @@
   notify: Restart sshd
 
 - name: "5.1.14 | PATCH | Ensure sshd LogLevel is configured"
-  when:
-    - deb12cis_rule_5_1_14
+  when: deb12cis_rule_5_1_14
   tags:
     - level1-server
     - level1-workstation
@@ -324,8 +310,7 @@
   notify: Restart sshd
 
 - name: "5.1.15 | PATCH | Ensure sshd MACs are configured"
-  when:
-    - deb12cis_rule_5_1_15
+  when: deb12cis_rule_5_1_15
   tags:
     - level1-server
     - level1-workstation
@@ -346,8 +331,7 @@
   notify: Restart sshd
 
 - name: "5.1.16 | PATCH | Ensure sshd MaxAuthTries is set to 4 or less"
-  when:
-    - deb12cis_rule_5_1_16
+  when: deb12cis_rule_5_1_16
   tags:
     - level1-server
     - level1-workstation
@@ -364,8 +348,7 @@
   notify: Restart sshd
 
 - name: "5.1.17 | PATCH | Ensure sshd MaxSessions is configured"
-  when:
-    - deb12cis_rule_5_1_17
+  when: deb12cis_rule_5_1_17
   tags:
     - level1-server
     - level1-workstation
@@ -386,8 +369,7 @@
   notify: Restart sshd
 
 - name: "5.1.18 | PATCH | Ensure sshd MaxStartups is configured"
-  when:
-    - deb12cis_rule_5_1_18
+  when: deb12cis_rule_5_1_18
   tags:
     - level1-server
     - level1-workstation
@@ -407,8 +389,7 @@
   notify: Restart sshd
 
 - name: "5.1.19 | PATCH | Ensure sshd PermitEmptyPasswords is disabled"
-  when:
-    - deb12cis_rule_5_1_19
+  when: deb12cis_rule_5_1_19
   tags:
     - level1-server
     - level1-workstation
@@ -429,8 +410,7 @@
   notify: Restart sshd
 
 - name: "5.1.20 | PATCH | Ensure sshd PermitRootLogin is disabled"
-  when:
-    - deb12cis_rule_5_1_20
+  when: deb12cis_rule_5_1_20
   tags:
     - level1-server
     - level1-workstation
@@ -446,8 +426,7 @@
   notify: Restart sshd
 
 - name: "5.1.21 | PATCH | Ensure sshd PermitUserEnvironment is disabled"
-  when:
-    - deb12cis_rule_5_1_21
+  when: deb12cis_rule_5_1_21
   tags:
     - level1-server
     - level1-workstation
@@ -467,8 +446,7 @@
   notify: Restart sshd
 
 - name: "5.1.22 | PATCH | Ensure sshd UsePAM is enabled"
-  when:
-    - deb12cis_rule_5_1_22
+  when: deb12cis_rule_5_1_22
   tags:
     - level1-server
     - level1-workstation

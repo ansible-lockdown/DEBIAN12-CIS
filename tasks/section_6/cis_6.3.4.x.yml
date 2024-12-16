@@ -24,8 +24,7 @@
     group: root
 
 - name: "6.3.4.4 | PATCH | Ensure the audit log file directory mode is configured"
-  when:
-    - deb12cis_rule_6_3_4_4
+  when: deb12cis_rule_6_3_4_4
   tags:
     - level2-server
     - level2-workstation
@@ -39,8 +38,7 @@
     mode: 'g-w,o-rwx'
 
 - name: "6.3.4.5 | PATCH | Ensure audit configuration files mode is configured"
-  when:
-    - deb12cis_rule_6_3_4_5
+  when: deb12cis_rule_6_3_4_5
   tags:
     - level2-server
     - level2-workstation
@@ -58,8 +56,7 @@
     label: "{{ item.path }}"
 
 - name: "6.3.4.6 | PATCH | Ensure audit configuration files are owned by root"
-  when:
-    - deb12cis_rule_6_3_4_6
+  when: deb12cis_rule_6_3_4_6
   tags:
     - level2-server
     - level2-workstation
@@ -75,8 +72,7 @@
     label: "{{ item.path }}"
 
 - name: "6.3.4.7 | PATCH | Ensure audit configuration files belong to group root"
-  when:
-    - deb12cis_rule_6_3_4_7
+  when: deb12cis_rule_6_3_4_7
   tags:
     - level2-server
     - level2-workstation
@@ -92,8 +88,7 @@
     label: "{{ item.path }}"
 
 - name: "6.3.4.8 | PATCH | Ensure audit tools mode is configured"
-  when:
-    - deb12cis_rule_6_3_4_8
+  when: deb12cis_rule_6_3_4_8
   tags:
     - level2-server
     - level2-workstation
@@ -107,8 +102,7 @@
   loop: "{{ audit_bins }}"
 
 - name: "6.3.4.9 | PATCH | Ensure audit tools are owned by root"
-  when:
-    - deb12cis_rule_6_3_4_9
+  when: deb12cis_rule_6_3_4_9
   tags:
     - level2-server
     - level2-workstation
@@ -122,8 +116,7 @@
   loop: "{{ audit_bins }}"
 
 - name: "6.3.4.10 | PATCH | Ensure audit tools belong to group root"
-  when:
-    - deb12cis_rule_6_3_4_10
+  when: deb12cis_rule_6_3_4_10
   tags:
     - level2-server
     - level2-workstation

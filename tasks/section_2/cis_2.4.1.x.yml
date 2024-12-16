@@ -1,8 +1,7 @@
 ---
 
 - name: "2.4.1.1 | PATCH | Ensure cron daemon is enabled and active"
-  when:
-    - deb12cis_rule_2_4_1_1
+  when: deb12cis_rule_2_4_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -20,8 +19,7 @@
     enabled: true
 
 - name: "2.4.1.2 | PATCH | Ensure permissions on /etc/crontab are configured"
-  when:
-    - deb12cis_rule_2_4_1_2
+  when: deb12cis_rule_2_4_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -37,8 +35,7 @@
     mode: 'u-x,go-rwx'
 
 - name: "2.4.1.3 | PATCH | Ensure permissions on /etc/cron.hourly are configured"
-  when:
-    - deb12cis_rule_2_4_1_3
+  when: deb12cis_rule_2_4_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -54,8 +51,7 @@
     mode: 'u+x,go-rwx'
 
 - name: "2.4.1.4 | PATCH | Ensure permissions on /etc/cron.daily are configured"
-  when:
-    - deb12cis_rule_2_4_1_4
+  when: deb12cis_rule_2_4_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -71,8 +67,7 @@
     mode: 'u+x,go-rwx'
 
 - name: "2.4.1.5 | PATCH | Ensure permissions on /etc/cron.weekly are configured"
-  when:
-    - deb12cis_rule_2_4_1_5
+  when: deb12cis_rule_2_4_1_5
   tags:
     - level1-server
     - level1-workstation
@@ -88,8 +83,7 @@
     mode: 'u+x,go-rwx'
 
 - name: "2.4.1.6 | PATCH | Ensure permissions on /etc/cron.monthly are configured"
-  when:
-    - deb12cis_rule_2_4_1_6
+  when: deb12cis_rule_2_4_1_6
   tags:
     - level1-server
     - level1-workstation
@@ -105,8 +99,7 @@
     mode: 'u+x,go-rwx'
 
 - name: "2.4.1.7 | PATCH | Ensure permissions on /etc/cron.d are configured"
-  when:
-    - deb12cis_rule_2_4_1_7
+  when: deb12cis_rule_2_4_1_7
   tags:
     - level1-server
     - level1-workstation

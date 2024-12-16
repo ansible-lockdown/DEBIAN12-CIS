@@ -28,8 +28,7 @@
       notify: Pam_auth_update_pwunix
 
 - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember"
-  when:
-    - deb12cis_rule_5_3_3_4_2
+  when: deb12cis_rule_5_3_3_4_2
   tags:
     - level1-server
     - level1-workstation
@@ -53,8 +52,7 @@
       notify: Pam_auth_update_pwunix
 
 - name: "5.3.3.4.3 | PATCH | Ensure pam_unix includes a strong password hashing algorithm"
-  when:
-    - deb12cis_rule_5_3_3_4_3
+  when: deb12cis_rule_5_3_3_4_3
   tags:
     - level1-server
     - level1-workstation
@@ -78,8 +76,7 @@
       notify: Pam_auth_update_pwunix
 
 - name: "5.3.3.4.4 | PATCH | Ensure pam_unix includes use_authtok"
-  when:
-    - deb12cis_rule_5_3_3_4_4
+  when: deb12cis_rule_5_3_3_4_4
   tags:
     - level1-server
     - level1-workstation
