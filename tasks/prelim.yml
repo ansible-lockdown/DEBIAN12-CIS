@@ -3,6 +3,14 @@
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
 
+- name: PRELIM | PATCH | Run apt update
+  when:
+    - deb12cis_rule_1_2_1_1 or
+      deb12cis_rule_1_2_2_1
+  tags: always
+  ansible.builtin.package:
+    update_cache: true
+
 - name: "PRELIM | Include audit specific variables"
   when:
     - run_audit or audit_only
