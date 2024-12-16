@@ -1,0 +1,7 @@
+## Ansible controlled file
+# Added as part of ansible-lockdown CIS baseline
+# provided by Mindpoint Group - A Tyto Athene Company
+
+{% for pool in deb12cis_time_pool %}
+pool {{ pool.name }} {{ pool.options }}
+{% endfor %}
