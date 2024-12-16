@@ -9,6 +9,8 @@
     - patch
     - rule_1.2.1.1
     - NIST800-53R5_SI-2
+  vars:
+    warn_control_id: '1.2.1.2'
   block:
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | list installed pubkey keys"
       ansible.builtin.command: "apt-key list"

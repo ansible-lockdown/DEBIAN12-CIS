@@ -498,7 +498,7 @@
         - not deb12cis_tftp_server
         - not deb12cis_tftp_mask
       ansible.builtin.package:
-        name: tftp-d-hpa
+        name: tftpd-hpa
         state: absent
 
     - name: "2.1.16 | PATCH | Ensure tftp server services are not in use | Mask service"
@@ -513,7 +513,7 @@
         masked: true
 
 - name: "2.1.17 | PATCH | Ensure web proxy server services are not in use"
-  when: deb12cis_rule_2_117
+  when: deb12cis_rule_2_1_17
   tags:
     - level1-server
     - level1-workstation
