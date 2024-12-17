@@ -177,3 +177,14 @@
     - outgoing
     - routed
   notify: Reload ufw
+
+# Added after ufw is installed and the file and base config is a prereq
+- name: "Optional | PATCH | UFW firewall force to use /etc/sysctl.conf settings"
+  when:
+    - deb12cis_rule_4_1_1
+    - deb12cis_firewall_package == "ufw"
+    - deb12cis_ufw_use_sysctl
+  ansible.builtin.lineinfile:
+    path: /etc/default/ufw
+    regexp: ^IPT_SYSCTL=.*
+    line: IPT_SYSCTL=/etc/sysctl.conf
