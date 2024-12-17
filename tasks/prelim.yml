@@ -113,6 +113,13 @@
       ansible.builtin.set_fact:
         grub2_path: /etc/grub2-efi.cfg
 
+- name: "PRELIM | PATCH | Install cron"
+  when: deb12cis_rule_2_4_1_1
+  tags: always
+  ansible.builtin.package:
+    name: cron
+    state: present
+
 - name: "PRELIM | AUDIT | Wireless adapter pre-requisites"
   when:
     - deb12cis_rule_3_1_2
