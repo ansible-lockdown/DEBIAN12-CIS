@@ -3,6 +3,14 @@
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
 
+- name: PRELIM | PATCH | Run apt update
+  when:
+    - deb12cis_rule_1_2_1_1 or
+      deb12cis_rule_1_2_2_1
+  tags: always
+  ansible.builtin.package:
+    update_cache: true
+
 - name: "PRELIM | Include audit specific variables"
   when:
     - run_audit or audit_only
@@ -58,11 +66,34 @@
     name: libselinux1
     state: present
 
-- name: "PRELIM | AUDIT | Section 1.1 | Create list of mount points"
-  tags:
-    - Always
+- name: PRELIM | AUDIT | Section 1.1 | Create list of mount points
+  tags: always
   ansible.builtin.set_fact:
-    mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+    prelim_mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+
+- name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options
+  tags: always
+  block:
+    - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - call mount  # noqa command-instead-of-module
+      ansible.builtin.shell: |
+        mount | awk '{print $1, $3, $5, $6}'
+      changed_when: false
+      register: prelim_mount_output
+
+    - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - build fact  # This is inherited and used in mountpoints tasks
+      ansible.builtin.set_fact:
+        prelim_mount_point_fs_and_options: >-
+          {%- set prelim_mount_point_fs_and_options = {} -%}
+          {%- for line in prelim_mount_output.stdout_lines -%}
+          {%- set fields = line.split() -%}
+          {%- set _ = prelim_mount_point_fs_and_options.update({fields[1]: {'src': fields[0], 'fs_type': fields[2], 'original_options': fields[3][1:-1].split(','), 'options': fields[3][1:-1].split(',')}}) -%}
+          {%- endfor -%}
+          {{ prelim_mount_point_fs_and_options }}
+
+    - name: "PRELIM | AUDIT | Debug of mount variables to assist in troubleshooting"
+      when: deb12cis_debug_mount_data
+      ansible.builtin.debug:
+        msg: "{{ prelim_mount_point_fs_and_options }}"
 
 - name: "PRELIM | AUDIT | Set facts based on boot type"
   block:
@@ -81,6 +112,13 @@
       when: prelim_efi_boot.stat.exists
       ansible.builtin.set_fact:
         grub2_path: /etc/grub2-efi.cfg
+
+- name: "PRELIM | PATCH | Install cron"
+  when: deb12cis_rule_2_4_1_1
+  tags: always
+  ansible.builtin.package:
+    name: cron
+    state: present
 
 - name: "PRELIM | AUDIT | Wireless adapter pre-requisites"
   when:
@@ -119,7 +157,7 @@
     path: "{{ deb12cis_sshd_config_file }}"
     owner: root
     group: root
-    mode: '0600'
+    mode: 'u-x,go-rwx'
     state: touch
 
 - name: "PRELIM | PATCH | 5.3.3.2.x ensure conf.d directory exists"
@@ -138,7 +176,7 @@
     path: /etc/security/pwquality.conf.d/
     owner: root
     group: root
-    mode: '0750'
+    mode: 'ug+x,g-w,o-rwx'
     state: directory
 
 - name: "PRELIM | AUDIT | Gather UID 0 accounts other than root"
@@ -162,6 +200,7 @@
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d
     state: directory
+    mode: 'u+x,go-w'
 
 # Carry out here to ensure conf file etc exist
 - name: "PRELIM | PATCH | Configure System Accounting (auditd)"
@@ -234,3 +273,45 @@
     - always
   ansible.builtin.package_facts:
     manager: auto
+
+- name: "Optional | PATCH | Check for UAS running for usb-storage"
+  when:
+    - deb12cis_rule_1_1_1_8
+  tags:
+    - level1-server
+    - level2-workstation
+    - patch
+    - always
+  block:
+    - name: "Optional | AUDIT | Check if UAS kernel module is running"
+      ansible.builtin.shell: "lsmod | grep uas"
+      changed_when: false
+      failed_when: false
+      ignore_errors: true
+      register: discovered_uas_status
+
+    - name: "Optional | PATCH | Remove UAS kernel module if running and not allowed"
+      when:
+        - discovered_uas_status.rc == 0
+        - deb12cis_uas_remove
+      notify: Update_Initramfs
+      block:
+        - name: "Optional | PATCH | Set UAS config"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/uas.conf
+            regexp: '^install uas'
+            line: 'install uas /bin/true'
+            create: true
+            mode: 'u-x,go-rwx'
+
+        - name: "Optional | PATCH | Blacklist uas"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            line: 'blacklist uas'
+            insertafter: EOF
+
+        - name: "Optional | PATCH | Remove uas module"
+          when: not system_is_container
+          community.general.modprobe:
+            name: uas
+            state: absent

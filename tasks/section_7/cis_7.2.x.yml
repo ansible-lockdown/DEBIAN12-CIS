@@ -1,8 +1,7 @@
 ---
 
 - name: "7.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords"
-  when:
-    - deb12cis_rule_7_2_1
+  when: deb12cis_rule_7_2_1
   tags:
     - level1-server
     - level1-workstation
@@ -32,8 +31,7 @@
         file: warning_facts.yml
 
 - name: "7.2.2 | PATCH | Ensure /etc/shadow password fields are not empty"
-  when:
-    - deb12cis_rule_7_2_2
+  when: deb12cis_rule_7_2_2
   tags:
     - level1-server
     - level1-workstation
@@ -58,8 +56,7 @@
         - "{{ discovered_empty_password_acct.stdout_lines }}"
 
 - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group"
-  when:
-    - deb12cis_rule_7_2_3
+  when: deb12cis_rule_7_2_3
   tags:
     - level1-server
     - level1-workstation
@@ -92,8 +89,7 @@
         file: warning_facts.yml
 
 - name: "7.2.4 | PATCH | Ensure shadow group is empty"
-  when:
-    - deb12cis_rule_7_2_4
+  when: deb12cis_rule_7_2_4
   tags:
     - level1-server
     - level1-workstation
@@ -111,18 +107,17 @@
         key: shadow
 
     - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
+      when: ansible_facts.getent_group.shadow[2] | length > 0
       ansible.builtin.debug:
         msg: "Warning!! - You have users in the shadow group"
-      when: ansible_facts.getent_group.shadow[2] | length > 0
 
     - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
+      when: ansible_facts.getent_group.shadow[2] | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
-      when: ansible_facts.getent_group.shadow[2] | length > 0
 
 - name: "7.2.5 | AUDIT | Ensure no duplicate UIDs exist"
-  when:
-    - deb12cis_rule_7_2_5
+  when: deb12cis_rule_7_2_5
   tags:
     - level1-server
     - level1-workstation
@@ -155,8 +150,7 @@
         file: warning_facts.yml
 
 - name: "7.2.6 | AUDIT | Ensure no duplicate GIDs exist"
-  when:
-    - deb12cis_rule_7_2_6
+  when: deb12cis_rule_7_2_6
   tags:
     - level1-server
     - level1-workstation
@@ -189,10 +183,7 @@
         file: warning_facts.yml
 
 - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist"
-  vars:
-    warn_control_id: '7.2.7'
-  when:
-    - deb12cis_rule_7_2_7
+  when: deb12cis_rule_7_2_7
   tags:
     - level1-server
     - level1-workstation
@@ -204,6 +195,8 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
+  vars:
+    warn_control_id: '7.2.7'
   block:
     - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist | Check for duplicate User Names"
       ansible.builtin.shell: "pwck -r | awk -F: '{if ($1 in users) print $1 ; else users[$1]}' /etc/passwd"
@@ -223,8 +216,7 @@
         file: warning_facts.yml
 
 - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist"
-  when:
-    - deb12cis_rule_7_2_8
+  when: deb12cis_rule_7_2_8
   tags:
     - level1-server
     - level1-workstation
@@ -257,8 +249,7 @@
         file: warning_facts.yml
 
 - name: "7.2.9 | PATCH | Ensure local interactive user home directories are configured"
-  when:
-    - deb12cis_rule_7_2_9
+  when: deb12cis_rule_7_2_9
   tags:
     - level1-server
     - level1-workstation
@@ -266,13 +257,13 @@
     - users
     - rule_7.2.9
   block:
-    - name: "7.2.9 | PATCH | Ensure local interactive user home directories are configured | Create dir if absent"
+    - name: "7.2.9 | PATCH | Ensure local interactive user home directories are configured | Create dir if absent"  # noqa risky-file-permissions
       ansible.builtin.file:
         path: "{{ item.dir }}"
         state: directory
         owner: "{{ item.id }}"
         group: "{{ item.gid }}"
-      loop: "{{ deb12cis_passwd | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', prelim_max_int_uid | int) | list }}"
+      loop: "{{ prelim_passwd | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', prelim_max_int_uid | int) | list }}"
       loop_control:
         label: "{{ item.id }}"
 
@@ -348,4 +339,4 @@
       ansible.builtin.file:
         path: '{{ item }}'
         mode: 'go-w'
-      with_items: "{{ discovered_homedir_dot_files.stdout_lines }}"
+      loop: "{{ discovered_homedir_dot_files.stdout_lines }}"
