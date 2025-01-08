@@ -11,7 +11,7 @@
     dest: /etc/audit/rules.d/99_auditd.rules
     owner: root
     group: root
-    mode: '0640'
+    mode: 'u-x,g-w,o-rwx'
   diff: "{{ discovered_auditd_rules_file.stat.exists }}"  # Only run diff if not a new file
   register: discovered_auditd_template_updated
   notify:
@@ -42,6 +42,6 @@
     dest: /etc/audit/rules.d/98_auditd_exceptions.rules
     owner: root
     group: root
-    mode: '0640'
+    mode: 'u-x,g-w,o-rwx'
   diff: "{{ discovered_auditd_exception_file.stat.exists }}"
   notify: Restart auditd
