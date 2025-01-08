@@ -1,8 +1,7 @@
 ---
 
 - name: "7.1.1 | PATCH | Ensure permissions on /etc/passwd are configured"
-  when:
-    - deb12cis_rule_7_1_1
+  when: deb12cis_rule_7_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -18,8 +17,7 @@
     mode: 'u-x,go-wx'
 
 - name: "7.1.2 | PATCH | Ensure permissions on /etc/passwd- are configured"
-  when:
-    - deb12cis_rule_7_1_2
+  when: deb12cis_rule_7_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -35,8 +33,7 @@
     mode: 'u-x,go-wx'
 
 - name: "7.1.3 | PATCH | Ensure permissions on /etc/group are configured"
-  when:
-    - deb12cis_rule_7_1_3
+  when: deb12cis_rule_7_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -52,8 +49,7 @@
     mode: 'u-x,go-wx'
 
 - name: "7.1.4 | PATCH | Ensure permissions on /etc/group- are configured"
-  when:
-    - deb12cis_rule_7_1_4
+  when: deb12cis_rule_7_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -69,8 +65,7 @@
     mode: 'u-x,go-wx'
 
 - name: "7.1.5 | PATCH | Ensure permissions on /etc/shadow are configured"
-  when:
-    - deb12cis_rule_7_1_5
+  when: deb12cis_rule_7_1_5
   tags:
     - level1-server
     - level1-workstation
@@ -83,11 +78,10 @@
     path: /etc/shadow
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.6 | PATCH | Ensure permissions on /etc/shadow- are configured"
-  when:
-    - deb12cis_rule_7_1_6
+  when: deb12cis_rule_7_1_6
   tags:
     - level1-server
     - level1-workstation
@@ -100,11 +94,10 @@
     path: /etc/shadow-
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.7 | PATCH | Ensure permissions on /etc/gshadow are configured"
-  when:
-    - deb12cis_rule_7_1_7
+  when: deb12cis_rule_7_1_7
   tags:
     - level1-server
     - level1-workstation
@@ -117,11 +110,10 @@
     path: /etc/gshadow
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.8 | PATCH | Ensure permissions on /etc/gshadow- are configured"
-  when:
-    - deb12cis_rule_7_1_8
+  when: deb12cis_rule_7_1_8
   tags:
     - level1-server
     - level1-workstation
@@ -134,11 +126,10 @@
     path: /etc/gshadow-
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.9 | PATCH | Ensure permissions on /etc/shells are configured"
-  when:
-    - deb12cis_rule_7_1_9
+  when: deb12cis_rule_7_1_9
   tags:
     - level1-server
     - level1-workstation
@@ -154,8 +145,7 @@
     mode: 'u-x,go-wx'
 
 - name: "7.1.10 | PATCH | Ensure permissions on /etc/security/opasswd are configured"
-  when:
-    - deb12cis_rule_7_1_10
+  when: deb12cis_rule_7_1_10
   tags:
     - level1-server
     - level1-workstation
@@ -171,8 +161,7 @@
     mode: 'u-x,go-wx'
 
 - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured"
-  when:
-    - deb12cis_rule_7_1_11
+  when: deb12cis_rule_7_1_11
   tags:
     - level1-server
     - level1-workstation
@@ -187,28 +176,27 @@
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
       failed_when: false
       changed_when: false
-      register: deb12_7_1_11_perms_results
+      register: discovered_worldwriteable_files
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
       when:
-        - deb12_7_1_11_perms_results.stdout_lines is defined
-        - deb12_7_1_11_perms_results.stdout_lines | length > 0
+        - discovered_worldwriteable_files.stdout_lines is defined
+        - discovered_worldwriteable_files.stdout_lines | length > 0
         - deb12cis_no_world_write_adjust
       ansible.builtin.file:
         path: '{{ item }}'
-        mode: o-w
+        mode: 'o-w'
         state: touch
-      loop: "{{ deb12_7_1_11_perms_results.stdout_lines }}"
+      loop: "{{ discovered_worldwriteable_files.stdout_lines }}"
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable directories add sticky bit"
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -o+w ! -perm -1002 2>/dev/null | xargs chmod a+t
-      failed_when: deb12cis_set_stickybit.rc not in [ 0, 123 ]
-      changed_when: deb12cis_set_stickybit.rc == 0
-      register: deb12cis_set_stickybit
+      failed_when: discovered_set_stickybit.rc not in [ 0, 123 ]
+      changed_when: discovered_set_stickybit.rc == 0
+      register: discovered_set_stickybit
 
 - name: "7.1.12 | PATCH | Ensure no files or directories without an owner and a group exist"
-  when:
-    - deb12cis_rule_7_1_12
+  when: deb12cis_rule_7_1_12
   tags:
     - level1-server
     - level1-workstation
@@ -221,7 +209,7 @@
     warn_control_id: '7.1.12'
   block:
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Get list files or directories"
-      ansible.builtin.shell: find ({{ deb12cis_exclude_unowned_search_path }}) {{ item.mount }} -xdev \( -nouser -o -nogroup \) -not -fstype nfs
+      ansible.builtin.command: find ({{ deb12cis_exclude_unowned_search_path }}) {{ item.mount }} -xdev \( -nouser -o -nogroup \) -not -fstype nfs
       changed_when: false
       failed_when: false
       check_mode: false
@@ -264,8 +252,7 @@
         file: warning_facts.yml
 
 - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed"
-  when:
-    - deb12cis_rule_7_1_13
+  when: deb12cis_rule_7_1_13
   tags:
     - level1-server
     - level1-workstation
@@ -283,7 +270,7 @@
     warn_control_id: '7.1.13'
   block:
     - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Find SUID and SGID"
-      ansible.builtin.shell: find {{ item.mount }} -xdev -type f -perm \( -02000 or -04000 \) -not -fstype nfs
+      ansible.builtin.command: find {{ item.mount }} -xdev -type f -perm \( -02000 or -04000 \) -not -fstype nfs
       changed_when: false
       failed_when: false
       check_mode: false
@@ -314,12 +301,11 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-s'
-      with_items:
-        - "{{ discovered_suid_sgid_files_flatten }}"
+      loop: "{{ discovered_suid_sgid_files_flatten }}"
 
     - name: "7.1.13 | AUDIT | Audit SUID executables | Warn Count"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
       when:
         - discovered_suid_sgid_files_flatten | length > 0
         - not deb12cis_suid_sgid_adjust
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml

@@ -1,4 +1,5 @@
 ---
+
 galaxy_info:
   author: "MindPoint Group"
   description: "Apply the Debian 12 CIS"
@@ -8,7 +9,7 @@ galaxy_info:
   namespace: mindpointgroup
   min_ansible_version: 2.10.1
   platforms:
-    - name: debian
+    - name: Debian
       versions:
         - "bookworm"
   galaxy_tags:
@@ -18,7 +19,6 @@ galaxy_info:
     - hardening
     - benchmark
     - compliance
-    - redhat
     - complianceascode
     - disa
     - debian

@@ -1,11 +1,7 @@
 ---
 
 - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured"
-  when:
-    - deb12cis_rule_1_2_1_1
-    - ansible_facts.distribution == "RedHat" or
-      ansible_facts.distribution == "Rocky" or
-      ansible_facts.distribution == "AlmaLinux"
+  when: deb12cis_rule_1_2_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -13,9 +9,11 @@
     - patch
     - rule_1.2.1.1
     - NIST800-53R5_SI-2
+  vars:
+    warn_control_id: '1.2.1.2'
   block:
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | list installed pubkey keys"
-      ansible.builtin.shell: "apt-key list"
+      ansible.builtin.command: "apt-key list"
       changed_when: false
       failed_when: false
       register: discovered_apt_keys
@@ -31,8 +29,7 @@
         file: warning_facts.yml
 
 - name: "1.2.1.2 | AUDIT | Ensure package manager repositories are configured"
-  when:
-    - deb12cis_rule_1_2_1_2
+  when: deb12cis_rule_1_2_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -44,7 +41,7 @@
     warn_control_id: '1.2.1.2'
   block:
     - name: "1.2.1.2 | AUDIT | Ensure package manager repositories are configured | Get repo list"
-      ansible.builtin.shell: apt-cache policy
+      ansible.builtin.command: apt-cache policy
       changed_when: false
       failed_when: false
       register: discovered_apt_config

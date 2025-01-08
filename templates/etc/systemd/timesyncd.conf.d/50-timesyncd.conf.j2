@@ -1,6 +1,6 @@
 ## Ansible controlled file
 # Added as part of ansible-lockdown CIS baseline
-# provided by MindPointGroup LLC
+# provided by Mindpoint Group - A Tyto Athene Company
 
 [Time]
 NTP={% for pool in deb12cis_time_pool %}{{ pool.name }} {% endfor %}

@@ -33,8 +33,7 @@
 
 # Adding the allow OpenSSH rule while enabling ufw to allow ansible to run after enabling
 - name: "4.1.3 | PATCH | Ensure ufw service is enabled"
-  when:
-    - deb12cis_rule_4_1_3
+  when: deb12cis_rule_4_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -56,8 +55,7 @@
         state: started
 
 - name: "4.1.4 | PATCH | Ensure loopback traffic is configured"
-  when:
-    - deb12cis_rule_4_1_4
+  when: deb12cis_rule_4_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -96,8 +94,7 @@
       notify: Reload ufw
 
 - name: "4.1.5 | PATCH | Ensure ufw outbound connections are configured"
-  when:
-    - deb12cis_rule_4_1_5
+  when: deb12cis_rule_4_1_5
   tags:
     - level1-server
     - level1-workstation
@@ -124,8 +121,7 @@
       notify: Reload ufw
 
 - name: "4.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports"
-  when:
-    - deb12cis_rule_4_1_6
+  when: deb12cis_rule_4_1_6
   tags:
     - level1-server
     - level1-workstation
@@ -137,18 +133,18 @@
     warn_control_id: '4.1.6'
   block:
     - name: "4.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Get list of open ports"
-      ansible.builtin.shell: ss -4tuln
+      ansible.builtin.command: ss -4tuln
       changed_when: false
       failed_when: false
       check_mode: false
-      register: deb12cis_4_1_6_open_listen_ports
+      register: discovered_ufw_open_listen_portss
 
     - name: "4.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Get list of firewall rules"
-      ansible.builtin.shell: ufw status
+      ansible.builtin.command: ufw status
       changed_when: false
       failed_when: false
       check_mode: false
-      register: deb12cis_4_1_6_firewall_rules
+      register: discovered_ufw_current_firewall_rules
 
     - name: "4.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Message out settings"
       ansible.builtin.debug:
@@ -156,17 +152,16 @@
           - "Warning!! Below are the listening ports and firewall rules"
           - "Please create firewall rule for any open ports if not already done"
           - "*****---Open Listen Ports---*****"
-          - "{{ deb12cis_4_1_6_open_listen_ports.stdout_lines }}"
+          - "{{ discovered_ufw_open_listen_portss.stdout_lines }}"
           - "*****---Firewall Rules---*****"
-          - "{{ deb12cis_4_1_6_firewall_rules.stdout_lines }}"
+          - "{{ discovered_ufw_current_firewall_rules.stdout_lines }}"
 
     - name: "4.1.6 | AUDIT | Ensure ufw firewall rules exist for all open ports | Set warning count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
 - name: "4.1.7 | PATCH | Ensure ufw default deny firewall policy"
-  when:
-    - deb12cis_rule_4_1_7
+  when: deb12cis_rule_4_1_7
   tags:
     - level1-server
     - level1-workstation
@@ -182,3 +177,14 @@
     - outgoing
     - routed
   notify: Reload ufw
+
+# Added after ufw is installed and the file and base config is a prereq
+- name: "Optional | PATCH | UFW firewall force to use /etc/sysctl.conf settings"
+  when:
+    - deb12cis_rule_4_1_1
+    - deb12cis_firewall_package == "ufw"
+    - deb12cis_ufw_use_sysctl
+  ansible.builtin.lineinfile:
+    path: /etc/default/ufw
+    regexp: ^IPT_SYSCTL=.*
+    line: IPT_SYSCTL=/etc/sysctl.conf
