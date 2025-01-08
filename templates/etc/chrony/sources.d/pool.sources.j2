@@ -2,5 +2,6 @@
 # Added as part of ansible-lockdown CIS baseline
 # provided by Mindpoint Group - A Tyto Athene Company
 
-[org/gnome/desktop/media-handling]
-autorun-never=true
+{% for pool in deb12cis_time_pool %}
+pool {{ pool.name }} {{ pool.options }}
+{% endfor %}

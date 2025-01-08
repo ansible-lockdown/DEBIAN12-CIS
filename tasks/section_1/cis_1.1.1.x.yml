@@ -1,8 +1,7 @@
 ---
 
 - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available"
-  when:
-    - deb12cis_rule_1_1_1_1
+  when: deb12cis_rule_1_1_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -17,7 +16,7 @@
         regexp: "^(#)?install cramfs(\\s|$)"
         line: "install cramfs /bin/true"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -25,7 +24,7 @@
         regexp: "^(#)?blacklist cramfs(\\s|$)"
         line: "blacklist cramfs"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available | Disable cramfs"
       when:
@@ -51,7 +50,7 @@
         regexp: "^(#)?install freevxfs(\\s|$)"
         line: "install freevxfs /bin/true"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.2 | PATCH | Ensure freevxfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -59,7 +58,7 @@
         regexp: "^(#)?blacklist freevxfs(\\s|$)"
         line: "blacklist freevxfs"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.2 | PATCH | Ensure freevxfs kernel module is not available | Disable freevxfs"
       when:
@@ -85,7 +84,7 @@
         regexp: "^(#)?install hfs(\\s|$)"
         line: "install hfs /bin/true"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.3 | PATCH | Ensure hfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -93,7 +92,7 @@
         regexp: "^(#)?blacklist hfs(\\s|$)"
         line: "blacklist hfs"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.3 | PATCH | Ensure hfs kernel module is not available | Disable hfs"
       when:
@@ -119,7 +118,7 @@
         regexp: "^(#)?install hfsplus(\\s|$)"
         line: "install hfsplus /bin/true"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.4 | PATCH | Ensure hfsplus kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -127,7 +126,7 @@
         regexp: "^(#)?blacklist hfsplus(\\s|$)"
         line: "blacklist hfsplus"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.4 | PATCH | Ensure hfsplus kernel module is not available | Disable hfsplus"
       when:
@@ -153,7 +152,7 @@
         regexp: "^(#)?install jffs2(\\s|$)"
         line: "install jffs2 /bin/true"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.5 | PATCH | Ensure jffs2 kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -161,7 +160,7 @@
         regexp: "^(#)?blacklist jffs2(\\s|$)"
         line: "blacklist jffs2"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.5 | PATCH | Ensure jffs2 kernel module is not available | Disable jffs2"
       when:
@@ -187,7 +186,7 @@
         regexp: "^(#)?install squashfs(\\s|$)"
         line: "install squashfs /bin/true"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.6 | PATCH | Ensure squashfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -195,7 +194,7 @@
         regexp: "^(#)?blacklist squashfs(\\s|$)"
         line: "blacklist squashfs"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.6 | PATCH | Ensure squashfs kernel module is not available | Disable squashfs"
       when:
@@ -221,7 +220,7 @@
         regexp: "^(#)?install udf(\\s|$)"
         line: "install udf /bin/true"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.7 | PATCH | Ensure udf kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -229,7 +228,7 @@
         regexp: "^(#)?blacklist udf(\\s|$)"
         line: "blacklist udf"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
     - name: "1.1.1.7 | PATCH | Ensure udf kernel module is not available | Disable udf"
       when:
@@ -248,26 +247,46 @@
     - rule_1.1.1.8
     - usb
     - NIST800-53R5_CM-7
+  vars:
+    warn_control_id: '1.1.1.8'
   block:
-    - name: "1.1.1.8 | PATCH | Ensure usb-storage kernel module is not available | Edit modprobe config"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/CIS.conf
-        regexp: "^(#)?install usb-storage(\\s|$)"
-        line: "install usb-storage /bin/true"
-        create: true
-        mode: '0600'
+    - name: "PATCH | Ensure usb-storage kernel module is not available | UAS is not running"
+      when: discovered_uas_status.rc != 0
+      block:
+        - name: "1.1.1.8 | PATCH | Ensure usb-storage kernel module is not available | Edit modprobe config"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/CIS.conf
+            regexp: "^(#)?install usb-storage(\\s|$)"
+            line: "install usb-storage /bin/true"
+            create: true
+            mode: 'u-x,go-rwx'
 
-    - name: "1.1.1.8 | PATCH | Ensure usb-storage kernel module is not available | blacklist"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/blacklist.conf
-        regexp: "^(#)?blacklist usb-storage(\\s|$)"
-        line: "blacklist usb-storage"
-        create: true
-        mode: '0600'
+        - name: "1.1.1.8 | PATCH | Ensure usb-storage kernel module is not available | blacklist"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist usb-storage(\\s|$)"
+            line: "blacklist usb-storage"
+            create: true
+            mode: 'u-x,go-rwx'
 
-    - name: "1.1.1.8 | PATCH | Ensure usb-storage kernel module is not available | Disable usb-storage"
-      when:
-        - not system_is_container
-      community.general.modprobe:
-        name: usb-storage
-        state: absent
+        - name: "1.1.1.8 | PATCH | Ensure usb-storage kernel module is not available | Disable usb-storage"
+          when: not system_is_container
+          community.general.modprobe:
+            name: usb-storage
+            state: absent
+
+    - name: "1.1.1.8 | AUDIT | Ensure usb-storage kernel module is not available | Warning if UAS is still running"
+      when: discovered_uas_status.rc == 0
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! USB Attached SCSI (UAS) support is still detected."
+          - "Removing UAS may cause performance issues or prevent certain USB devices from functioning correctly."
+          - "UAS provides higher speeds and better I/O performance compared to traditional USB mass storage."
+          - "Ensure that this action is intentional and consider testing on non-critical systems before applying in production."
+          - "Please review your setting for variable debian11cis_uas_remove and make sure it is set to true."
+          - "And rerun the Ansible playbook to properly remove usb_storage."
+
+    - name: "1.1.1.8 | WARN | Ensure usb-storage kernel module is not available | Increment Warning Count"
+      when: discovered_uas_status.rc == 0
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml

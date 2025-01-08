@@ -1,8 +1,7 @@
 ---
 
 - name: "6.3.1.1 | PATCH | Ensure auditd is installed"
-  when:
-    - deb12cis_rule_6_3_1_1
+  when: deb12cis_rule_6_3_1_1
   tags:
     - level2-server
     - level2-workstation
@@ -27,8 +26,7 @@
         state: present
 
 - name: "6.3.1.2 | PATCH | Ensure auditd service is enabled and active"
-  when:
-    - deb12cis_rule_6_3_1_2
+  when: deb12cis_rule_6_3_1_2
   tags:
     - level2-server
     - level2-workstation
@@ -44,8 +42,7 @@
     enabled: true
 
 - name: "6.3.1.3 | PATCH | Ensure auditing for processes that start prior to auditd is enabled"
-  when:
-    - deb12cis_rule_6_3_1_3
+  when: deb12cis_rule_6_3_1_3
   tags:
     - level2-server
     - level2-workstation
@@ -61,8 +58,7 @@
   notify: Update-grub
 
 - name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is sufficient"
-  when:
-    - deb12cis_rule_6_3_1_4
+  when: deb12cis_rule_6_3_1_4
   tags:
     - level2-server
     - level2-workstation

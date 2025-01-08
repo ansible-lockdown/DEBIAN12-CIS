@@ -3,7 +3,7 @@
 - name: POST | AUDITD | Apply auditd template will for section 4.1.3 - only required rules will be added | stat file
   ansible.builtin.stat:
     path: /etc/audit/rules.d/99_auditd.rules
-  register: deb12cis_auditd_file
+  register: discovered_auditd_rules_file
 
 - name: POST | AUDITD | Apply auditd template will for section 4.1.3 - only required rules will be added | setup file
   ansible.builtin.template:
@@ -11,9 +11,9 @@
     dest: /etc/audit/rules.d/99_auditd.rules
     owner: root
     group: root
-    mode: '0640'
-  diff: "{{ deb12cis_auditd_file.stat.exists }}"  # Only run diff if not a new file
-  register: deb12cis_auditd_template_updated
+    mode: 'u-x,g-w,o-rwx'
+  diff: "{{ discovered_auditd_rules_file.stat.exists }}"  # Only run diff if not a new file
+  register: discovered_auditd_template_updated
   notify:
     - Auditd immutable check
     - Audit immutable fact
@@ -21,8 +21,8 @@
 
 - name: POST | AUDITD | Add Warning count for changes to template file | Warn Count  # noqa no-handler
   when:
-    - deb12cis_auditd_template_updated.changed
-    - deb12cis_auditd_file.stat.exists
+    - discovered_auditd_template_updated.changed
+    - discovered_auditd_rules_file.stat.exists
   ansible.builtin.import_tasks:
     file: warning_facts.yml
   vars:
@@ -31,7 +31,7 @@
 - name: POST | AUDITD | Apply auditd template will for section 4.1.3 - only required rules will be added | stat file
   ansible.builtin.stat:
     path: /etc/audit/rules.d/98_auditd_exceptions.rules
-  register: deb12cis_auditd_exception_file
+  register: discovered_auditd_exception_file
 
 - name: POST | Set up auditd user logging exceptions | setup file
   when:
@@ -42,6 +42,6 @@
     dest: /etc/audit/rules.d/98_auditd_exceptions.rules
     owner: root
     group: root
-    mode: '0640'
-  diff: "{{ deb12cis_auditd_exception_file.stat.exists }}"
+    mode: 'u-x,g-w,o-rwx'
+  diff: "{{ discovered_auditd_exception_file.stat.exists }}"
   notify: Restart auditd

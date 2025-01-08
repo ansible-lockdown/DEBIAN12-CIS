@@ -1,8 +1,7 @@
 ---
 
 - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured"
-  when:
-    - deb12cis_rule_6_2_2_1
+  when: deb12cis_rule_6_2_2_1
   tags:
     - level1-server
     - level1-workstation
@@ -29,8 +28,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-x,g-wx,o-rwx'
-      failed_when: deb12cis_logfile_list.state not in '[ file, absent ]'
-      register: deb12cis_logfile_list
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
@@ -40,8 +39,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-x,g-x,o-rwx'
-      failed_when: deb12cis_logfile_list.state not in '[ file, absent ]'
-      register: deb12cis_logfile_list
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
@@ -55,6 +54,6 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'ug-x,o-wx'
-      failed_when: deb12cis_logfile_list.state not in '[ file, absent ]'
-      register: deb12cis_logfile_list
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
