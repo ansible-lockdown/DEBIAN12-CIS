@@ -41,9 +41,8 @@
     - NIST800-53R5_AU-12
   ansible.builtin.lineinfile:
     path: /etc/sudoers
-    regexp: ^(Defaults\s*)logfile=
-    line: \1logfile="{{ deb12cis_sudolog_location }}"
-    backrefs: true
+    regexp: ^Defaults\s*logfile=
+    line: Defaults logfile="{{ deb12cis_sudolog_location }}"
     validate: '/usr/sbin/visudo -cf %s'
 
 - name: "5.2.4 | PATCH | Ensure users must provide password for escalation"

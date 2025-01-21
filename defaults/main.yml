@@ -1305,17 +1305,17 @@ deb12cis_auditd_extra_conf:
 # Section 7 Vars
 
 # 7.1.12 Ensure no files or directories without an owner and a group exist
-deb12cis_exclude_unowned_search_path: '! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*"'
+deb12cis_exclude_unowned_search_path: '\( ! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*" \)'
 
 # Control 7.1.12
 # The value of this variable specifies the owner that will be set for unowned files and directories.
 deb12cis_unowned_owner: root
 deb12cis_ungrouped_group: root
 # This variable is a toggle for enabling/disabling the automated
-# setting of an owner (specified in variable `deb12cis_unowned_owner`)
-# for all unowned files and directories.
+# setting of an owner or group (specified in variable `deb12cis_unowned_owner`)
+# for all unowned or ungrouped files and directories.
 # Possible values are `true` and `false`.
-deb12cis_ownership_adjust: true
+deb12cis_ownership_adjust: false
 
 ## Control 7.1.13
 # This variable is a toggle for enabling/disabling the automated removal
