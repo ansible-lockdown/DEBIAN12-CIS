@@ -518,7 +518,7 @@ deb12cis_rule_7_2_10: true
 ##
 
 
-## Control 1.1.1.8
+## Control 1.1.1.8 - Ensure udf kernel module is not available
 # We have found that some systems may have UAS kernel running and if it is,
 # usb-storage will fail to be removed which is control 1.1.1.8. By default, this
 # is set to false. By having this set to false control 1.1.1.8 will run but if UAS
@@ -533,7 +533,7 @@ deb12cis_uas_remove: false
 # mount point for the controls in section 1.
 deb12cis_debug_mount_data: false
 
-## Control 1.1.2
+## Controls 1.1.2.1.x
 # If set to `true`, rule will be implemented using the `tmp.mount` systemd-service,
 # otherwise fstab configuration will be used.
 # These /tmp settings will include nosuid,nodev,noexec to conform to CIS standards.
@@ -557,7 +557,7 @@ deb12cis_apparmor_disable: false
 # and sets `enforce` mode, no matter what this variable's value is.
 deb12cis_apparmor_mode: complain
 
-## Control 1.4.1
+## Control 1.4.1 - Ensure bootloader password is set
 # Whether to set `deb12cis_bootloader_password_hash` or not. You might set this variable to
 # `false` to set an individual password on (each of) your machine(s) yourself manually instead of
 # storing the password-hash in the `deb12cis_bootloader_password_hash` variable here.
@@ -583,7 +583,7 @@ deb12cis_ask_passwd_to_boot: false
 # Ability to set file in which the kernel sysctl changes are placed
 deb12cis_sysctl_kernel_conf: /etc/sysctl.d/98_cis_kernel.conf
 
-## Control 1.6.1
+## Control 1.6.1 - Ensure message of the day is configured properly
 # This variable governs, whether dynamic motd is disabled
 deb12cis_disable_dynamic_motd: true
 
@@ -706,7 +706,7 @@ deb12cis_xinetd_mask: false
 # Set this variable to `true` to keep service `xwindow`; otherwise, the service is uninstalled.
 deb12cis_xwindow_server: false  # will remove mask not an option
 
-## Control 2.1.21
+## Control 2.1.21 - Ensure mail transfer agents are configured for local-only mode
 # This variable if set to 'false', ensures that the mail transfer agent is configured for
 # local-only mode.
 deb12cis_is_mail_server: false
@@ -726,7 +726,7 @@ deb12cis_ldap_clients_required: false
 # Set this variable to `true` to keep package `ftp`; otherwise, the package is uninstalled.
 deb12cis_ftp_client: false
 
-## Control 2.3.1.1
+## Control 2.3.1.1 - Ensure a single time synchronization daemon is in use
 # This variable chooses the tool used for time synchronization
 # The two options are `chrony` and `systemd-timesyncd`.
 deb12cis_time_sync_tool: "systemd-timesyncd"
@@ -762,7 +762,7 @@ deb12cis_purge_apt: false
 ## Section 3 Control Variables
 ##
 
-## Control 3.1.1
+## Control 3.1.1 - Ensure IP forwarding is disabled
 # This variable represents the IPv6 requirement toggle.
 # CIS recommends to enable or disable IPv6 in accordance with
 # system requirements and local site policy. If you have IPv6 but
@@ -770,7 +770,7 @@ deb12cis_purge_apt: false
 # the disabling of IPv6.
 deb12cis_ipv6_required: true
 
-## Control 3.1.3
+## Control 3.1.3 - Ensure bluetooth services are not in use
 # Set this variable to `true` to keep service `bluetooth`; otherwise, the service is uninstalled.
 deb12cis_bluetooth_service: false
 # Set this variable to `true` to mask service `bluetooth`.
@@ -974,29 +974,31 @@ deb12cis_sshd_deny_groups: ""
 # CIS recommends `sudo` or, if LDAP functionality is required, `sudo-ldap`.
 deb12cis_sudo_package: "sudo"
 
-## Control 5.2.3
+## Control 5.2.3 - Ensure sudo log file exists
 # This variable contains the path to the sudo
 # log file.
 deb12cis_sudolog_location: "/var/log/sudo.log"
-##  Control 5.2.6
+
+##  Control 5.2.6 - Ensure sudo authentication timeout is configured correctly
 # This variable sets the duration (in minutes) during which a user's authentication credentials
 # are cached after successfully authenticating using "sudo". This allows the user to execute
 # multiple commands with elevated privileges without needing to re-enter their password for each
 # command within the specified time period. CIS requires a value of at most 15 minutes.
 deb12cis_sudo_timestamp_timeout: 15
-## Control 5.2.7
+
+## Control 5.2.7 - Ensure access to the su command is restricted
 # This variable determines the group of users that are allowed to use the su command.
 # one to specify a user group that is allowed to use the "su" command.
 # CIS requires that such a group be created (named according to site policy) and be kept empty.
 deb12cis_sugroup: nosugroup
 
-## Control 5.3.2.x
+## Controls 5.3.2.x
 # This variable sets the name of the directory where the templates for pam are stored.
 # These templates are used to create the files which will implement the CIS controls
 # regarding pam. This variable is also used for Controls 5.3.3.3.x and Controls 5.3.3.4.x.
 deb12cis_pam_confd_dir: 'usr/share/pam-configs/'
 
-## Control 5.3.2.1 - pam_unix
+## Control 5.3.2.1 - Ensure pam_unix module is enabled
 # This variable stores the name of the file that ensures that pam_unix module is enabled.
 # This file can be found at the path given by the 'deb12cis_pam_confd_dir' variable.
 # This variable is also used for Controls 5.3.3.4.x.
@@ -1010,7 +1012,7 @@ deb12cis_pam_create_pamunix_file: false
 # Allow pam-auth-update --enable deb12cis_pam_pwunix_file to run/ IT DOES NOT
 deb12cis_pam_auth_unix: true
 
-## Control 5.3.2.2 - pam_faillock
+## Control 5.3.2.2 - Ensure pam_faillock module is enabled
 # This variable stores the name of one of the files that ensure that pam_faillock module is enabled.
 # This file can be found at the path given by the 'deb12cis_pam_confd_dir' variable.
 deb12cis_pam_faillock_file: 'faillock'
@@ -1028,7 +1030,7 @@ deb12cis_pam_create_faillock_files: true
 # Allow pam-auth-update --enable deb12cis_pam_faillock_notify_file/ IT DOES NOT
 deb12cis_pam_auth_faillock: true
 
-## Control 5.3.2.3 - pam_pwquality
+## Control 5.3.2.3 - Ensure pam_pwquality module is enabled
 # This variable stores the name of the file that ensures that pam_pwquality module is enabled.
 # This file can be found at the path given by the 'deb12cis_pam_confd_dir' variable.
 deb12cis_pam_pwquality_file: 'pwquality'
@@ -1040,7 +1042,7 @@ deb12cis_pam_create_pwquality_files: true
 # Allow pam-auth-update --enable deb12cis_pam_pwquality_file/ IT DOES NOT
 deb12cis_pam_auth_pwquality: true
 
-## Control 5.3.2.4 - pam_pwhistory
+## Control 5.3.2.4 - Ensure pam_pwhistory module is enabled
 # This variable stores the name of the file that ensures that pam_pwhistory module is enabled.
 # This file can be found at the path given by the 'deb12cis_pam_confd_dir' variable.
 # This variable is also used for Controls 5.3.3.3.x.
@@ -1054,17 +1056,17 @@ deb12cis_pam_create_pwhistory_files: true
 # Allow pam-auth-update --enable deb12cis_pam_pwhistory_file/ IT DOES NOT
 deb12cis_pam_auth_pwhistory: true
 
-## Control 5.3.3.1.1 - faillock_deny
+## Control 5.3.3.1.1 - Ensure password failed attempts lockout is configured
 # This variable holds the number of attempts before the account is locked.
 # CIS states that this value should be greater than 0 and no greater than 5.
 deb12cis_faillock_deny: 3
 
-## Control 5.3.3.1.2 - faillock unlock time
+## Control 5.3.3.1.2 - Ensure password unlock time is configured
 # This variable holds the time in seconds before the account is unlocked.
 # CIS states that this value should be at least 900 and should never be 0.
 deb12cis_faillock_unlock_time: 900
 
-## Control 5.3.3.1.3 - lock root
+## Control 5.3.3.1.3 - Ensure password failed attempts lockout includes root account
 # This variable is used in the task that ensures that even the root account
 # is included in the password failed attempts lockout measure.
 # The following variable is used in the 'regexp' field. This field is used to find the
@@ -1078,7 +1080,7 @@ deb12cis_pamroot_lock_option: even_deny_root
 # file so that the control is implemented.
 deb12cis_pamroot_lock_string: even_deny_root
 
-## Control 5.3.3.2.1 - password difok
+## Control 5.3.3.2.1 - Ensure password number of changed characters is configured
 # This variable holds the path to the configuration file that will be created (or overwritten if already existing)
 # in order to implement the 'Ensure password number of changed characters is configured' control.
 deb12cis_passwd_difok_file: etc/security/pwquality.conf.d/50-pwdifok.conf  # pragma: allowlist secret
@@ -1087,7 +1089,7 @@ deb12cis_passwd_difok_file: etc/security/pwquality.conf.d/50-pwdifok.conf  # pra
 # are too similar to their previous ones, enhancing security. CIS states that this value should be at least 2.
 deb12cis_passwd_difok_value: 2
 
-## Control 5.3.3.2.2 - password minlength
+## Control 5.3.3.2.2 - Ensure minimum password length is configured
 # This variable holds the path to the configuration file that will be created (or overwritten if already existing)
 # in order to implement the 'Ensure minimum password length is configured' control.
 deb12cis_passwd_minlen_file: etc/security/pwquality.conf.d/50-pwlength.conf  # pragma: allowlist secret
@@ -1095,7 +1097,7 @@ deb12cis_passwd_minlen_file: etc/security/pwquality.conf.d/50-pwlength.conf  # p
 # CIS states that this value should be at least 14.
 deb12cis_passwd_minlen_value: 14
 
-## Control 5.3.3.2.3 - password complex
+## Control 5.3.3.2.3 - Ensure password complexity is configured
 # This variable holds the path to the configuration file that will be created (or overwritten if already existing)
 # in order to implement the 'Ensure password complexity is configured' control.
 deb12cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf  # pragma: allowlist secret
@@ -1125,14 +1127,14 @@ deb12cis_passwd_ocredit: 0
 # e.g. lcredit = -1 requires at least one lowercase character
 deb12cis_passwd_lcredit: -2
 
-## Control 5.3.3.2.4 - password maxrepeat
+## Control 5.3.3.2.4 - Ensure password same consecutive characters is configured
 # This variable holds the path to the configuration file that will be created (or overwritten if already existing)
 # in order to implement the 'Ensure password same consecutive characters is configured' control.
 deb12cis_passwd_maxrepeat_file: etc/security/pwquality.conf.d/50-pwrepeat.conf  # pragma: allowlist secret
 # The following variable sets the maximum number of allowed same consecutive characters in a new password.
 deb12cis_passwd_maxrepeat_value: 3
 
-## Control 5.3.3.2.5 - password maxsequence
+## Control 5.3.3.2.5 - Ensure password maximum sequential characters is is configured
 # This variable holds the path to the configuration file that will be created (or overwritten if already existing)
 # in order to implement the 'Ensure password maximum sequential characters is configured' control.
 deb12cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequence.conf  # pragma: allowlist secret
@@ -1140,7 +1142,7 @@ deb12cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequence
 # Examples of such sequence are '12345' or 'fedcb' . The check is disabled if the value is 0 .
 deb12cis_passwd_maxsequence_value: 3
 
-## Control 5.3.3.2.6 - password dictcheck
+## Control 5.3.3.2.6 - Ensure password dictionary check is enabled
 # This variable holds the path to the configuration file that will be created (or overwritten if already existing)
 # in order to implement the 'Ensure password dictionary check is enabled' control.
 deb12cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.conf  # pragma: allowlist secret
@@ -1150,7 +1152,7 @@ deb12cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.con
 # When set to '0', dictionary checks are disabled. CIS states that it shall always be set to '1'.
 deb12cis_passwd_dictcheck_value: 1
 
-## Control 5.3.3.2.7 - password quality enforce
+## Control 5.3.3.2.7 - Ensure password quality checking is enforced
 # This variable holds the path to the configuration file that will be created (or overwritten if already existing)
 # in order to implement the 'Ensure password quality checking is enforced' control.
 deb12cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality_enforce.conf  # pragma: allowlist secret
@@ -1158,19 +1160,19 @@ deb12cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality
 # Otherwise, only a warning message will be provided. CIS states that it should never be set to `0`.
 deb12cis_passwd_quality_enforce_value: 1
 
-## Control 5.3.3.2.8 - password quality enforce for root included with 5.3.3.2.7
+## Control 5.3.3.2.8 - Ensure password quality is enforced for the root user
 # This variable holds the path to the configuration file that will be created (or overwritten if already existing)
 # in order to implement the 'Ensure password quality is enforced for the root user' control.
 deb12cis_passwd_quality_enforce_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
 # The following variable enforces that the root user must adhere to the same password quality policies as other users.
 deb12cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
 
-## Control 5.3.3.3.1
+## Control 5.3.3.3.1 - Ensure password history remember is configured
 # This variable represents the number of password change cycles, after which
 # a user can re-use a password. CIS requires a value of 24 or more.
 deb12cis_pamd_pwhistory_remember: 24
 
-## Control 5.4.1.1
+## Control 5.4.1.1 - Ensure password expiration is configured
 # This variable governs after how many days a  password expires.
 # CIS requires a value no greater than 365 or less than 1.
 deb12cis_pass_max_days: 365
@@ -1179,7 +1181,7 @@ deb12cis_pass_max_days: 365
 # access, CIS checks for this particular change in its assessment.
 deb12cis_force_user_maxdays: false
 
-## Control 5.4.1.2
+## Control 5.4.1.2 - Ensure minimum password days is configured
 # This variable specifies the minimum number of days allowed between changing passwords.
 # CIS requires a value of at least 1.
 deb12cis_pass_min_days: 1
@@ -1188,7 +1190,7 @@ deb12cis_pass_min_days: 1
 # access, CIS checks for this particular change in its assessment.
 deb12cis_force_user_mindays: false
 
-## Control 5.4.1.3
+## Control 5.4.1.3 - Ensure password expiration warning days is configured
 # This variable governs, how many days before a password expires, the user will be warned.
 # CIS requires a value of at least 7.
 deb12cis_pass_warn_age: 7
@@ -1198,13 +1200,13 @@ deb12cis_pass_warn_age: 7
 # access, CIS checks for this particular change in its assessment.
 deb12cis_force_user_warnage: false
 
-## Control 5.4.1.4
+## Control 5.4.1.4 - Ensure strong password hashing algorithm is configured
 # deb12cis_passwd_hash_algo is the hashing algorithm used
 deb12cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
 # Set pam as well as login defs if PAM is required
 deb12cis_passwd_setpam_hash_algo: false
 
-## Control 5.4.1.5
+## Control 5.4.1.5 - Ensure inactive password lock is configured
 # This variable specifies the number of days of inactivity before an account will be locked.
 # CIS requires a value of 45 days or less.
 deb12cis_inactivelock_lock_days: 45
@@ -1227,7 +1229,7 @@ deb12cis_futurepwchgdate_autofix: true
 # restrictive.
 deb12cis_root_umask: '0027'  # 0027 or more restrictive
 
-## Control 5.4.3.2 - Configuring user shell timeout
+## Control 5.4.3.2 - Ensure default user shell timeout is configured
 # This variable represents the amount of seconds a command or process is allowed to
 # run before being forcefully terminated.
 # CIS requires a value of at most 900 seconds.
@@ -1407,44 +1409,36 @@ deb12cis_journal_upload_url: 192.168.50.42
 # server to authenticate itself to the client. This key is used alongside the server's
 # public certificate to establish secure communication.
 deb12cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to the public certificate file of the remote journal
 # server. This certificate is used to verify the authenticity of the remote server.
 deb12cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to a file containing one or more public certificates
 # of certificate authorities (CAs) that the client trusts. These trusted certificates are used
 # to validate the authenticity of the remote server's certificate.
 deb12cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
-# ATTENTION: Uncomment the keyword below when values are set!
 
 ## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
-# Current variable configures the max amount of disk space the logs will use(thus, journal files
-# will not grow without bounds)
-# The variables below related to journald, please set these to your site specific values
 # These variable specifies how much disk space the journal may use up at most
 # Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
 # See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
 deb12cis_journald_systemmaxuse: 10M
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
-# Current variable configures the amount of disk space to keep free for other uses.
+# This variable determines disk to be kept free by `journald`.
+# Specify values in bytes or use K, M, G, T, P, E as units for the specified size.
 deb12cis_journald_systemkeepfree: 100G
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # This variable configures how much disk space the journal may use up at most.
 # Similar with 'deb12cis_journald_systemmaxuse', but related to runtime space.
+# Specify values in bytes or use K, M, G, T, P, E as units for the specified size.
 deb12cis_journald_runtimemaxuse: 10M
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # This variable configures the actual amount of disk space to keep free
 # Similar with 'deb12cis_journald_systemkeepfree', but related to runtime space.
+# Specify values in bytes or use K, M, G, T, P, E as units for the specified size.
 deb12cis_journald_runtimekeepfree: 100G
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
 # The given values is interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
-# ATTENTION: Uncomment the keyword below when values are set!
 deb12cis_journald_maxfilesec: 1month
 
 ##  Control 6.4.2.1 - Ensure audit_backlog_limit is sufficient
@@ -1475,76 +1469,114 @@ deb12cis_auditd_max_log_file_size: 10
 deb12cis_auditd_max_log_file_action: keep_logs
 
 ## Control 6.4.2.3
-# This variable determines how the system should act in case of issues with disk
-# The disk_full_action parameter tells the system what action to take when no free space is available on the partition that holds the audit log files.
+# This variable determines how the system should act in case of issues with the disk.
+# The disk_full_action parameter tells the system what action to take when no free space is
+# available on the partition that holds the audit log files.
 # Valid values are ignore, syslog, rotate, exec, suspend, single, and halt.
-#
-# The disk_error_action parameter tells the system what action to take when an error is detected on the partition that holds the audit log files.
-# Valid values are ignore, syslog, exec, suspend, single, and halt.
-#
 # CIS prescribes
 # disk_full_action parameter:
-# Set to halt - the auditd daemon will shutdown the system when the disk partition containing the audit logs becomes full.
-# Set to single - the auditd daemon will put the computer system in single user mode when the disk partition containing the audit logs becomes full.
-#
-# disk_error_action parameter:
-# Set to halt - the auditd daemon will shutdown the system when an error is detected on the partition that holds the audit log files.
-# Set to single - the auditd daemon will put the computer system in single user mode when an error is detected on the partition that holds the audit log files.
-# Set to syslog - the auditd daemon will issue no more than 5 consecutive warnings to syslog when an error is detected on the partition that holds the audit log files.
+# Set to halt - the auditd daemon will shutdown the system when the disk partition containing
+# the audit logs becomes full.
+# Set to single - the auditd daemon will put the computer system in single user mode when the
+# disk partition containing the audit logs becomes full.
 deb12cis_auditd_disk_full_action: halt
+# This variable determines how the system should act in case of issues with the disk.
+# The disk_error_action parameter tells the system what action to take when an error is detected
+# on the partition that holds the audit log files.
+# Valid values are ignore, syslog, exec, suspend, single, and halt.
+# disk_error_action parameter:
+# Set to halt - the auditd daemon will shutdown the system when an error is detected on the
+# partition that holds the audit log files.
+# Set to single - the auditd daemon will put the computer system in single user mode when
+# an error is detected on the partition that holds the audit log files.
+# Set to syslog - the auditd daemon will issue no more than 5 consecutive warnings to syslog
+# when an error is detected on the partition that holds the audit log files.
 deb12cis_auditd_disk_error_action: syslog
 
 # Control 6.4.2.4
-# Wait to do when space left is low.
-# The space_left_action parameter tells the system what action to take when the system has detected that it is starting to get low on disk space.
-# Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
-# The admin_space_left_action parameter tells the system what action to take when the system has detected that it is low on disk space.
-# Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
+# This variable tells the system what action to take when the system has detected
+# that it is starting to get low on disk space.
+# The options for setting this variable are as follows:
+# "ignore"  - the system does nothing when presented with the aforementioned issue;
+# "syslog" - a message is sent to the system log about disk space running low;
+# "email"  - the system sends an email notification to the email address
+#            specified in the "action_mail_acct" variable;
+# "exec"   - the system executes a custom command when disk space is running
+#            low;
+# "suspend" - the system suspends recording audit events until more space is available;
+# "single"  - the audit daemon will put the computer system in single user mode;
+# "halt"    - the system is halted when disk space is critically low;
+# CIS prescribes either 'email', 'exec', `single` or `halt`.
 deb12cis_auditd_space_left_action: email
+# This variable tells the system what action to take when the system has detected
+# that it is low on disk space.
+# The options for setting this variable are as follows:
+# "ignore"  - the system does nothing when presented with the aforementioned issue;
+# "syslog"  - a message is sent to the system log about disk space running low;
+# "email"  - the system sends an email notification to the email address
+#            specified in the "action_mail_acct" variable;
+# "exec"   - the system executes a custom command when disk space is running
+#            low;
+# "suspend" - the system suspends recording audit events until more space is available;
+# "single"  - the audit daemon will put the computer system in single user mode;
+# "halt"    - the system is halted when disk space is critically low;
+# CIS prescribes either `halt` or `single`.
 deb12cis_auditd_admin_space_left_action: halt
-
-# This value governs if the below extra-vars for auditd should be used by the role
+# This variable governs if the configuration for space_left_action and admin_space_left action
+# should be implemented.
 deb12cis_auditd_extra_conf_usage: false
 
 # 6.3.3.x allow exceptions for UID in auditd config
-## Advanced option found in auditd post
-# This variable governs if defining user exceptions for auditd logging is acceptable.
+# This variable is used to condition the execution of a POST task
+# from the "auditd.yml" file. That task implements an advanced option,
+# and it only gets executed if this variable's value is set to 'true'.
+# The advance option sets users whose actions are not logged by auditd.
 deb12cis_allow_auditd_uid_user_exclusions: false
-# This variable contains a list of uids to be excluded(users whose actions are not logged by auditd)
+# This variable contains adds a list of uids to be excluded(users whose actions are not logged by auditd)
 deb12cis_auditd_uid_exclude:
   - 1999
 
-# This can be used to configure other keys in auditd.conf
-# Example:
+
+# This variable can be used to configure other keys in auditd.conf
 deb12cis_auditd_extra_conf:
+  # This variable governs the threshold(MegaBytes) under which the audit daemon should perform a
+  # specific action to alert that the system is running low on disk space. Must be lower than
+  # the 'space_left' variable.
   admin_space_left: '10%'
 
-# Section 7 Vars
+##
+## Section 7 Control Variables
+##
 
-# 7.1.12 Ensure no files or directories without an owner and a group exist
-deb12cis_exclude_unowned_search_path: '\( ! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*" \)'
-
-# Control 7.1.12
-# The value of this variable specifies the owner that will be set for unowned files and directories.
-deb12cis_unowned_owner: root
-deb12cis_ungrouped_group: root
-# This variable is a toggle for enabling/disabling the automated
-# setting of an owner or group (specified in variable `deb12cis_unowned_owner`)
-# for all unowned or ungrouped files and directories.
+## Control 7.1.11 - Ensure world writable files and directories are secured
+# The following variable is a toggle for enabling/disabling the automated
+# removal of world-writable permissions from all files.
 # Possible values are `true` and `false`.
-deb12cis_ownership_adjust: false
-
-## Control 7.1.13
-# This variable is a toggle for enabling/disabling the automated removal
-# of the SUID bit from all files on all mounts.
-# Possible values are `true` and `false`.
-deb12cis_suid_sgid_adjust: false
-
-## Control 7.1.11 - Ensure no world writable files exist
-# Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable.
 deb12cis_no_world_write_adjust: true
 
-## Control 7.2.9
+## Control 7.1.12 - Ensure no files or directories without an owner and a group exist
+# This variable hold the part of the command that helps detect which files and
+# directories do not have an owner and an affiliated group.
+deb12cis_exclude_unowned_search_path: '\( ! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*" \)'
+# The value of this variable specifies the owner that will be set for unowned files and directories.
+deb12cis_unowned_owner: root
+# The value of this variable specifies the group that will be set for ungrouped files and directories.
+deb12cis_ungrouped_group: root
+# This variable is a toggle for enabling/disabling the automated
+# setting of an owner or group (specified in variables `deb12cis_unowned_owner`
+# and 'deb12cis_ungrouped_group') for all unowned or ungrouped files and
+# directories. Setting this variable to 'false' will only display a
+# warning with a list of the unowned and ungrouped files and directories,
+# asking the user to manually assign ownership.
+deb12cis_ownership_adjust: false
+
+## Control 7.1.13 - Ensure SUID and SGID files are reviewed
+# This variable is a toggle for enabling/disabling the automated removal
+# of the SUID bit from all files on all mounts. Setting this variable to 'false'
+# will only display a warning.
+deb12cis_suid_sgid_adjust: false
+
+## Control 7.2.9 -Ensure no duplicate group names exist
 # The minimum and maximum UIDs to be used for specifying
 # non-system users (Those who usually have an home directory in
 # /home, have a shell set and hence can login) can either be
