@@ -862,6 +862,13 @@ deb12cis_sudo_package: "sudo"
 ## Control 5.2.3
 # This variable defines the path and file name of the sudo log file.
 deb12cis_sudolog_location: "/var/log/sudo.log"
+
+## Control 5.2.4 - Ensure users must provide password for escalation
+# The following variable specifies a list of users that should not be required to provide a password
+# for escalation. Feel free to edit it according to your needs.
+deb12cis_sudoers_exclude_nopasswd_list:
+  - admin
+
 ##  Control 5.2.6
 # This variable sets the duration (in minutes) during which a user's authentication credentials
 # are cached after successfully authenticating using "sudo". This allows the user to execute
