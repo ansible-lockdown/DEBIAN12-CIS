@@ -35,12 +35,12 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   loop:
-    - { regexp: 'URL=', line: 'URL={{ deb12cis_remote_log_server }}'}
+    - { regexp: 'URL=', line: 'URL={{ deb12cis_journal_upload_url }}'}
     - { regexp: 'ServerKeyFile=', line: 'ServerKeyFile={{ deb12cis_journal_upload_serverkeyfile }}'}
     - { regexp: 'ServerCertificateFile=', line: 'ServerCertificateFile={{ deb12cis_journal_servercertificatefile }}'}
     - { regexp: 'TrustedCertificateFile=', line: 'TrustedCertificateFile={{ deb12cis_journal_trustedcertificatefile }}'}
 
-- name: "6.2.1.2.3 | PATCH | Ensure systemd-journal-remote is enabled and active"
+- name: "6.2.1.2.3 | PATCH | Ensure systemd-journal-upload is enabled and active"
   when:
     - not deb12cis_system_is_log_server
     - deb12cis_rule_6_2_1_2_3
