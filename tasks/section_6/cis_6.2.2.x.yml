@@ -17,7 +17,7 @@
       failed_when: false
       register: discovered_logfiles
 
-    - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
+    - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured | add u-x,g-wx,o-rwx permissions for some special files"
       when:
         - discovered_logfiles.stdout_lines | length > 0
         - ('audit.log' in item or 'journal' in item) or
@@ -32,7 +32,7 @@
       register: discovered_logfile_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
-    - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
+    - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured | add u-x,g-x,o-rwx permissions for some special files"
       when:
         - discovered_logfiles.stdout_lines | length > 0
         - ('anaconda' in item or 'dnf' in item or 'secure' in item  or 'messages' in item or 'hawkey' in item)
@@ -43,7 +43,7 @@
       register: discovered_logfile_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
-    - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
+    - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured | add ug-x,o-wx permissions for some special files"
       when:
         - discovered_logfiles.stdout_lines | length > 0
         - ('sssd' in item or 'lastlog' in item) or
@@ -56,4 +56,29 @@
         mode: 'ug-x,o-wx'
       failed_when: discovered_logfile_list.state not in '[ file, absent ]'
       register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.stdout_lines }}"
+
+    - name: "6.2.2.1 | PATCH | Ensure access to all logfiles has been configured | change permissions for the rest of the files"
+      when:
+        - discovered_logfiles.stdout_lines | length > 0
+        - item != "/var/log/btmp"
+        - item != "/var/log/utmp"
+        - item != "/var/log/wtmp"
+        - item != "/var/log/lastlog"
+        - "'sssd' not in item"
+        - "'lastlog' not in item"
+        - "'anaconda' not in item"
+        - "'dnf' not in item"
+        - "'secure' not in item"
+        - "'messages' not in item"
+        - "'hawkey' not in item"
+        - item != '/var/log/secure'
+        - item != '/var/log/syslog'
+        - item != '/var/log/messages'
+        - item != '/var/log/auth.log'
+        - "'audit.log' not in item"
+        - "'journal' not in item"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'u+rw,g+r,o-r'
       loop: "{{ discovered_logfiles.stdout_lines }}"
