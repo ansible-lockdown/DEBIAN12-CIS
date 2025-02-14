@@ -1364,8 +1364,11 @@ deb12cis_system_is_log_server: false
 deb12cis_rsyslog_ansiblemanaged: true
 
 ## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable specifies the address of the remote log host where logs are being sent.
-deb12cis_remote_log_server: 192.168.2.100
+# This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
+# remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
+# over UDP or TCP, will not be performed. However, the only implemented logging service by this role is
+# `journald`. So this variable will never be used.
+deb12cis_remote_log_server: false
 ## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable configures the value of the 'target' parameter to be configured when enabling
 # forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
