@@ -310,16 +310,25 @@
   vars:
     warn_control_id: '7.2.10'
   block:
+
+    - name: "7.2.10 | AUDIT | Ensure local interactive user dot files access is configured | Get the users' home dirs"
+      ansible.builtin.shell: "getent passwd | awk -F: '$7 !~ \"/usr/bin/false|/bin/false|/sbin/nologin|/usr/sbin/nologin\" {print $6}'"
+      changed_when: false
+      failed_when: discovered_users_homedirs.rc not in [ 0, 1 ]
+      check_mode: false
+      register: discovered_users_homedirs
+
     - name: "7.2.10 | AUDIT | Ensure local interactive user dot files access is configured | Check for files"
-      ansible.builtin.shell: find /home/ -name "\.*" -perm /g+w,o+w
+      ansible.builtin.shell: find {{ item }}/ - type f -name "\.*" ! -perm -0644
       changed_when: false
       failed_when: discovered_homedir_dot_files.rc not in [ 0, 1 ]
       check_mode: false
       register: discovered_homedir_dot_files
+      loop: "{{ discovered_users_homedirs.stdout_lines }}"
 
     - name: "7.2.10 | AUDIT | Ensure local interactive user dot files access is configured | Warning on files found"
       when:
-        - discovered_homedir_dot_files.stdout | length > 0
+        - discovered_homedir_dot_files.results | length > 0
         - deb12cis_dotperm_ansiblemanaged
       ansible.builtin.debug:
         msg:
@@ -327,16 +336,27 @@
 
     - name: "7.2.10 | PATCH | Ensure local interactive user dot files access is configured | Set warning count"
       when:
-        - discovered_homedir_dot_files.stdout | length > 0
+        - discovered_homedir_dot_files.results | length > 0
         - deb12cis_dotperm_ansiblemanaged
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
-    - name: "7.2.10 | PATCH | Ensure local interactive user dot files access is configured | Changes files if configured"
+    - name: "7.2.10 | PATCH | Ensure local interactive user dot files access is configured | Add right permissions for general files"
       when:
-        - discovered_homedir_dot_files.stdout | length > 0
+        - discovered_homedir_dot_files.results | length > 0
         - deb12cis_dotperm_ansiblemanaged
+        - item | basename not in ['.ansible','.ssh','.bash_profile','.bash_history','.netrc']
       ansible.builtin.file:
         path: '{{ item }}'
-        mode: 'go-w'
-      loop: "{{ discovered_homedir_dot_files.stdout_lines }}"
+        mode: 'go-wx,u-x'
+      loop: "{{ discovered_homedir_dot_files.results | map(attribute='stdout_lines') | list | flatten }}"
+
+    - name: "7.2.10 | PATCH | Ensure local interactive user dot files access is configured | Add right permissions for .bash_profile, .bash_history or .netrc files"
+      when:
+        - discovered_homedir_dot_files.results | length > 0
+        - deb12cis_dotperm_ansiblemanaged
+        - item | basename == '.bash_profile' or item | basename == '.netrc' or item | basename == '.bash_history'
+      ansible.builtin.file:
+        path: '{{ item }}'
+        mode: 'go-rwx,u-x'
+      loop: "{{ discovered_homedir_dot_files.results | map(attribute='stdout_lines') | list | flatten }}"
