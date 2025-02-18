@@ -319,7 +319,7 @@
       register: discovered_users_homedirs
 
     - name: "7.2.10 | AUDIT | Ensure local interactive user dot files access is configured | Check for files"
-      ansible.builtin.shell: find {{ item }}/ - type f -name "\.*" ! -perm -0644
+      ansible.builtin.shell: find {{ item }}/ -type f -name "\.*" ! -perm -0644
       changed_when: false
       failed_when: discovered_homedir_dot_files.rc not in [ 0, 1 ]
       check_mode: false
@@ -345,7 +345,7 @@
       when:
         - discovered_homedir_dot_files.results | length > 0
         - deb12cis_dotperm_ansiblemanaged
-        - item | basename not in ['.ansible','.ssh','.bash_profile','.bash_history','.netrc']
+        - item | basename not in ['.ansible','.bash_profile','.bash_history','.netrc']
       ansible.builtin.file:
         path: '{{ item }}'
         mode: 'go-wx,u-x'
