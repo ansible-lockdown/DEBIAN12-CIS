@@ -63,7 +63,7 @@
       register: discovered_sudo_nopasswd
 
     - name: "5.2.4 | PATCH | Ensure users must provide password for escalation"
-      when: discovered_sudo_nopasswd.std | length > 0
+      when: discovered_sudo_nopasswd.stdout | length > 0
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: '^((?!#|{% for name in deb12cis_sudoers_exclude_nopasswd_list %}{{ name }}{% if not loop.last -%}|{%- endif -%}{% endfor %}).*)NOPASSWD(.*)'
