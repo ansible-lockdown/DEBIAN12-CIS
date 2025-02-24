@@ -47,7 +47,7 @@
         create: true
       loop: "{{ prelim_wireless_modules.stdout_lines }}"
 
-    - name: "3.2.1 | PATCH | Ensure dccp kernel module is not available | blacklist"
+    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled  | blacklist"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/blacklist.conf
         regexp: "^(#)?blacklist {{ item }}(\\s|$)"
