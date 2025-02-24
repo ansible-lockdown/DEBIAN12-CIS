@@ -184,6 +184,14 @@
     - deb12cis_rule_4_1_1
     - deb12cis_firewall_package == "ufw"
     - deb12cis_ufw_use_sysctl
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_4.1.1
+    - apt
+    - ufw
+    - NIST800-53R5_SC-7
   ansible.builtin.lineinfile:
     path: /etc/default/ufw
     regexp: ^IPT_SYSCTL=.*
