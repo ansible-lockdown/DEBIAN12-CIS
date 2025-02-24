@@ -13,7 +13,7 @@ os_check: true
 # (e.g., removing .forward and .netrc files for interactive users) are carried out.
 # If you set this variable to 'true', the role will carry such tasks; if you set it to
 # 'false', these tasks will be skipped.
-deb12cis_disruption_high: false
+deb12cis_disruption_high: true
 
 ## Switching on/off specific baseline sections
 # These variables govern whether the tasks of a particular section are to be executed when running the role.
@@ -122,8 +122,6 @@ audit_log_dir: '/opt'
 ## PLEASE NOTE: These work in coordination with the section # group variables and tags.
 ## You must enable an entire section in order for the variables below to take effect.
 
-
-
 ## Section 1 Fixes
 # Section 1 is Initial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
 # Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
@@ -215,7 +213,6 @@ deb12cis_rule_1_7_8: true
 deb12cis_rule_1_7_9: true
 deb12cis_rule_1_7_10: true
 
-
 ## Section 2 Fixes
 # Section 2 is Services (Special Purpose Services, and service clients)
 deb12cis_rule_2_1_1: true
@@ -294,7 +291,6 @@ deb12cis_rule_3_3_8: true
 deb12cis_rule_3_3_9: true
 deb12cis_rule_3_3_10: true
 deb12cis_rule_3_3_11: true
-
 
 ## Section 4 Fixes
 # Section 4 is Firewall configuration (Configure single firewall utility, Configure Uncomplicated Firewall, Configure nftables
@@ -420,7 +416,6 @@ deb12cis_rule_5_4_2_8: true
 deb12cis_rule_5_4_3_1: true
 deb12cis_rule_5_4_3_2: true
 deb12cis_rule_5_4_3_3: true
-
 
 ## Section 6 Fixes
 # Section 6 is Logging and Auditing (Configure System Accounting (auditd), Configure Data Retention, and Configure Logging)
@@ -556,12 +551,18 @@ deb12cis_apparmor_disable: false
 # ATTENTION: if Control 1.3.1.4 is run (e.g., when running level 2 rules), it OVERRIDES control 1.3.1.3
 # and sets `enforce` mode, no matter what this variable's value is.
 deb12cis_apparmor_mode: complain
+# This variable is used as a check for the implementation of control 1.3.1.3.
+# As explained in the variable's description from above, if control 1.3.1.4 is run
+# it overrides this control. So this control will get skipped if control 1.3.1.4
+# is executed. Default value is `false`, and it will only get changed to `true`
+# automatically by the role if the tasks associated for control 1.3.1.4 are executed.
+control_1_3_1_4_was_run: false
 
 ## Control 1.4.1 - Ensure bootloader password is set
 # Whether to set `deb12cis_bootloader_password_hash` or not. You might set this variable to
 # `false` to set an individual password on (each of) your machine(s) yourself manually instead of
 # storing the password-hash in the `deb12cis_bootloader_password_hash` variable here.
-deb12cis_set_boot_pass: false
+deb12cis_set_boot_pass: true
 # This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default
 # value must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
 # this format: 'grub.pbkdf2.sha512.<Rounds>.<Salt>.<Checksum>'
@@ -979,6 +980,12 @@ deb12cis_sudo_package: "sudo"
 # log file.
 deb12cis_sudolog_location: "/var/log/sudo.log"
 
+## Control 5.2.4 - Ensure users must provide password for escalation
+# The following variable specifies a list of users that should not be required to provide a password
+# for escalation. Feel free to edit it according to your needs.
+deb12cis_sudoers_exclude_nopasswd_list:
+  - admin
+
 ##  Control 5.2.6 - Ensure sudo authentication timeout is configured correctly
 # This variable sets the duration (in minutes) during which a user's authentication credentials
 # are cached after successfully authenticating using "sudo". This allows the user to execute
@@ -1366,7 +1373,7 @@ deb12cis_rsyslog_ansiblemanaged: true
 ## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
 # remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
-# over UDP or TCP, will not be performed. However, the only implemented logging service by this role is
+# over UDP or TCP, will not be performed.However, the only implemented logging service by this role is
 # `journald`. So this variable will never be used.
 deb12cis_remote_log_server: false
 ## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
@@ -1539,7 +1546,6 @@ deb12cis_allow_auditd_uid_user_exclusions: false
 deb12cis_auditd_uid_exclude:
   - 1999
 
-
 # This variable can be used to configure other keys in auditd.conf
 deb12cis_auditd_extra_conf:
   # This variable governs the threshold(MegaBytes) under which the audit daemon should perform a
@@ -1597,3 +1603,9 @@ prelim_min_int_uid: 1000
 # Note that the value will be dynamically overwritten if variable `discover_int_uid` has
 # been set to `true`.
 prelim_max_int_uid: 65533
+
+## Control 7.2.10 - Ensure local interactive user dot files access is configured
+# This variable is a toggle foe enabling/disabling the automated modification of
+# permissions on dot files.
+# Possible values are `true` and `false`.
+deb12cis_dotperm_ansiblemanaged: true
