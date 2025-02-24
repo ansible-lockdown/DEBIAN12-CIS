@@ -84,10 +84,10 @@
     - NIST800-53R5_MP-2
   block:
     - name: "5.1.4 | PATCH | Ensure sshd access is configured | Add allowed users"
-      when: "deb12cis_sshd['allow_users']| default('') | length > 0 "
+      when: "deb12cis_sshd_allow_users | default('') | length > 0 "
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
-        regexp: '^(?i)(#|)\s*AllowUsers'
+        regexp: '(?i)^(#|)\s*AllowUsers'
         line: 'AllowUsers {{ deb12cis_sshd_allow_users }}'
         validate: 'sshd -t -f %s'
       notify: Restart sshd
@@ -96,7 +96,7 @@
       when: "deb12cis_sshd_allow_groups | default('') | length > 0"
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
-        regexp: '^(?i)(#|)\s*AllowGroups'
+        regexp: '(?i)^(#|)\s*AllowGroups'
         line: 'AllowGroups {{ deb12cis_sshd_allow_groups }}'
         validate: 'sshd -t -f %s'
       notify: Restart sshd
@@ -105,7 +105,7 @@
       when: "deb12cis_sshd_deny_users | default('') | length > 0"
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
-        regexp: '^(?i)(#|)\s*DenyUsers'
+        regexp: '(?i)^(#|)\s*DenyUsers'
         line: 'DenyUsers {{ deb12cis_sshd_deny_users }} '
         validate: 'sshd -t -f %s'
       notify: Restart sshd
@@ -114,7 +114,7 @@
       when: "deb12cis_sshd_deny_groups | default('') | length > 0"
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
-        regexp: '^(?i)(#|)\s*DenyGroups'
+        regexp: '(?i)^(#|)\s*DenyGroups'
         line: 'DenyGroups {{ deb12cis_sshd_deny_groups }}'
         validate: 'sshd -t -f %s'
       notify: Restart sshd
