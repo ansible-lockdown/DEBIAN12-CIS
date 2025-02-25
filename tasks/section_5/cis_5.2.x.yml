@@ -10,7 +10,7 @@
     - rule_5.2.1
     - NIST800-53R5_AC-6
   ansible.builtin.package:
-    name: sudo
+    name: "{{ deb12cis_sudo_package }}"
     state: present
 
 - name: "5.2.2 | PATCH | Ensure sudo commands use pty"
