@@ -31,14 +31,6 @@ deb12cis_section7: true
 deb12cis_level_1: true
 deb12cis_level_2: true
 
-## Section 1.6 - Mandatory Access Control
-# This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
-# 'deb12cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
-deb12cis_selinux_disable: false
-# This variable is used in a preliminary task, handling grub2 paths either in case of
-# UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
-deb12cis_legacy_boot: false
-
 ## Benchmark name and profiles used by auditing control role
 # The audit variable found at the base
 benchmark: DEBIAN12-CIS
@@ -70,8 +62,6 @@ setup_audit: false
 
 # enable audits to run - this runs the audit and get the latest content
 run_audit: false
-# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
-audit_run_heavy_tests: true
 
 ## Only run Audit do not remediate
 audit_only: false
@@ -713,9 +703,6 @@ deb12cis_xwindow_server: false  # will remove mask not an option
 deb12cis_is_mail_server: false
 
 ## Controls 2.2.x - Configure Client Services
-# Set the respective variable to `true` to keep the
-# client package, otherwise it is uninstalled.
-deb12cis_nis_client_required: false  # Same package as NIS server
 # Set this variable to `true` to keep package `rsh`; otherwise, the package is uninstalled.
 deb12cis_rsh_client: false
 # Set this variable to `true` to keep package `talk`; otherwise, the package is uninstalled.
@@ -1210,8 +1197,6 @@ deb12cis_force_user_warnage: false
 ## Control 5.4.1.4 - Ensure strong password hashing algorithm is configured
 # deb12cis_passwd_hash_algo is the hashing algorithm used
 deb12cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
-# Set pam as well as login defs if PAM is required
-deb12cis_passwd_setpam_hash_algo: false
 
 ## Control 5.4.1.5 - Ensure inactive password lock is configured
 # This variable specifies the number of days of inactivity before an account will be locked.
@@ -1364,48 +1349,6 @@ deb12cis_syslog: journald
 #  - 'true', current system will act as a log SERVER, enabling centralised log management(by protecting log integrity
 # from local attacks on remote clients)
 deb12cis_system_is_log_server: false
-
-## Control 6.2.3.5 | PATCH | Ensure logging is configured
-# This variable governs if current Ansible role should manage syslog settings
-# in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
-deb12cis_rsyslog_ansiblemanaged: true
-
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
-# remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
-# over UDP or TCP, will not be performed.However, the only implemented logging service by this role is
-# `journald`. So this variable will never be used.
-deb12cis_remote_log_server: false
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value of the 'target' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
-# destination server. For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_host: logagg.example.com
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value of the 'port' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server. The default value for this destination port is 514.
-# For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_port: 514
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value("TCP"/"UDP") of the 'protocol' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server. The default value for the 'omfwd' plug-in is UDP.
-# For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_protocol: tcp
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable governs how often an action is retried(value is passed to 'action.resumeRetryCount' parameter) before
-# it is considered to have failed(that roughly translates to discarded messages). The default value is 0, but
-# when set to "-1"(eternal), this setting would prevent rsyslog from dropping messages when retrying to connect
-# if server is not responding. For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_retrycount: 100
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
-# For this value to be reflected in the configuration, the variable which enables the automatic configuration
-# of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_queuesize: 1000
 
 ## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # 'deb12cis_journal_upload_url' is the ip address to upload the journal entries to
