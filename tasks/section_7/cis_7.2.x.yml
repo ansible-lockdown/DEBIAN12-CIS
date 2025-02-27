@@ -274,7 +274,7 @@
         - "'acl' in ansible_facts.packages"
       ansible.posix.acl:
         path: "{{ item }}"
-        default: true
+        default: false
         etype: group
         permissions: rx
         state: present
@@ -286,7 +286,7 @@
         - "'acl' in ansible_facts.packages"
       ansible.posix.acl:
         path: "{{ item }}"
-        default: true
+        default: false
         etype: other
         permissions: 0
         state: present
