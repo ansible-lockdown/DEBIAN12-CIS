@@ -1002,8 +1002,14 @@ deb12cis_pam_pwunix_file: 'pam_unix'
 # or overwrites the existing file (that has the same name) of the target, implementing
 # the needed configuration.
 # Should NOT be enabled, if allowing custom config that enabled pam_faillock
+# NOTE that you also need to set `deb12cis_pam_auth_unix` to `true`:
+# 'Pam_auth_update_pwunix' will only be run if both these variables
+# are set to `true`.
 deb12cis_pam_create_pamunix_file: false
-# Allow pam-auth-update --enable deb12cis_pam_pwunix_file to run/ IT DOES NOT
+# Allow pam-auth-update --enable deb12cis_pam_pwunix_file to run
+# NOTE that you also need to set `deb12cis_pam_create_pamunix_file`
+# to `true`: 'Pam_auth_update_pwunix' will only be run if both these
+# variables are set to `true`.
 deb12cis_pam_auth_unix: true
 
 ## Control 5.3.2.2 - Ensure pam_faillock module is enabled
@@ -1017,11 +1023,15 @@ deb12cis_pam_faillock_notify_file: 'faillock_notify'
 # The following variable conditions the task that implements the CIS control
 # regarding pam-faillock. The task creates a new configuration file using a jinja template,
 # or overwrites the existing file of the target that has the same name, implementing
-# the needed configuration.
+# the needed configuration. NOTE that you also need to set `deb12cis_pam_auth_faillock`
+# to `true`: 'Pam_auth_update_pwfaillock' will only be run if both these
+# variables are set to `true`.
 deb12cis_pam_create_faillock_files: true
 # Allow pam-auth-update --enable deb12cis_pam_faillock_file
-# and
-# Allow pam-auth-update --enable deb12cis_pam_faillock_notify_file/ IT DOES NOT
+# and Allow pam-auth-update --enable deb12cis_pam_faillock_notify_file
+# NOTE that you also need to set `deb12cis_pam_create_faillock_files`
+# to `true`: 'Pam_auth_update_pwfaillock' will only be run if both these
+# variables are set to `true`.
 deb12cis_pam_auth_faillock: true
 
 ## Control 5.3.2.3 - Ensure pam_pwquality module is enabled
@@ -1031,9 +1041,14 @@ deb12cis_pam_pwquality_file: 'pwquality'
 # The following variable conditions the task that implements the CIS control
 # regarding pam_pwquality. The task creates a new configuration file using a jinja template,
 # or overwrites the existing file of the target that has the same name, implementing
-# the needed configuration.
+# the needed configuration. NOTE that you also need to set `deb12cis_pam_auth_pwquality`
+## to `true`: 'Pam_auth_update_pwquality' will only be run if both these
+## variables are set to `true`.
 deb12cis_pam_create_pwquality_files: true
-# Allow pam-auth-update --enable deb12cis_pam_pwquality_file/ IT DOES NOT
+# Allow pam-auth-update --enable deb12cis_pam_pwquality_file
+# NOTE that you also need to set `deb12cis_pam_create_pwquality_files`
+# to `true`: 'Pam_auth_update_pwquality' will only be run if both these
+# variables are set to `true`.
 deb12cis_pam_auth_pwquality: true
 
 ## Control 5.3.2.4 - Ensure pam_pwhistory module is enabled
@@ -1044,10 +1059,14 @@ deb12cis_pam_pwhistory_file: 'pwhistory'
 # The following variable conditions the task that implements the CIS control
 # regarding pam_pwhistory. The task creates a new configuration file using a jinja template,
 # or overwrites the existing file of the target that has the same name, implementing
-# the needed configuration.
-# filepath also affects controls 5.3.3.3.1, 5.3.3.3.2, 5.3.3.3.3
+# the needed configuration. NOTE that you also need to set `deb12cis_pam_auth_pwhistory`
+### to `true`: 'Pam_auth_update_pwhistory' will only be run if both these
+### variables are set to `true`.
 deb12cis_pam_create_pwhistory_files: true
-# Allow pam-auth-update --enable deb12cis_pam_pwhistory_file/ IT DOES NOT
+# Allow pam-auth-update --enable deb12cis_pam_pwhistory_file
+# NOTE that you also need to set `deb12cis_pam_create_pwhistory_files`
+# to `true`: 'Pam_auth_update_pwhistory' will only be run if both these
+# variables are set to `true`.
 deb12cis_pam_auth_pwhistory: true
 
 ## Control 5.3.3.1.1 - Ensure password failed attempts lockout is configured
