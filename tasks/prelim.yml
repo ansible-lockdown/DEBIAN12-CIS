@@ -66,6 +66,13 @@
     name: libselinux1
     state: present
 
+- name: "PRELIM | PATCH | Ensure ACL is installed"
+  when:
+    - '"acl" not in ansible_facts.packages'
+  ansible.builtin.package:
+    name: acl
+    state: present
+
 - name: PRELIM | AUDIT | Section 1.1 | Create list of mount points
   tags: always
   ansible.builtin.set_fact:
