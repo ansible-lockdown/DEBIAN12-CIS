@@ -67,8 +67,7 @@
     state: present
 
 - name: "PRELIM | PATCH | Ensure ACL is installed"
-  when:
-    - '"acl" not in ansible_facts.packages'
+  when: '"acl" not in ansible_facts.packages'
   ansible.builtin.package:
     name: acl
     state: present
