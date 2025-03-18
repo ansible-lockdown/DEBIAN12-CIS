@@ -1120,7 +1120,7 @@ deb12cis_passwd_complex_option: minclass  # pragma: allowlist secret
 # The following variable sets the password complexity via 'minclass'. The 'minclass' option provides
 # the minimum number of classes of characters required in a new password. (digits, uppercase, lowercase, others). e.g.
 # For example a value of 4 would mean that it requires digits, uppercase, lower case, and special characters.
-deb12cis_passwd_minclass: 3
+deb12cis_passwd_minclass: 4
 # The following variables set the password complexity via the 'credits' option.
 # Each of the variables represents a requirement for complexity.
 # The 'dcredit' variable is the maximum credit for having digits in the new password.
