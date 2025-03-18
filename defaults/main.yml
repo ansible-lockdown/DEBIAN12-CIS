@@ -502,7 +502,6 @@ deb12cis_rule_7_2_10: true
 ## Section 1 Control Variables
 ##
 
-
 ## Control 1.1.1.8 - Ensure udf kernel module is not available
 # We have found that some systems may have UAS kernel running and if it is,
 # usb-storage will fail to be removed which is control 1.1.1.8. By default, this
@@ -602,7 +601,6 @@ deb12cis_screensaver_lock_delay: 5
 ##
 ## Section 2 Control Variables
 ##
-
 
 ## Controls 2.1.x - Configure Server Services
 # The set of rules that make up section 2.1, are used for ensuring that
@@ -785,7 +783,6 @@ deb12cis_is_router: false
 # implemented. Therefore, those tasks are setting this variable's
 # value to 'true' so as to execute the needed update!
 deb12cis_sysctl_update: false
-
 
 # The following variable is responsible for the execution of a
 # handler that flushes the ipv4 route table. Although the default
