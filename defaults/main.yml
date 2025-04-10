@@ -1,23 +1,24 @@
 ---
 # defaults file for deb12-cis
 # WARNING:
-# These values may be overriden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
+# These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 
-# Run the OS validation check
+# This variable is used for running the OS validation check.
 # Supported OSs will not need for this to be changed - see README e.g. CentOS
 os_check: true
 
-# Disruption is high
-## Run tests that are considered higher risk and could have a system impact if not properly tested
-## Default false
-## Will be fine if clean new unconfigured build
-deb12cis_disruption_high: false
+## Possibly disruptive tasks
+# This variable governs whether tasks of a potentially disruptive nature on your system
+# (e.g., removing .forward and .netrc files for interactive users) are carried out.
+# If you set this variable to 'true', the role will carry such tasks; if you set it to
+# 'false', these tasks will be skipped.
+deb12cis_disruption_high: true
 
 ## Switching on/off specific baseline sections
 # These variables govern whether the tasks of a particular section are to be executed when running the role.
-# E.g: If you want to execute the tasks of Section 1 you should set the "_section1" variable to true.
-# If you do not want the tasks from that section to get executed you simply set the variable to "false".
+# E.g: If you want to execute the tasks of Section 1 you should set the '_section1' variable to 'true'.
+# If you do not want the tasks from that section to get executed you simply set the variable to 'false'.
 deb12cis_section1: true
 deb12cis_section2: true
 deb12cis_section3: true
@@ -26,33 +27,26 @@ deb12cis_section5: true
 deb12cis_section6: true
 deb12cis_section7: true
 
-# This is used for audit purposes to run only specific level use the tags
-# e.g.
-# - level1-server
-# - level2-workstation
+## This is used for audit purposes.
 deb12cis_level_1: true
 deb12cis_level_2: true
 
-## Section 1.6 - Mandatory Access Control
-# This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
-# 'deb12cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
-deb12cis_selinux_disable: false
-# This variable is used in a preliminary task, handling grub2 paths either in case of
-# UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
-deb12cis_legacy_boot: false
-
-## Benchmark name used by audting control role
+## Benchmark name and profiles used by auditing control role
 # The audit variable found at the base
-## metadata for Audit benchmark
+benchmark: DEBIAN12-CIS
 benchmark_version: '1.0.1'
 
-benchmark: DEBIAN12-CIS
-
-# Whether to skip the system reboot before audit
+## Reboot system before audit
 # System will reboot if false, can give better audit results
 skip_reboot: true
 
-# default value will change to true but wont reboot if not enabled but will error
+## This variable's value defaults to 'false'.
+# If there are tasks that require a reboot they will notify a handler
+# that sets this variable's value to 'true'. The rebooting task
+# is triggered by this variable, and only executes if this var's
+# value is set to 'true' and if the 'skip_reboot' variable is 'false'.
+# If 'skip_reboot' is set to 'true', the rebooting task will display
+# a warning message.
 change_requires_reboot: false
 
 ###
@@ -61,28 +55,25 @@ change_requires_reboot: false
 
 ###########################################
 ### Goss is required on the remote host ###
-### vars/audit.yml for other settings  ###
+## Refer to vars/auditd.yml for any other settings ##
 
 # Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
 setup_audit: false
 
 # enable audits to run - this runs the audit and get the latest content
 run_audit: false
-# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
-audit_run_heavy_tests: true
 
 ## Only run Audit do not remediate
 audit_only: false
-### As part of audit_only ###
+# As part of audit_only
 # This will enable files to be copied back to control node in audit_only mode
 fetch_audit_files: false
 # Path to copy the files to will create dir structure in audit_only mode
 audit_capture_files_dir: /some/location to copy to on control node
-#############################
 
 # How to retrieve audit binary
 # Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already dowmloaded
+# you will need to access to either github or the file already downloaded
 get_audit_binary_method: download
 
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
@@ -94,10 +85,11 @@ audit_bin_copy_location: /some/accessible/path
 # options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
 audit_content: git
 
+# This is the source for unarchiving or copying the audit content files.
 # If using either archive, copy, get_url:
-## Note will work with .tar files - zip will require extra configuration
-### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/UBUNTU22-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
+# Note will work with .tar files - zip will require extra configuration
+# If using get_url this is expecting github url in tar.gz format e.g.
+# https://github.com/ansible-lockdown/UBUNTU22-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
 audit_conf_source: "some path or url to copy from"
 
 # Destination for the audit content to be placed on managed node
@@ -110,11 +102,17 @@ audit_log_dir: '/opt'
 ### Goss Settings ##
 ####### END ########
 
-# These variables correspond with the CIS rule IDs or paragraph numbers defined in
-# the CIS benchmark documents.
-# PLEASE NOTE: These work in coordination with the section # group variables and tags.
-# You must enable an entire section in order for the variables below to take effect.
+##
+## Rule-specific switches
+##
+## Use the switches below to disable specific rules independently of the chosen profile
+##
+## These variables correspond with the CIS rule IDs or paragraph numbers defined in
+## the CIS benchmark documents.
+## PLEASE NOTE: These work in coordination with the section # group variables and tags.
+## You must enable an entire section in order for the variables below to take effect.
 
+## Section 1 Fixes
 # Section 1 is Initial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
 # Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
 # Filesystem kernel modules
@@ -205,8 +203,8 @@ deb12cis_rule_1_7_8: true
 deb12cis_rule_1_7_9: true
 deb12cis_rule_1_7_10: true
 
-# Section 2 rules are controling Services (Special Purpose Services, and service clients)
-## Configure Server Services
+## Section 2 Fixes
+# Section 2 is Services (Special Purpose Services, and service clients)
 deb12cis_rule_2_1_1: true
 deb12cis_rule_2_1_2: true
 deb12cis_rule_2_1_3: true
@@ -230,7 +228,7 @@ deb12cis_rule_2_1_20: true
 deb12cis_rule_2_1_21: true
 deb12cis_rule_2_1_22: true
 
-## Configure Client Services
+# Configure Client Services
 deb12cis_rule_2_2_1: true
 deb12cis_rule_2_2_2: true
 deb12cis_rule_2_2_3: true
@@ -238,7 +236,7 @@ deb12cis_rule_2_2_4: true
 deb12cis_rule_2_2_5: true
 deb12cis_rule_2_2_6: true
 
-## Ensure time synchronization is in use
+# Ensure time synchronization is in use
 deb12cis_rule_2_3_1_1: true
 # Configure systemd-timesyncd
 deb12cis_rule_2_3_2_1: true
@@ -248,8 +246,8 @@ deb12cis_rule_2_3_3_1: true
 deb12cis_rule_2_3_3_2: true
 deb12cis_rule_2_3_3_3: true
 
-# 2.4 Job Schedulers
-# 2.4.1 Configure Cron
+# Job Schedulers
+# Configure Cron
 deb12cis_rule_2_4_1_1: true
 deb12cis_rule_2_4_1_2: true
 deb12cis_rule_2_4_1_3: true
@@ -261,12 +259,12 @@ deb12cis_rule_2_4_1_8: true
 # Configure At
 deb12cis_rule_2_4_2_1: true
 
-# Section 3 Network
-## Network Devices
+## Section 3 Network Configuration
+# Network Devices
 deb12cis_rule_3_1_1: true
 deb12cis_rule_3_1_2: true
 deb12cis_rule_3_1_3: true
-## Network Kernel Modules
+# Network Kernel Modules
 deb12cis_rule_3_2_1: true
 deb12cis_rule_3_2_2: true
 deb12cis_rule_3_2_3: true
@@ -284,9 +282,10 @@ deb12cis_rule_3_3_9: true
 deb12cis_rule_3_3_10: true
 deb12cis_rule_3_3_11: true
 
-# Section 4 Firewalls
-### Section 4 Host Based Firewall
-# 4.1 Configure UncomplicatedFirewall
+## Section 4 Fixes
+# Section 4 is Firewall configuration (Configure single firewall utility, Configure Uncomplicated Firewall, Configure nftables
+# and Configure iptables)
+# Configure UncomplicatedFirewall
 deb12cis_rule_4_1_1: true
 deb12cis_rule_4_1_2: true
 deb12cis_rule_4_1_3: true
@@ -294,7 +293,7 @@ deb12cis_rule_4_1_4: true
 deb12cis_rule_4_1_5: true
 deb12cis_rule_4_1_6: true
 deb12cis_rule_4_1_7: true
-# 4.2 Configure nftables
+# Configure nftables
 deb12cis_rule_4_2_1: true
 deb12cis_rule_4_2_2: true
 deb12cis_rule_4_2_3: true
@@ -314,13 +313,15 @@ deb12cis_rule_4_3_2_1: true
 deb12cis_rule_4_3_2_2: true
 deb12cis_rule_4_3_2_3: true
 deb12cis_rule_4_3_2_4: true
-# Configure IPv5 iptables
+# Configure IPv6 iptables
 deb12cis_rule_4_3_3_1: true
 deb12cis_rule_4_3_3_2: true
 deb12cis_rule_4_3_3_3: true
 deb12cis_rule_4_3_3_4: true
 
-## Section 5 Access Control
+## Section 5 Fixes
+# Section 5 is Access, Authentication, and Authorization (Configure time-based job schedulers, Configure sudo, Configure SSH Server, Configure PAM
+# and User Accounts and Environment)
 # 5.1 Configure SSH Server
 deb12cis_rule_5_1_1: true
 deb12cis_rule_5_1_2: true
@@ -365,7 +366,7 @@ deb12cis_rule_5_3_2_4: true
 deb12cis_rule_5_3_3_1_1: true
 deb12cis_rule_5_3_3_1_2: true
 deb12cis_rule_5_3_3_1_3: true
-# 5.3.3.2 Configure pam_quality module
+# 5.3.3.2 Configure pam_pwquality module
 deb12cis_rule_5_3_3_2_1: true
 deb12cis_rule_5_3_3_2_2: true
 deb12cis_rule_5_3_3_2_3: true
@@ -374,8 +375,8 @@ deb12cis_rule_5_3_3_2_5: true
 deb12cis_rule_5_3_3_2_6: true
 deb12cis_rule_5_3_3_2_7: true
 deb12cis_rule_5_3_3_2_8: true
-# 5.3.3.3 Configure pam_history module
-# This are added as part of 5.3.2.4 using jinja2 template
+# 5.3.3.3 Configure pam_pwhistory module
+# These are added as part of 5.3.2.4 using jinja2 template
 deb12cis_rule_5_3_3_3_1: true
 deb12cis_rule_5_3_3_3_2: true
 deb12cis_rule_5_3_3_3_3: true
@@ -401,13 +402,13 @@ deb12cis_rule_5_4_2_5: true
 deb12cis_rule_5_4_2_6: true
 deb12cis_rule_5_4_2_7: true
 deb12cis_rule_5_4_2_8: true
-# 5.4.2 Configure user default environment
+# 5.4.3 Configure user default environment
 deb12cis_rule_5_4_3_1: true
 deb12cis_rule_5_4_3_2: true
 deb12cis_rule_5_4_3_3: true
 
-# Section 6 Logging and Auditing
-## 6.1 Configure Integrity Checking
+## Section 6 Fixes
+# Section 6 is Logging and Auditing (Configure System Accounting (auditd), Configure Data Retention, and Configure Logging)
 deb12cis_rule_6_1_1: true
 deb12cis_rule_6_1_2: true
 ## 6.2.1.1.x Configure systemd-journald service
@@ -469,7 +470,8 @@ deb12cis_rule_6_3_4_8: true
 deb12cis_rule_6_3_4_9: true
 deb12cis_rule_6_3_4_10: true
 
-# Section 7 System Maintenance
+## Section 7 Fixes
+# Section 7 is System Maintenance (System File Permissions and User and Group Settings)
 ## 7.1 System File Permissions
 deb12cis_rule_7_1_1: true
 deb12cis_rule_7_1_2: true
@@ -496,23 +498,26 @@ deb12cis_rule_7_2_8: true
 deb12cis_rule_7_2_9: true
 deb12cis_rule_7_2_10: true
 
-## Section 1 vars
+##
+## Section 1 Control Variables
+##
 
-## Control 1.1.1.8
-# We have found that some systems may have UAS kernel running and if it is
-# usb-storage will fail to be removed which is control 1.1.1.8. By default This
+## Control 1.1.1.8 - Ensure udf kernel module is not available
+# We have found that some systems may have UAS kernel running and if it is,
+# usb-storage will fail to be removed which is control 1.1.1.8. By default, this
 # is set to false. By having this set to false control 1.1.1.8 will run but if UAS
-# Is loaded you will receive a warning message instead of usb-storage being removed
+# is loaded you will receive a warning message instead of usb-storage being removed
 # and the playbook will have to be re-run with this switch set to true.
 # Default: false
 deb12cis_uas_remove: false
 
-## Ability to enabe debug on mounts to assist in troubleshooting
-# Mount point changes are set based upon facts created in Prelim
-# these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.
+## Ability to enable debug on mounts to assist in troubleshooting.
+# Mount point changes are set based upon facts created in Prelim,
+# these then build the variable and options that is passed to the handler to set the
+# mount point for the controls in section 1.
 deb12cis_debug_mount_data: false
 
-## Control 1.1.2
+## Controls 1.1.2.1.x
 # If set to `true`, rule will be implemented using the `tmp.mount` systemd-service,
 # otherwise fstab configuration will be used.
 # These /tmp settings will include nosuid,nodev,noexec to conform to CIS standards.
@@ -521,12 +526,13 @@ deb12cis_tmp_svc: false
 ## Controls 1.3.1.x - apparmor
 # AppArmor security policies define what system resources applications can access and their privileges.
 # This automatically limits the damage that the software can do to files accessible by the calling user.
-# The following variables are related to the set of rules from section 1.6.1.x
 
 ## Controls 1.3.1.3 and 1.3.1.4 Ensure all AppArmor Profiles are in enforce (1.3.1.3/4) or complain (1.3.1.3) mode
 
-# This variable disables the implementation of rules 1.3.1.3 and 1.3.1.4
-# regarding enforcing profiles or putting them in complain mode
+# This variable disables the implementation of rules 1.3.1.1, 1.3.1.2,
+# 1.3.1.3 and 1.3.1.4. These refer to ensuring that AppArmor is installed,
+# that it is enabled in the bootloader configuration and that profiles are enforced
+# or put in complain mode.
 deb12cis_apparmor_disable: false
 
 # This variable specifies whether enforce mode or complain  mode is set in Control 1.3.1.3.
@@ -541,41 +547,45 @@ deb12cis_apparmor_mode: complain
 # automatically by the role if the tasks associated for control 1.3.1.4 are executed.
 control_1_3_1_4_was_run: false
 
-## Control 1.4.1
-
-## Whether to set boot password or not
-deb12cis_set_boot_pass: false
-
-# This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value
-# must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
+## Control 1.4.1 - Ensure bootloader password is set
+# Whether to set `deb12cis_bootloader_password_hash` or not. You might set this variable to
+# `false` to set an individual password on (each of) your machine(s) yourself manually instead of
+# storing the password-hash in the `deb12cis_bootloader_password_hash` variable here.
+deb12cis_set_boot_pass: true
+# This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default
+# value must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
 # this format: 'grub.pbkdf2.sha512.<Rounds>.<Salt>.<Checksum>'
 deb12cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
-
-# Ability to override password to boot requirement.
-deb12cis_ask_passwd_to_boot: false
-
-# File which contains the user grub config - not to be 00_header
+# The file in which the grub superuser is specified. The password hash of `deb12cis_grub_user_file`
+# will end up here. The file will be overwritten by this Ansible role and must be in a
+# location where the command `update-grub` will parse it – i.e. usually /etc/grub.d/*.
 deb12cis_grub_user_file: /etc/grub.d/00_user
-
-# User to login to grub with
+# The name of the user in the single-user mode. You have to login with this user for example in
+# the recovery console, which would be otherwise unprotected. This must be `root`.
 deb12cis_grub_user: root
 
+## Unrestricted boot
+# Setting this variable to 'false' enables the system to
+# boot *without* querying for the bootloader password.
+deb12cis_ask_passwd_to_boot: false
+
 ## Controls 1.5.x
-# Ability to set file in which the kernel systcl changes are placed
+# Ability to set file in which the kernel sysctl changes are placed
 deb12cis_sysctl_kernel_conf: /etc/sysctl.d/98_cis_kernel.conf
 
-## Controls:
-# - 1.7.1 - Ensure message of the day is configured properly
-# - 1.7.2 - Ensure local login warning banner is configured properly
-# - 1.7.3 - Ensure remote login warning banner is configured properly
-# This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
-deb12cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
-# End Banner
-# This variable governs, whether dynamic motd is disabled (as required by control 1.7.1)
+## Control 1.6.1 - Ensure message of the day is configured properly
+# This variable governs, whether dynamic motd is disabled
 deb12cis_disable_dynamic_motd: true
 
-## Control 1.7.x - Settings for GDM
-## 1.7 GDM graphical interface
+## Controls 1.7.x  - Set Warning banners and tightening the access rights.
+
+# This variable specifies the warning banner displayed to the user
+# after local login, remote login, and as motd (message of the day)
+# Note that the banner text must not contain the below items in order to be
+# compliant with CIS: \m, \r, \s, \v or references to the OS platform
+deb12cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
+# This variable governs, whether CIS rules regarding GDM
+# are carried out.
 deb12cis_desktop_required: false
 # This variable specifies the GNOME configuration database file to which configurations are written.
 # (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
@@ -588,82 +598,127 @@ deb12cis_screensaver_idle_delay: 900
 # Set max value for lock-delay in seconds (between 0 and 5)
 deb12cis_screensaver_lock_delay: 5
 
-## Section 2. Services
+##
+## Section 2 Control Variables
+##
 
-## Section 2.1.x
-# Service configuration
-# Options are
-# Service
-# - false - removes package
-# - true - leaves package installed
-# Mask
-# - false - leaves service in current status
-# - true - sets service name to masked
-#
-# Setting both Service and Mask to false will remove the package if exists
+## Controls 2.1.x - Configure Server Services
+# The set of rules that make up section 2.1, are used for ensuring that
+# certain services are not installed on the OS.
+# The following list of variables contain two types: the ones that end in '_services', and the ones that end in '_mask'
+# in '_mask'. For completely removing a service both those variables referencing that service shall be set to 'false'.
+# For masking a service the type that ends in '_mask' shall be set to 'true'.
+# Set this variable to `true` to keep service `autofs`; otherwise, the service is uninstalled.
 deb12cis_autofs_services: false
+# Set this variable to `true` to mask service `autofs`.
 deb12cis_autofs_mask: false
+# Set this variable to `true` to keep service `avahi`; otherwise, the service is uninstalled.
 deb12cis_avahi_server: false
+# Set this variable to `true` to mask service `avahi`.
 deb12cis_avahi_mask: false
+# Set this variable to `true` to keep service `dhcp`; otherwise, the service is uninstalled.
 deb12cis_dhcp_server: false
+# Set this variable to `true` to mask service `dhcp`.
 deb12cis_dhcp_mask: false
+# Set this variable to `true` to keep service `dns`; otherwise, the service is uninstalled.
 deb12cis_dns_server: false
+# Set this variable to `true` to mask service `dns`.
 deb12cis_dns_mask: false
+# Set this variable to `true` to keep service `dnsmasq`; otherwise, the service is uninstalled.
 deb12cis_dnsmasq_server: false
+# Set this variable to `true` to mask service `dnsmasq`.
 deb12cis_dnsmasq_mask: false
+# Set this variable to `true` to keep service `samba`; otherwise, the service is uninstalled.
 deb12cis_samba_server: false
+# Set this variable to `true` to mask service `samba`.
 deb12cis_samba_mask: false
+# Set this variable to `true` to keep service `ftp`; otherwise, the service is uninstalled.
 deb12cis_ftp_server: false
+# Set this variable to `true` to mask service `ftp`.
 deb12cis_ftp_mask: false
+# Set this variable to `true` to keep service `ldap`; otherwise, the service is uninstalled.
 deb12cis_ldap_server: false
+# Set this variable to `true` to mask service `ldap`.
 deb12cis_ldap_mask: false
+# Set this variable to `true` to keep service `message`; otherwise, the service is uninstalled.
 deb12cis_message_server: false  # This is for messaging dovecot and cyrus-imap
+# Set this variable to `true` to mask service `message`.
 deb12cis_message_mask: false
+# Set this variable to `true` to keep service `nfs`; otherwise, the service is uninstalled.
 deb12cis_nfs_server: true
+# Set this variable to `true` to mask service `nfs`.
 deb12cis_nfs_mask: true
+# Set this variable to `true` to keep service `nis`; otherwise, the service is uninstalled.
 deb12cis_nis_server: true  # set to mask if nis client required
+# Set this variable to `true` to mask service `nis`.
 deb12cis_nis_mask: false
+# Set this variable to `true` to keep service `print`; otherwise, the service is uninstalled.
 deb12cis_print_server: false  # replaces cups
+# Set this variable to `true` to mask service `print`.
 deb12cis_print_mask: false
+# Set this variable to `true` to keep service `rpc`; otherwise, the service is uninstalled.
 deb12cis_rpc_server: true
+# Set this variable to `true` to mask service `rpc`.
 deb12cis_rpc_mask: true
+# Set this variable to `true` to keep service `rsync`; otherwise, the service is uninstalled.
 deb12cis_rsync_server: false
+# Set this variable to `true` to mask service `rsync`.
 deb12cis_rsync_mask: false
+# Set this variable to `true` to keep service `snmp`; otherwise, the service is uninstalled.
 deb12cis_snmp_server: false
+# Set this variable to `true` to mask service `snmp`.
 deb12cis_snmp_mask: false
+# Set this variable to `true` to keep service `telnet`; otherwise, the service is uninstalled.
 deb12cis_telnet_server: false
+# Set this variable to `true` to mask service `telnet`.
 deb12cis_telnet_mask: false
+# Set this variable to `true` to keep service `tftp`; otherwise, the service is uninstalled.
 deb12cis_tftp_server: false
+# Set this variable to `true` to mask service `tftp`.
 deb12cis_tftp_mask: false
+# Set this variable to `true` to keep service `squid`; otherwise, the service is uninstalled.
 deb12cis_squid_server: false
+# Set this variable to `true` to mask service `squid`.
 deb12cis_squid_mask: false
+# Set this variable to `true` to keep service `apache2`; otherwise, the service is uninstalled.
 deb12cis_apache2_server: false
+# Set this variable to `true` to mask service `apache2`.
 deb12cis_apache2_mask: false
+# Set this variable to `true` to keep service `nginx`; otherwise, the service is uninstalled.
 deb12cis_nginx_server: false
+# Set this variable to `true` to mask service `nginx`.
 deb12cis_nginx_mask: false
+# Set this variable to `true` to keep service `xinetd`; otherwise, the service is uninstalled.
 deb12cis_xinetd_server: false
+# Set this variable to `true` to mask service `xinetd`.
 deb12cis_xinetd_mask: false
+# Set this variable to `true` to keep service `xwindow`; otherwise, the service is uninstalled.
 deb12cis_xwindow_server: false  # will remove mask not an option
+
+## Control 2.1.21 - Ensure mail transfer agents are configured for local-only mode
+# This variable if set to 'false', ensures that the mail transfer agent is configured for
+# local-only mode.
 deb12cis_is_mail_server: false
 
-## Section 2.2 Service clients
-# Client Services
-deb12cis_nis_client_required: false  # Same package as NIS server
+## Controls 2.2.x - Configure Client Services
+# Set this variable to `true` to keep package `rsh`; otherwise, the package is uninstalled.
 deb12cis_rsh_client: false
+# Set this variable to `true` to keep package `talk`; otherwise, the package is uninstalled.
 deb12cis_talk_client: false
+# Set this variable to `true` to keep package `telnet`; otherwise, the package is uninstalled.
 deb12cis_telnet_client: false
+# Set this variable to `true` to keep package `ldap_clients`; otherwise, the package is uninstalled.
 deb12cis_ldap_clients_required: false
+# Set this variable to `true` to keep package `ftp`; otherwise, the package is uninstalled.
 deb12cis_ftp_client: false
 
-## Section 2.3 Time Synchronization
-
-## Control 2.3.1.1
-# This variable choses the tool used for time synchronization
-# The two options are `chrony`and `systemd-timesyncd`.
+## Control 2.3.1.1 - Ensure a single time synchronization daemon is in use
+# This variable chooses the tool used for time synchronization
+# The two options are `chrony` and `systemd-timesyncd`.
 deb12cis_time_sync_tool: "systemd-timesyncd"
 
 ## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
-# The following variable represents a list of of time server pools used
+# The following variable represents a list of time server pools used
 # for configuring chrony and timesyncd.
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
@@ -671,7 +726,7 @@ deb12cis_time_sync_tool: "systemd-timesyncd"
 deb12cis_time_pool:
   - name: time.nist.gov
     options: iburst maxsources 4
-# The following variable represents a list of of time servers used
+# The following variable represents a list of time servers used
 # for configuring chrony and timesyncd
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
 # The default setting for the `options` is `iburst` -- please refer to the documentation
@@ -689,42 +744,55 @@ deb12cis_time_servers:
 # This will also purge any packages not removed via this playbook
 deb12cis_purge_apt: false
 
-## Section 3 vars
-## Sysctl
-# Service configuration
-# Options are
-# Service
-# - false - removes package
-# - true - leaves package installed
-# Mask
-# - false - leaves service in current status
-# - true - sets service name to masked
-#
-# Setting both Service and Mask to false will remove the package if exists
-#
-deb12cis_bluetooth_service: false
-deb12cis_bluetooth_mask: false
+##
+## Section 3 Control Variables
+##
 
-## 3.1 IPv6 requirement toggle
-# This variable governs whether ipv6 is enabled or disabled.
+## Control 3.1.1 - Ensure IP forwarding is disabled
+# This variable represents the IPv6 requirement toggle.
+# CIS recommends to enable or disable IPv6 in accordance with
+# system requirements and local site policy. If you have IPv6 but
+# do not use it, setting this variable's value to 'false' will trigger
+# the disabling of IPv6.
 deb12cis_ipv6_required: true
 
-## 3.1.2 wireless network requirements
-# 3.3 System network parameters (host only OR host and router)
+## Control 3.1.3 - Ensure bluetooth services are not in use
+# Set this variable to `true` to keep service `bluetooth`; otherwise, the service is uninstalled.
+deb12cis_bluetooth_service: false
+# Set this variable to `true` to mask service `bluetooth`.
+deb12cis_bluetooth_mask: false
+
+## Controls 3.3.x
 # This variable governs whether specific CIS rules
-# concerned with acceptance and routing of packages are skipped.
+# concerned with acceptance and routing of packages
+# are skipped.
 deb12cis_is_router: false
 
-# This variable governs if the task which updates sysctl(including sysctl reload) is executed.
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+## Sysctl
+# Sysctl is a command-line utility on Unix-like OSs that allows
+# administrators and users to query and modify kernel parameters
+# at run time. It is commonly used for performance optimization,
+# security hardening, etc.
+# Updating sysctl after modifications is necessary to make the
+# changes persistent and ensure they are applied each time the
+# system restarts!
+# This variable's value controls the execution of a Post task
+# responsible for updating sysctl. The default value is 'false',
+# but throughout the role, some tasks need sysctl to get
+# updated in order for the changes made by them to be fully
+# implemented. Therefore, those tasks are setting this variable's
+# value to 'true' so as to execute the needed update!
 deb12cis_sysctl_update: false
-# This variable governs if the task which flushes the IPv4 routing table is executed(forcing subsequent connections to
-# use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+
+# The following variable is responsible for the execution of a
+# handler that flushes the ipv4 route table. Although the default
+# value is 'false', some tasks are in need of this handler to get
+# executed, therefore, they are setting this variable's value to 'true'!
 deb12cis_flush_ipv4_route: false
-# This variable governs if the task which flushes the IPv6 routing table is executed(forcing subsequent connections to
-# use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# The following variable is responsible for the execution of a
+# handler that flushes the ipv6 route table. Although the default
+# value is 'false', some tasks are in need of this handler to get
+# executed, therefore, they are setting this variable's value to 'true'!
 deb12cis_flush_ipv6_route: false
 
 ##
@@ -739,12 +807,12 @@ deb12cis_flush_ipv6_route: false
 # Any other value, e.g. `none` will skip all firewall-related controls.
 deb12cis_firewall_package: "ufw"
 
-# This variable is used in a preliminary task that forces the UFW firewall to use /etc/sysctl.conf
-# settings. If set to "true" the task will get done in the prelim section of the role.
+# This variable is used in a task that forces the UFW firewall to use /etc/sysctl.conf
+# settings. If set to "true" the task will get executed.
 deb12cis_ufw_use_sysctl: true
 
 ## Control 4.1.5 - Ensure ufw outbound connections are configured
-# The value of this variable represents the ports for the firewall to allow oubound traffic from.
+# The value of this variable represents the ports for the firewall to allow outbound traffic from.
 # If you want to allow outbound traffic on all ports, set the variable to  `all`, e.g.,
 # `deb12cis_ufw_allow_out_ports: "all"`.
 deb12cis_ufw_allow_out_ports:
@@ -763,32 +831,58 @@ deb12cis_ufw_allow_out_ports:
 ##
 ## Section 5 Control Variables
 ##
-# This value, containing the absolute filepath of the produced 'sshd' config file, allows usage of
-# drop-in files('/etc/ssh/ssh_config.d/{ssh_drop_in_name}.conf', supported by deb12) when CIS adopts them.
-# Otherwise, the default value is '/etc/ssh/ssh_config'.
+
+# This variable stores the path to the sshd configuration file
+# that the role will use, in order to implement different
+# needed controls related to sshd. The variable allows usage of
+# drop-in files ('/etc/ssh/ssh_config.d/{ssh_drop_in_name}.conf',
+# supported by deb12) when CIS adopts them. Otherwise, the default
+# value is '/etc/ssh/ssh_config'.
 deb12cis_sshd_config_file: /etc/ssh/sshd_config
 
 ## Controls 5.1.x -- various sshd settings
+# The following variable is used to control the verbosity of the logging, produced by the SSH server.
+# The options for setting it are as follows:
+# - `QUIET`: Minimal logging;
+# - `FATAL`: logs only fatal errors;
+# - `ERROR`: logs error messages;
+# - `INFO`: logs informational messages in addition to errors;
+# - `VERBOSE`: logs a higher level of detail, including login attempts and key exchanges;
+# - `DEBUG`: generates very detailed debugging information including sensitive information.
 deb12cis_sshd_default_log_level: "INFO"
+# This variable specifies the maximum number of authentication attempts that are
+# allowed for a single SSH session.
 deb12cis_sshd_default_max_auth_tries: 4
+# This variable is used to set the maximum number of open sessions per connection.
 deb12cis_sshd_default_max_sessions: 8
+# This variable specifies the amount of seconds allowed for successful authentication to
+# the SSH server.
 deb12cis_sshd_default_login_grace_time: 60
+# This variable sets the time interval in seconds between sending "keep-alive"
+# messages from the server to the client. These types of messages are intended to
+# keep the connection alive and prevent it being terminated due to inactivity.
 deb12cis_sshd_default_client_alive_interval: 15
+# This variable sets the maximum number of unresponsive "keep-alive" messages
+# that can be sent from the server to the client before the connection is considered
+# inactive and thus, closed.
 deb12cis_sshd_default_client_alive_count_max: 3
-# Removed chacha20-poly1305 due to cve2023-48795
-# all Ciphers, KEX and Macs set to FIPS 140
-# This will nee dto be adjusted according to your site requirements
+# This variable specifies the encryption algorithms that can be used for securing
+# data transmission. Algorithms such as chacha20-poly1305 are removed from the list
+# due to cve2023-48795. This will need to be adjusted according to your site requirements.
 deb12cis_sshd_default_ciphers:
   - aes256-gcm@openssh.com
   - aes128-gcm@openssh.com
   - aes256-ctr
   - aes192-ctr
   - aes128-ctr
+# This variable specifies a list of message authentication code algorithms (MACs) that are allowed for verifying
+# the integrity of data exchanged. (the 'hmac-sha2-384' option is not available anymore as it is seen as bad ssh2 MAC)
 deb12cis_sshd_default_macs:
   - hmac-sha1
   - hmac-sha2-256
-  #  - hmac-sha2-384  # hashed out seen as bad ssh2 MAC
   - hmac-sha2-512
+# This variable is used to state the key exchange algorithms used to establish secure encryption
+# keys during the initial connection setup.
 deb12cis_sshd_default_kex_algorithms:
   - ecdh-sha2-nistp256
   - ecdh-sha2-nistp384
@@ -834,7 +928,7 @@ deb12cis_sshd_login_grace_time: "{{ deb12cis_sshd_default_login_grace_time }}"
 # This variables is used to set the maximum number of open sessions per connection.
 deb12cis_sshd_max_sessions: "{{ deb12cis_sshd_default_max_sessions }}"
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
-# access for users whose user name matches one of the patterns. This is done
+# access for users whose username matches one of the patterns. This is done
 # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
 # If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
 # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
@@ -847,7 +941,7 @@ deb12cis_sshd_allow_users: ""
 # For more info, https://linux.die.net/man/5/sshd_config
 deb12cis_sshd_allow_groups: ""
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
-# for users whose user name matches one of the patterns. This is done
+# for users whose username matches one of the patterns. This is done
 # by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
 # If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
 # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
@@ -865,8 +959,9 @@ deb12cis_sshd_deny_groups: ""
 # CIS recommends `sudo` or, if LDAP functionality is required, `sudo-ldap`.
 deb12cis_sudo_package: "sudo"
 
-## Control 5.2.3
-# This variable defines the path and file name of the sudo log file.
+## Control 5.2.3 - Ensure sudo log file exists
+# This variable contains the path to the sudo
+# log file.
 deb12cis_sudolog_location: "/var/log/sudo.log"
 
 ## Control 5.2.4 - Ensure users must provide password for escalation
@@ -875,168 +970,274 @@ deb12cis_sudolog_location: "/var/log/sudo.log"
 deb12cis_sudoers_exclude_nopasswd_list:
   - admin
 
-##  Control 5.2.6
+##  Control 5.2.6 - Ensure sudo authentication timeout is configured correctly
 # This variable sets the duration (in minutes) during which a user's authentication credentials
 # are cached after successfully authenticating using "sudo". This allows the user to execute
 # multiple commands with elevated privileges without needing to re-enter their password for each
 # command within the specified time period. CIS requires a value of at most 15 minutes.
 deb12cis_sudo_timestamp_timeout: 15
-## Control 5.2.7
+
+## Control 5.2.7 - Ensure access to the su command is restricted
 # This variable determines the group of users that are allowed to use the su command.
 # one to specify a user group that is allowed to use the "su" command.
 # CIS requires that such a group be created (named according to site policy) and be kept empty.
 deb12cis_sugroup: nosugroup
 
-## 5.3.2.x
-# Path to find templates and where to put file for pam-auth
+## Controls 5.3.2.x
+# This variable sets the name of the directory where the templates for pam are stored.
+# These templates are used to create the files which will implement the CIS controls
+# regarding pam. This variable is also used for Controls 5.3.3.3.x and Controls 5.3.3.4.x.
 deb12cis_pam_confd_dir: 'usr/share/pam-configs/'
-### Note: controls also managed with disruption high due to the nature of pam changes
-# Create file will create/replace with the name
 
-# Controls 5.3.2.1 - pam_unix
-# Name of file
+## Control 5.3.2.1 - Ensure pam_unix module is enabled
+# This variable stores the name of the file that ensures that pam_unix module is enabled.
+# This file can be found at the path given by the 'deb12cis_pam_confd_dir' variable.
+# This variable is also used for Controls 5.3.3.4.x.
 deb12cis_pam_pwunix_file: 'pam_unix'
-# Should NOT be enabled if allowing custom config that enabled pam_faillock
+# The following variable conditions the task that implements the CIS control
+# regarding pam-unix. The task creates a new configuration file using a jinja template,
+# or overwrites the existing file (that has the same name) of the target, implementing
+# the needed configuration.
+# Should NOT be enabled, if allowing custom config that enabled pam_faillock
+# NOTE that you also need to set `deb12cis_pam_auth_unix` to `true`:
+# 'Pam_auth_update_pwunix' will only be run if both these variables
+# are set to `true`.
 deb12cis_pam_create_pamunix_file: false
 # Allow pam-auth-update --enable deb12cis_pam_pwunix_file to run
+# NOTE that you also need to set `deb12cis_pam_create_pamunix_file`
+# to `true`: 'Pam_auth_update_pwunix' will only be run if both these
+# variables are set to `true`.
 deb12cis_pam_auth_unix: true
 
-# 5.3.2.2 - pam_faillock
-# Name of files
+## Control 5.3.2.2 - Ensure pam_faillock module is enabled
+# This variable stores the name of one of the files that ensure that pam_faillock module is enabled.
+# This file can be found at the path given by the 'deb12cis_pam_confd_dir' variable.
 deb12cis_pam_faillock_file: 'faillock'
+# This variable stores the name of one of the files that implement the measures
+# regarding pam-faillock. This file can be found at the path given by
+# the 'deb12cis_pam_confd_dir' variable.
 deb12cis_pam_faillock_notify_file: 'faillock_notify'
-# Allow pam-auth-update --enable deb12cis_pam_faillock_file
-# and
-# Allow pam-auth-update --enable deb12cis_pam_faillock_notify_file
-deb12cis_pam_auth_faillock: true
-# Allow new file to be created or overwrite existing with same name
+# The following variable conditions the task that implements the CIS control
+# regarding pam-faillock. The task creates a new configuration file using a jinja template,
+# or overwrites the existing file of the target that has the same name, implementing
+# the needed configuration. NOTE that you also need to set `deb12cis_pam_auth_faillock`
+# to `true`: 'Pam_auth_update_pwfaillock' will only be run if both these
+# variables are set to `true`.
 deb12cis_pam_create_faillock_files: true
+# Allow pam-auth-update --enable deb12cis_pam_faillock_file
+# and Allow pam-auth-update --enable deb12cis_pam_faillock_notify_file
+# NOTE that you also need to set `deb12cis_pam_create_faillock_files`
+# to `true`: 'Pam_auth_update_pwfaillock' will only be run if both these
+# variables are set to `true`.
+deb12cis_pam_auth_faillock: true
 
-# 5.3.2.3 - pam_pwquality
-# Name of files
+## Control 5.3.2.3 - Ensure pam_pwquality module is enabled
+# This variable stores the name of the file that ensures that pam_pwquality module is enabled.
+# This file can be found at the path given by the 'deb12cis_pam_confd_dir' variable.
 deb12cis_pam_pwquality_file: 'pwquality'
-# Allow new file to be created or overwrite existing with same name
+# The following variable conditions the task that implements the CIS control
+# regarding pam_pwquality. The task creates a new configuration file using a jinja template,
+# or overwrites the existing file of the target that has the same name, implementing
+# the needed configuration. NOTE that you also need to set `deb12cis_pam_auth_pwquality`
+## to `true`: 'Pam_auth_update_pwquality' will only be run if both these
+## variables are set to `true`.
 deb12cis_pam_create_pwquality_files: true
 # Allow pam-auth-update --enable deb12cis_pam_pwquality_file
+# NOTE that you also need to set `deb12cis_pam_create_pwquality_files`
+# to `true`: 'Pam_auth_update_pwquality' will only be run if both these
+# variables are set to `true`.
 deb12cis_pam_auth_pwquality: true
 
-# 5.3.2.4 - pam_pwhistory
-# Name of file
+## Control 5.3.2.4 - Ensure pam_pwhistory module is enabled
+# This variable stores the name of the file that ensures that pam_pwhistory module is enabled.
+# This file can be found at the path given by the 'deb12cis_pam_confd_dir' variable.
+# This variable is also used for Controls 5.3.3.3.x.
 deb12cis_pam_pwhistory_file: 'pwhistory'
-# Allow new file to be created or overwrite existing with same name
-# filepath also affects controls 5.3.3.3.1, 5.3.3.3.2, 5.3.3.3.3
+# The following variable conditions the task that implements the CIS control
+# regarding pam_pwhistory. The task creates a new configuration file using a jinja template,
+# or overwrites the existing file of the target that has the same name, implementing
+# the needed configuration. NOTE that you also need to set `deb12cis_pam_auth_pwhistory`
+### to `true`: 'Pam_auth_update_pwhistory' will only be run if both these
+### variables are set to `true`.
 deb12cis_pam_create_pwhistory_files: true
 # Allow pam-auth-update --enable deb12cis_pam_pwhistory_file
+# NOTE that you also need to set `deb12cis_pam_create_pwhistory_files`
+# to `true`: 'Pam_auth_update_pwhistory' will only be run if both these
+# variables are set to `true`.
 deb12cis_pam_auth_pwhistory: true
 
-# 5.3.3.1.1 - faillock_deny
+## Control 5.3.3.1.1 - Ensure password failed attempts lockout is configured
+# This variable holds the number of attempts before the account is locked.
+# CIS states that this value should be greater than 0 and no greater than 5.
 deb12cis_faillock_deny: 3
 
-# 5.3.3.1.2 - faillock unlock time
+## Control 5.3.3.1.2 - Ensure password unlock time is configured
+# This variable holds the time in seconds before the account is unlocked.
+# CIS states that this value should be at least 900 and should never be 0.
 deb12cis_faillock_unlock_time: 900
 
-# 5.3.3.1.3 - lock root
-# This allow optional - even_deny_root or root_unlock_time
+## Control 5.3.3.1.3 - Ensure password failed attempts lockout includes root account
+# This variable is used in the task that ensures that even the root account
+# is included in the password failed attempts lockout measure.
+# The following variable is used in the 'regexp' field. This field is used to find the
+# line in the file. If the line matches the regular expression, it will be replaced
+# with the line parameter's value, which in this case is the 'deb12cis_pamroot_lock_string'
+# variable's value.
 deb12cis_pamroot_lock_option: even_deny_root
+# This variable is used in the task that ensures that even the root account
+# is included in the password failed attempts lockout measure.
+# The following variable holds the exact line that need to be added in the configuration
+# file so that the control is implemented.
 deb12cis_pamroot_lock_string: even_deny_root
 
-# 5.3.3.2.1 - password difok
+## Control 5.3.3.2.1 - Ensure password number of changed characters is configured
+# This variable holds the path to the configuration file that will be created (or overwritten if already existing)
+# in order to implement the 'Ensure password number of changed characters is configured' control.
 deb12cis_passwd_difok_file: etc/security/pwquality.conf.d/50-pwdifok.conf  # pragma: allowlist secret
+# This variable's value represents the minimum number of characters that must be different between
+# the new password and the old password. It helps ensure that users don't create new passwords that
+# are too similar to their previous ones, enhancing security. CIS states that this value should be at least 2.
 deb12cis_passwd_difok_value: 2
 
-# 5.3.3.2.2 - password minlength
+## Control 5.3.3.2.2 - Ensure minimum password length is configured
+# This variable holds the path to the configuration file that will be created (or overwritten if already existing)
+# in order to implement the 'Ensure minimum password length is configured' control.
 deb12cis_passwd_minlen_file: etc/security/pwquality.conf.d/50-pwlength.conf  # pragma: allowlist secret
+# This variable specifies the minimum length that a password must  have to be considered valid.
+# CIS states that this value should be at least 14.
 deb12cis_passwd_minlen_value: 14
 
-# 5.3.3.2.3 - password complex
+## Control 5.3.3.2.3 - Ensure password complexity is configured
+# This variable holds the path to the configuration file that will be created (or overwritten if already existing)
+# in order to implement the 'Ensure password complexity is configured' control.
 deb12cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf  # pragma: allowlist secret
-# Choose if using minclass or credits options
-# Options are: minclass or credits
-# ensure only one is selected
+# This variable holds the options for configuring the password complexity.
+# Options supported are: 'minclass' or 'credits'.
 deb12cis_passwd_complex_option: minclass  # pragma: allowlist secret
+# The following variable sets the password complexity via 'minclass'. The 'minclass' option provides
+# the minimum number of classes of characters required in a new password. (digits, uppercase, lowercase, others). e.g.
+# For example a value of 4 would mean that it requires digits, uppercase, lower case, and special characters.
 deb12cis_passwd_minclass: 4
+# The following variables set the password complexity via the 'credits' option.
+# Each of the variables represents a requirement for complexity.
+# The 'dcredit' variable is the maximum credit for having digits in the new password.
+# If less than 0 it is the minimum number of digits in the new password.
+# e.g. dcredit = -1 requires at least one digit
 deb12cis_passwd_dcredit: -1
+# The 'ucredit' variable is the maximum credit for having uppercase characters in the new password.
+# If less than 0 it is the minimum number of uppercase characters in the new password.
+# e.g. ucredit = -1 requires at least one uppercase character
 deb12cis_passwd_ucredit: -2
+# The 'ocredit' variable is the maximum credit for having other characters in the new password.
+# If less than 0 it is the minimum number of other characters in the new password.
+# e.g. ocredit = -1 requires at least one special character
 deb12cis_passwd_ocredit: 0
+# The 'lcredit' variable is the maximum credit for having lowercase characters in the new password.
+# If less than 0 it is the minimum number of lowercase characters in the new password.
+# e.g. lcredit = -1 requires at least one lowercase character
 deb12cis_passwd_lcredit: -2
 
-# 5.3.3.2.4 - password maxrepeat
+## Control 5.3.3.2.4 - Ensure password same consecutive characters is configured
+# This variable holds the path to the configuration file that will be created (or overwritten if already existing)
+# in order to implement the 'Ensure password same consecutive characters is configured' control.
 deb12cis_passwd_maxrepeat_file: etc/security/pwquality.conf.d/50-pwrepeat.conf  # pragma: allowlist secret
+# The following variable sets the maximum number of allowed same consecutive characters in a new password.
 deb12cis_passwd_maxrepeat_value: 3
 
-# 5.3.3.2.5 - password maxsequence
+## Control 5.3.3.2.5 - Ensure password maximum sequential characters is is configured
+# This variable holds the path to the configuration file that will be created (or overwritten if already existing)
+# in order to implement the 'Ensure password maximum sequential characters is configured' control.
 deb12cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequence.conf  # pragma: allowlist secret
+# The following variable sets the maximum length of monotonic character sequences in the new password.
+# Examples of such sequence are '12345' or 'fedcb' . The check is disabled if the value is 0 .
 deb12cis_passwd_maxsequence_value: 3
 
-# 5.3.3.2.6 - password dictcheck
+## Control 5.3.3.2.6 - Ensure password dictionary check is enabled
+# This variable holds the path to the configuration file that will be created (or overwritten if already existing)
+# in order to implement the 'Ensure password dictionary check is enabled' control.
 deb12cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.conf  # pragma: allowlist secret
+# The following variable's value sets whether to check for the words from the cracklib dictionary.
+# When set to '1', this option enables dictionary checks, ensuring that passwords are not based on common
+# dictionary words, which helps prevent users from choosing easily guessable passwords.
+# When set to '0', dictionary checks are disabled. CIS states that it shall always be set to '1'.
 deb12cis_passwd_dictcheck_value: 1
 
-# 5.3.3.2.7 - password quality enforce
+## Control 5.3.3.2.7 - Ensure password quality checking is enforced
+# This variable holds the path to the configuration file that will be created (or overwritten if already existing)
+# in order to implement the 'Ensure password quality checking is enforced' control.
 deb12cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality_enforce.conf  # pragma: allowlist secret
+# The following variable if not set to '0' will mean that the password will be rejected if it fails the checks.
+# Otherwise, only a warning message will be provided. CIS states that it should never be set to `0`.
 deb12cis_passwd_quality_enforce_value: 1
 
-# 5.3.3.2.8 - password quality enforce for root included with 5.3.3.2.7
+## Control 5.3.3.2.8 - Ensure password quality is enforced for the root user
+# This variable holds the path to the configuration file that will be created (or overwritten if already existing)
+# in order to implement the 'Ensure password quality is enforced for the root user' control.
 deb12cis_passwd_quality_enforce_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
+# The following variable enforces that the root user must adhere to the same password quality policies as other users.
 deb12cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
 
-## 5.3.3.3 Configure pam_pwhistory module
-# Uses value for deb12cis_pam_pwhistory_file in 5.3.2.4
-# Control 5.3.3.3.1
+## Control 5.3.3.3.1 - Ensure password history remember is configured
 # This variable represents the number of password change cycles, after which
-# a user can re-use a password. # CIS requires a value of 24 or more.
+# a user can re-use a password. CIS requires a value of 24 or more.
 deb12cis_pamd_pwhistory_remember: 24
 
-## Controls 5.4.1.x - Password settings
-## Control 5.4.1.1
+## Control 5.4.1.1 - Ensure password expiration is configured
 # This variable governs after how many days a  password expires.
-# CIS requires a value of 365 or less.
+# CIS requires a value no greater than 365 or less than 1.
 deb12cis_pass_max_days: 365
-## Allow the forcing of setting user_max_days for logins.
-# This can break current connecting user access
+# The following variable is responsible for setting the pass_max_days
+# for all existing users. While this may break current connecting user
+# access, CIS checks for this particular change in its assessment.
 deb12cis_force_user_maxdays: false
 
-## Control 5.4.1.2
+## Control 5.4.1.2 - Ensure minimum password days is configured
 # This variable specifies the minimum number of days allowed between changing passwords.
 # CIS requires a value of at least 1.
 deb12cis_pass_min_days: 1
-# Allow the force setting of minimum days between changing the password
-# This can break current connecting user access
+# The following variable is responsible for setting the pass_min_days
+# for all existing users. While this may break current connecting user
+# access, CIS checks for this particular change in its assessment.
 deb12cis_force_user_mindays: false
 
-## Control 5.4.1.3
+## Control 5.4.1.3 - Ensure password expiration warning days is configured
 # This variable governs, how many days before a password expires, the user will be warned.
 # CIS requires a value of at least 7.
 deb12cis_pass_warn_age: 7
-## 5Allow the forcing of of number of days before warning users of password expiry
-# This can break current connecting user access
+# The following variable is responsible for setting the number of days
+# before warning users of password expiry for all local users.
+# While this may break current connecting user
+# access, CIS checks for this particular change in its assessment.
 deb12cis_force_user_warnage: false
 
-## Control 5.4.1.5
+## Control 5.4.1.4 - Ensure strong password hashing algorithm is configured
+# deb12cis_passwd_hash_algo is the hashing algorithm used
+deb12cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
+
+## Control 5.4.1.5 - Ensure inactive password lock is configured
 # This variable specifies the number of days of inactivity before an account will be locked.
 # CIS requires a value of 45 days or less.
 deb12cis_inactivelock_lock_days: 45
 
 ## Control 5.4.1.6 - Ensure all users last password change date is in the past
-# Allow ansible to expire password for account with a last changed date in the future. Setting it
-# to 'false' will just display users in violation, while 'true' will expire those users passwords.
+# The following variable allows Ansible to expire password for accounts with a last changed date
+# in the future. Setting it to 'false' will just display users in violation, while setting it to
+# 'true' will expire those users' passwords.
 deb12cis_futurepwchgdate_autofix: true
 
-# 5.4.2.6 root umask
+# Control 5.4.2.6 - Ensure root user umask is configured
+# The following variable specifies the "umask" to configure for the root user.
+# The user file-creation mode mask ( umask ) is used to determine the file
+# permission for newly created directories and files. In Linux, the default
+# permissions for any newly created directory is 0777 ( rwxrwxrwx ), and for
+# any newly created file it is 0666 ( rw-rw-rw- ). The umask modifies the default
+# Linux permissions by restricting (masking) these permissions. The umask is not
+# simply subtracted, but is processed bitwise. Bits set in the umask are cleared
+# in the resulting file mode. CIS recommends setting 'umask' to '0027' or more
+# restrictive.
 deb12cis_root_umask: '0027'  # 0027 or more restrictive
-## Control 5.4.4
-# deb12cis_passwd_hash_algo is the hashing algorithm used
-deb12cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
-# Set pam as well as login defs if PAM is required
-deb12cis_passwd_setpam_hash_algo: false
 
-## Control 5.4.3 - Default user mask
-# The following variable specifies the "umask" to set in the `/etc/bash.bashrc` and `/etc/profile`.
-# The value needs to be `027` or more restrictive to comply with CIS standards
-deb12cis_bash_umask: '027'
-
-## Control 5.4.3.2 - Configuring user shell timeout
-# This dictionary is related to ensuring the rule about user shell timeout
+## Control 5.4.3.2 - Ensure default user shell timeout is configured
 # This variable represents the amount of seconds a command or process is allowed to
 # run before being forcefully terminated.
 # CIS requires a value of at most 900 seconds.
@@ -1044,102 +1245,117 @@ deb12cis_shell_session_timeout: 900
 # This variable specifies the path of the timeout setting file.
 # (TMOUT setting can be set in multiple files, but only one is required for the
 # rule to pass. Options are:
-# - a file in `/etc/profile.d/` ending in `.s`,
+# - a file in `/etc/profile.d/` ending in `.sh`,
 # - `/etc/profile`, or
 # - `/etc/bash.bashrc`.
 deb12cis_shell_session_file: /etc/profile.d/tmout.sh
 
-### Controls:
-# - 5.4.2.7 -  Ensure system accounts are secured
-# - 7.2.9 - Ensure local interactive user home directories exist
-# - 7.2.10 - Ensure local interactive users own their home directories
-# UID settings for interactive users
-# These are discovered via logins.def if set true
-deb12cis_discover_int_uid: true
-# This variable sets the minimum number from which to search for UID
-# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
-# been set to `true`.
-prelim_min_int_uid: 1000
-### Controls:
-# - Ensure local interactive user home directories exist
-# - Ensure local interactive users own their home directories
-# This variable sets the maximum number at which the search stops for UID
-# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
-# been set to `true`.
-prelim_max_int_uid: 65533
+## Control 5.4.3.3 - Ensure default user umask is configured
+# The following variable specifies the "umask" to set in the `/etc/bash.bashrc` and `/etc/profile`.
+# The value needs to be `027` or more restrictive to comply with CIS standards.
+deb12cis_bash_umask: '027'
 
-## Section6 vars
+##
+## Section 6 Control Variables
+##
 
 ## Control 6.1.1 - allow aide to be configured
 # AIDE is a file integrity checking tool, similar in nature to Tripwire.
 # While it cannot prevent intrusions, it can detect unauthorized changes
 # to configuration files by alerting when the files are changed. Review
 # the AIDE quick start guide and AIDE documentation before proceeding.
-# By setting this variable to `true`, all of the settings related to AIDE will be applied!
+# By setting this variable to `true`, all the settings related to AIDE will be applied!
 deb12cis_config_aide: true
-
-# If DB file older than below will automatically rebuild DB
+# This variable sets a maximum allowed age of the AIDE database file until
+# the file is rebuilt. If the file is older than the value below, the role
+# will automatically rebuild the database file.
 # e.g. options:1w = 1 week, 1d = 1day 1h = 1 hour
 deb12cis_aide_db_file_age: 1w
-
-# If aide already setup this forces a new DB to be created
+# If AIDE is already setup this variable forces a new database
+# file to be created.
 deb12cis_aide_db_recreate: false
-
-# allows to change db file, not config need to be adjusted too
+# This variable is used to check if there is already an existing database file
+# created by AIDE on the target system. If it is not present, the role will generate
+# a database file with the same name as the value of this variable.
 deb12cis_aide_db_file: /var/lib/aide/aide.db
-
-## When Initializing aide this can take longer on some systems
-# changing the values enables user to change to thier own requirements
-# Maximum Time in seconds
+# When Initializing aide this can take longer on some systems,
+# changing the values enables user to change to their own requirements.
+# The following variable represents the maximum time in seconds.
 deb12cis_aide_init_async: 600
-# Polling Interval in seconds
+# When Initializing aide this can take longer on some systems,
+# changing the values enables user to change to their own requirements.
+# The following variable represents the polling interval in seconds.
 deb12cis_aide_init_poll: 15
 
-# Set how aide is scanned either cron or timer
+## Control 6.1.2
+# The following variable sets how AIDE is scanned.
+# Available options are either cron or timer.
 deb12cis_aide_scan: cron
-# These are the crontab settings for periodical checking of the filesystem's integrity using AIDE.
-# The sub-settings of this variable provide the parameters required to configure
-# the cron job on the target system.
-# Cron is a time-based job scheduling program in Unix OS, which allows tasks to be scheduled
-# and executed automatically at a certain point in time.
-
+# The following variable represents a setting for periodical checking of the filesystem's
+# integrity using AIDE. It provides a parameter required to configure the cron job on
+# the target system. Cron is a time-based job scheduling program in Unix OS, which
+# allows tasks to be scheduled and executed automatically at a certain point in time.
 # This variable represents the user account under which the cron job for AIDE will run.
 deb12cis_aide_cron_user: root
+# The following variable represents a setting for periodical checking of the filesystem's
+# integrity using AIDE. It provides a parameter required to configure the cron job on
+# the target system. Cron is a time-based job scheduling program in Unix OS, which
+# allows tasks to be scheduled and executed automatically at a certain point in time.
 # This variable represents the path to the AIDE crontab file.
 deb12cis_aide_cron_file: /etc/cron.d/aide_cron
+# The following variable represents a setting for periodical checking of the filesystem's
+# integrity using AIDE. It provides a parameter required to configure the cron job on
+# the target system. Cron is a time-based job scheduling program in Unix OS, which
+# allows tasks to be scheduled and executed automatically at a certain point in time.
 # This variable represents the actual command or script that the cron job
 # will execute for running AIDE.
 deb12cis_aide_cron_job: '/usr/bin/aide --config /etc/aide/aide.conf --check'
-# These variables define the schedule for the cron job
+# The following variable represents a setting for periodical checking of the filesystem's
+# integrity using AIDE. It provides a parameter required to configure the cron job on
+# the target system. Cron is a time-based job scheduling program in Unix OS, which
+# allows tasks to be scheduled and executed automatically at a certain point in time.
 # This variable governs the minute of the time of day when the AIDE cronjob is run.
 # It must be in the range `0-59`.
 deb12cis_aide_cron_minute: 0
+# The following variable represents a setting for periodical checking of the filesystem's
+# integrity using AIDE. It provides a parameter required to configure the cron job on
+# the target system. Cron is a time-based job scheduling program in Unix OS, which
+# allows tasks to be scheduled and executed automatically at a certain point in time.
 # This variable governs the hour of the time of day when the AIDE cronjob is run.
 # It must be in the range `0-23`.
 deb12cis_aide_cron_hour: 5
+# The following variable represents a setting for periodical checking of the filesystem's
+# integrity using AIDE. It provides a parameter required to configure the cron job on
+# the target system. Cron is a time-based job scheduling program in Unix OS, which
+# allows tasks to be scheduled and executed automatically at a certain point in time.
 # This variable governs the day of the month when the AIDE cronjob is run.
 # `*` signifies that the job is run on all days; furthermore, specific days
 # can be given in the range `1-31`; several days can be concatenated with a comma.
 # The specified day(s) can must be in the range  `1-31`.
 deb12cis_aide_cron_day: '*'
+# The following variable represents a setting for periodical checking of the filesystem's
+# integrity using AIDE. It provides a parameter required to configure the cron job on
+# the target system. Cron is a time-based job scheduling program in Unix OS, which
+# allows tasks to be scheduled and executed automatically at a certain point in time.
 # This variable governs months when the AIDE cronjob is run.
 # `*` signifies that the job is run in every month; furthermore, specific months
 # can be given in the range `1-12`; several months can be concatenated with commas.
 # The specified month(s) can must be in the range  `1-12`.
 deb12cis_aide_cron_month: '*'
+# The following variable represents a setting for periodical checking of the filesystem's
+# integrity using AIDE. It provides a parameter required to configure the cron job on
+# the target system. Cron is a time-based job scheduling program in Unix OS, which
+# allows tasks to be scheduled and executed automatically at a certain point in time.
 # This variable governs the weekdays, when the AIDE cronjob is run.
 # `*` signifies that the job is run on all weekdays; furthermore, specific weekdays
 # can be given in the range `0-7` (both `0` and `7` represent Sunday); several weekdays
 # can be concatenated with commas.
 deb12cis_aide_cron_weekday: '*'
 
-#
-## Preferred method of logging
-## Whether rsyslog or journald preferred method for local logging
 ## Control 6.2.3 | Configure rsyslog
 ## Control 6.2.1 | Configure journald
 # This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
-# or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
+# or 'journald'(only one that is implemented) will trigger the execution of the associated subsection, as the-best
 # practices are written wholly independent of each other.
 deb12cis_syslog: journald
 
@@ -1149,47 +1365,6 @@ deb12cis_syslog: journald
 #  - 'true', current system will act as a log SERVER, enabling centralised log management(by protecting log integrity
 # from local attacks on remote clients)
 deb12cis_system_is_log_server: false
-
-## Control 6.2.3.5 | PATCH | Ensure logging is configured
-# This variable governs if current Ansible role should manage syslog settings
-# in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
-deb12cis_rsyslog_ansiblemanaged: true
-
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
-# remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
-# over UDP or TCP, will not be performed.
-deb12cis_remote_log_server: false
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value of the 'target' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
-# destination server. For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_host: logagg.example.com
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value of the 'port' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server. The default value for this destination port is 514.
-# For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_port: 514
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value("TCP"/"UDP") of the 'protocol' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server. The default value for the 'omfwd' plug-in is UDP.
-# For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_protocol: tcp
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable governs how often an action is retried(value is passed to 'action.resumeRetryCount' parameter) before
-# it is considered to have failed(that roughly translates to discarded messages). The default value is 0, but
-# when set to "-1"(eternal), this setting would prevent rsyslog from dropping messages when retrying to connect
-# if server is not responding. For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_retrycount: 100
-## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
-# For this value to be reflected in the configuration, the variable which enables the automatic configuration
-# of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
-deb12cis_remote_log_queuesize: 1000
 
 ## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # 'deb12cis_journal_upload_url' is the ip address to upload the journal entries to
@@ -1203,44 +1378,36 @@ deb12cis_journal_upload_url: 192.168.50.42
 # server to authenticate itself to the client. This key is used alongside the server's
 # public certificate to establish secure communication.
 deb12cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to the public certificate file of the remote journal
 # server. This certificate is used to verify the authenticity of the remote server.
 deb12cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to a file containing one or more public certificates
 # of certificate authorities (CAs) that the client trusts. These trusted certificates are used
 # to validate the authenticity of the remote server's certificate.
 deb12cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
-# ATTENTION: Uncomment the keyword below when values are set!
 
 ## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
-# Current variable configures the max amount of disk space the logs will use(thus, journal files
-# will not grow without bounds)
-# The variables below related to journald, please set these to your site specific values
 # These variable specifies how much disk space the journal may use up at most
 # Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
 # See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
 deb12cis_journald_systemmaxuse: 10M
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
-# Current variable configures the amount of disk space to keep free for other uses.
+# This variable determines disk to be kept free by `journald`.
+# Specify values in bytes or use K, M, G, T, P, E as units for the specified size.
 deb12cis_journald_systemkeepfree: 100G
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # This variable configures how much disk space the journal may use up at most.
 # Similar with 'deb12cis_journald_systemmaxuse', but related to runtime space.
+# Specify values in bytes or use K, M, G, T, P, E as units for the specified size.
 deb12cis_journald_runtimemaxuse: 10M
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # This variable configures the actual amount of disk space to keep free
 # Similar with 'deb12cis_journald_systemkeepfree', but related to runtime space.
+# Specify values in bytes or use K, M, G, T, P, E as units for the specified size.
 deb12cis_journald_runtimekeepfree: 100G
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
 # The given values is interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
-# ATTENTION: Uncomment the keyword below when values are set!
 deb12cis_journald_maxfilesec: 1month
 
 ##  Control 6.4.2.1 - Ensure audit_backlog_limit is sufficient
@@ -1271,77 +1438,133 @@ deb12cis_auditd_max_log_file_size: 10
 deb12cis_auditd_max_log_file_action: keep_logs
 
 ## Control 6.4.2.3
-# This variable determines how the system should act in case of issues with disk
-# The disk_full_action parameter tells the system what action to take when no free space is available on the partition that holds the audit log files.
+# This variable determines how the system should act in case of issues with the disk.
+# The disk_full_action parameter tells the system what action to take when no free space is
+# available on the partition that holds the audit log files.
 # Valid values are ignore, syslog, rotate, exec, suspend, single, and halt.
-#
-# The disk_error_action parameter tells the system what action to take when an error is detected on the partition that holds the audit log files.
-# Valid values are ignore, syslog, exec, suspend, single, and halt.
-#
 # CIS prescribes
 # disk_full_action parameter:
-# Set to halt - the auditd daemon will shutdown the system when the disk partition containing the audit logs becomes full.
-# Set to single - the auditd daemon will put the computer system in single user mode when the disk partition containing the audit logs becomes full.
-#
-# disk_error_action parameter:
-# Set to halt - the auditd daemon will shutdown the system when an error is detected on the partition that holds the audit log files.
-# Set to single - the auditd daemon will put the computer system in single user mode when an error is detected on the partition that holds the audit log files.
-# Set to syslog - the auditd daemon will issue no more than 5 consecutive warnings to syslog when an error is detected on the partition that holds the audit log files.
+# Set to halt - the auditd daemon will shutdown the system when the disk partition containing
+# the audit logs becomes full.
+# Set to single - the auditd daemon will put the computer system in single user mode when the
+# disk partition containing the audit logs becomes full.
 deb12cis_auditd_disk_full_action: halt
+# This variable determines how the system should act in case of issues with the disk.
+# The disk_error_action parameter tells the system what action to take when an error is detected
+# on the partition that holds the audit log files.
+# Valid values are ignore, syslog, exec, suspend, single, and halt.
+# disk_error_action parameter:
+# Set to halt - the auditd daemon will shutdown the system when an error is detected on the
+# partition that holds the audit log files.
+# Set to single - the auditd daemon will put the computer system in single user mode when
+# an error is detected on the partition that holds the audit log files.
+# Set to syslog - the auditd daemon will issue no more than 5 consecutive warnings to syslog
+# when an error is detected on the partition that holds the audit log files.
 deb12cis_auditd_disk_error_action: syslog
 
 # Control 6.4.2.4
-# Wait to do when space left is low.
-# The space_left_action parameter tells the system what action to take when the system has detected that it is starting to get low on disk space.
-# Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
-# The admin_space_left_action parameter tells the system what action to take when the system has detected that it is low on disk space.
-# Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
+# This variable tells the system what action to take when the system has detected
+# that it is starting to get low on disk space.
+# The options for setting this variable are as follows:
+# "ignore"  - the system does nothing when presented with the aforementioned issue;
+# "syslog" - a message is sent to the system log about disk space running low;
+# "email"  - the system sends an email notification to the email address
+#            specified in the "action_mail_acct" variable;
+# "exec"   - the system executes a custom command when disk space is running
+#            low;
+# "suspend" - the system suspends recording audit events until more space is available;
+# "single"  - the audit daemon will put the computer system in single user mode;
+# "halt"    - the system is halted when disk space is critically low;
+# CIS prescribes either 'email', 'exec', `single` or `halt`.
 deb12cis_auditd_space_left_action: email
+# This variable tells the system what action to take when the system has detected
+# that it is low on disk space.
+# The options for setting this variable are as follows:
+# "ignore"  - the system does nothing when presented with the aforementioned issue;
+# "syslog"  - a message is sent to the system log about disk space running low;
+# "email"  - the system sends an email notification to the email address
+#            specified in the "action_mail_acct" variable;
+# "exec"   - the system executes a custom command when disk space is running
+#            low;
+# "suspend" - the system suspends recording audit events until more space is available;
+# "single"  - the audit daemon will put the computer system in single user mode;
+# "halt"    - the system is halted when disk space is critically low;
+# CIS prescribes either `halt` or `single`.
 deb12cis_auditd_admin_space_left_action: halt
-
-# This value governs if the below extra-vars for auditd should be used by the role
+# This variable governs if the configuration for space_left_action and admin_space_left action
+# should be implemented.
 deb12cis_auditd_extra_conf_usage: false
 
 # 6.3.3.x allow exceptions for UID in auditd config
-## Advanced option found in auditd post
-# This variable governs if defining user exceptions for auditd logging is acceptable.
+# This variable is used to condition the execution of a POST task
+# from the "auditd.yml" file. That task implements an advanced option,
+# and it only gets executed if this variable's value is set to 'true'.
+# The advance option sets users whose actions are not logged by auditd.
 deb12cis_allow_auditd_uid_user_exclusions: false
-# This variable contains a list of uids to be excluded(users whose actions are not logged by auditd)
+# This variable contains adds a list of uids to be excluded(users whose actions are not logged by auditd)
 deb12cis_auditd_uid_exclude:
   - 1999
 
-# This can be used to configure other keys in auditd.conf
-# Example:
+# This variable can be used to configure other keys in auditd.conf
 deb12cis_auditd_extra_conf:
+  # This variable governs the threshold(MegaBytes) under which the audit daemon should perform a
+  # specific action to alert that the system is running low on disk space. Must be lower than
+  # the 'space_left' variable.
   admin_space_left: '10%'
 
-# Section 7 Vars
+##
+## Section 7 Control Variables
+##
 
-# 7.1.12 Ensure no files or directories without an owner and a group exist
+## Control 7.1.11 - Ensure world writable files and directories are secured
+# The following variable is a toggle for enabling/disabling the automated
+# removal of world-writable permissions from all files.
+# Possible values are `true` and `false`.
+deb12cis_no_world_write_adjust: true
+
+## Control 7.1.12 - Ensure no files or directories without an owner and a group exist
+# This variable hold the part of the command that helps detect which files and
+# directories do not have an owner and an affiliated group.
 deb12cis_exclude_unowned_search_path: '\( ! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*" \)'
-
-# Control 7.1.12
 # The value of this variable specifies the owner that will be set for unowned files and directories.
 deb12cis_unowned_owner: root
+# The value of this variable specifies the group that will be set for ungrouped files and directories.
 deb12cis_ungrouped_group: root
 # This variable is a toggle for enabling/disabling the automated
-# setting of an owner or group (specified in variable `deb12cis_unowned_owner`)
-# for all unowned or ungrouped files and directories.
-# Possible values are `true` and `false`.
+# setting of an owner or group (specified in variables `deb12cis_unowned_owner`
+# and 'deb12cis_ungrouped_group') for all unowned or ungrouped files and
+# directories. Setting this variable to 'false' will only display a
+# warning with a list of the unowned and ungrouped files and directories,
+# asking the user to manually assign ownership.
 deb12cis_ownership_adjust: false
 
-## Control 7.1.13
+## Control 7.1.13 - Ensure SUID and SGID files are reviewed
 # This variable is a toggle for enabling/disabling the automated removal
-# of the SUID bit from all files on all mounts.
-# Possible values are `true` and `false`.
+# of the SUID bit from all files on all mounts. Setting this variable to 'false'
+# will only display a warning.
 deb12cis_suid_sgid_adjust: false
 
-## Control 7.1.11 - Ensure no world writable files exist
-# Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable.
-deb12cis_no_world_write_adjust: true
+## Control 7.2.9 -Ensure no duplicate group names exist
+# The minimum and maximum UIDs to be used for specifying
+# non-system users (Those who usually have an home directory in
+# /home, have a shell set and hence can login) can either be
+# discovered automatically via logins.def or set manually
+# in this file
+# If min/maxx UIDs are to be discovered automatically,
+# set this variable to `true`, otherwise to `false`
+# and specify the options `min_int_uid` and `max_int_uid`.
+deb12cis_discover_int_uid: true
+# This variable sets the minimum number from which to search for UID
+# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
+# been set to `true`.
+prelim_min_int_uid: 1000
+# This variable sets the maximum number at which the search stops for UID
+# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
+# been set to `true`.
+prelim_max_int_uid: 65533
 
 ## Control 7.2.10 - Ensure local interactive user dot files access is configured
 # This variable is a toggle foe enabling/disabling the automated modification of
 # permissions on dot files.
 # Possible values are `true` and `false`.
-deb12cis_dotperm_ansiblemanaged: false
+deb12cis_dotperm_ansiblemanaged: true
