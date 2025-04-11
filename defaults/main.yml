@@ -1,7 +1,7 @@
 ---
 # defaults file for deb12-cis
 # WARNING:
-# These values may be overriden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
+# These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 
 # Run the OS validation check
@@ -11,7 +11,7 @@ os_check: true
 # Disruption is high
 ## Run tests that are considered higher risk and could have a system impact if not properly tested
 ## Default false
-## Will be fine if clean new unconfigured build
+## Will be fine if clean new un-configured build
 deb12cis_disruption_high: false
 
 ## Switching on/off specific baseline sections
@@ -55,6 +55,10 @@ skip_reboot: true
 # default value will change to true but wont reboot if not enabled but will error
 change_requires_reboot: false
 
+# Create managed not custom local_facts files
+create_benchmark_facts: true
+ansible_facts_path: /etc/ansible/facts.d
+
 ###
 ### Settings for associated Audit role using Goss
 ###
@@ -73,9 +77,7 @@ audit_run_heavy_tests: true
 
 ## Only run Audit do not remediate
 audit_only: false
-### As part of audit_only ###
-# This will enable files to be copied back to control node in audit_only mode
-fetch_audit_files: false
+
 # Path to copy the files to will create dir structure in audit_only mode
 audit_capture_files_dir: /some/location to copy to on control node
 #############################
@@ -106,6 +108,16 @@ audit_conf_dest: "/opt"
 
 # Where the audit logs are stored
 audit_log_dir: '/opt'
+
+# Method of getting,uploading the summary files
+## Ensure access and permissions are available for these to occur.
+## options are
+# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
+# copy - copies file to a location available to the managed node
+audit_output_collection_method: fetch
+
+# Location to put the audit files
+audit_output_destination: /opt/audit_summaries/
 
 ### Goss Settings ##
 ####### END ########
