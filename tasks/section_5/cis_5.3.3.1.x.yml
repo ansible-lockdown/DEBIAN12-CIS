@@ -94,7 +94,7 @@
     - name: "5.3.3.1.3 | PATCH | Ensure password failed attempts lockout includes root account | if exists remove unlock_time from faillock line in pam-auth conf files"
       when: discovered_faillock_rootlock_files.stdout | length > 0
       ansible.builtin.replace:
-        path: "{{ item.pah }}"
+        path: "{{ item.path }}"
         regexp: '(*.pam_faillock.so\s*)(even_deny_root\b|root_unlock_time\s*=\s*\d+\b)(.*)'
         replace: \1\3
       loop: "{{ prelim_pam_conf_files.files }}"
