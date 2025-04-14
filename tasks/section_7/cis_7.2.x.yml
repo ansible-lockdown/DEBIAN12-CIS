@@ -360,5 +360,6 @@
           when:
             - item.path | basename in ['.forward','.rhosts']
             - item.path is not search ("CIS")
-          ansible.builtin.shell: "mv {{ item.path }} {{ item.path }}_CIS_TOBEREVIEWED"
+          ansible.builtin.command: "mv {{ item.path }} {{ item.path }}_CIS_TOBEREVIEWED"
+          changed_when: true
           loop: "{{ discovered_hidden_files.files }}"
