@@ -167,6 +167,18 @@
     value: '1'
     sysctl_set: true
 
+- name: Iptables persistent
+  ansible.builtin.shell: bash -c "iptables-save > /etc/iptables/rules.v4"
+  changed_when: discovered_ip4tables_save.rc == 0
+  failed_when: discovered_ip4tables_save.rc > 0
+  register: discovered_ip4tables_save
+
+- name: Ip6tables persistent
+  ansible.builtin.shell: bash -c "ip6tables-save > /etc/iptables/rules.v6"
+  changed_when: discovered_ip6tables_save.rc == 0
+  failed_when: discovered_ip6tables_save.rc > 0
+  register: discovered_ip6tables_save
+
 - name: Restart timeservice
   ansible.builtin.systemd:
     name: "{{ deb12cis_time_sync_tool }}"
