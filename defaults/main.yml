@@ -724,7 +724,6 @@ deb12cis_bluetooth_mask: false
 deb12cis_ipv4_required: true
 
 # This variable governs whether ipv6 is enabled or disabled.
-deb12cis_ipv4_required: true
 deb12cis_ipv6_required: true
 
 ## 3.1.2 wireless network requirements
