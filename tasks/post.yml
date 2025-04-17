@@ -2,8 +2,7 @@
 # Post tasks
 
 - name: "POST | AUDIT | Gather the package facts after remediation"
-  tags:
-    - always
+  tags: always
   ansible.builtin.package_facts:
     manager: auto
 
@@ -12,8 +11,7 @@
     - deb12cis_sysctl_update
     - not system_is_container
     - "'procps' in ansible_facts.packages"
-  tags:
-    - always
+  tags: always
   ansible.builtin.template:
     src: "etc/sysctl.d/{{ item }}.j2"
     dest: "/etc/sysctl.d/{{ item }}"
@@ -32,8 +30,7 @@
 
 - name: "POST | PATCH |reboot system if changes require it and not skipped"
   when: change_requires_reboot
-  tags:
-    - always
+  tags: always
   vars:
     warn_control_id: Reboot_required
   block:
