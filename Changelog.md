@@ -1,5 +1,12 @@
 # Changes to deb12CIS
 
-## 0.9.0- Based on CIS v1.0.1
+## 1.0.2 - Based on CIS v1.0.1
+- New workflows
+- fetch audit options added
+- ansible facts created
+- fileglob options rewritten
+- issues addressed
+
+## 1.0.1 - Based on CIS v1.0.1
 
 - Initial release of playbook

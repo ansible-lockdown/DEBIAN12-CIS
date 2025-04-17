@@ -160,24 +160,40 @@
     mode: 'u-x,go-rwx'
     state: touch
 
-- name: "PRELIM | PATCH | 5.3.3.2.x ensure conf.d directory exists"
+- name: "PRELIM | AUDIT | Capture pam configs related files"
+  tags: always
+  ansible.builtin.find:
+    paths:
+      - '/usr/share/pam-configs/'
+      - '/etc/pam.d/'
+  register: prelim_pam_conf_files
+
+- name: PRELIM | PATCH | Ensure conf.d directory exists required for 5.3.3.2.x
   when:
     - deb12cis_rule_5_3_3_2_1 or
-      deb12cis_rule_5_3_3_2_2 or
-      deb12cis_rule_5_3_3_2_3 or
-      deb12cis_rule_5_3_3_2_4 or
-      deb12cis_rule_5_3_3_2_5 or
-      deb12cis_rule_5_3_3_2_6 or
-      deb12cis_rule_5_3_3_2_7 or
-      deb12cis_rule_5_3_3_2_8
-  tags:
-    - always
+      deb12cis_rule_5_3_3_2_6
+  tags: always
   ansible.builtin.file:
-    path: /etc/security/pwquality.conf.d/
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
     owner: root
     group: root
-    mode: 'ug+x,g-w,o-rwx'
-    state: directory
+    mode: 'g-w,o-rwx'
+    modification_time: preserve
+    access_time: preserve
+  register: prelim_pwquality_dummy
+  changed_when: prelim_pwquality_dummy.diff == "absent"
+  loop:
+    - { path: '/etc/security/pwquality.conf.d', state: 'directory' }
+    - { path: '/etc/security/pwquality.conf.d/cis_dummy.conf', state: 'touch' }
+
+- name: "PRELIM | AUDIT | Capture pam security related files"
+  tags: always
+  ansible.builtin.find:
+    paths:
+      - /etc/security/pwquality.conf.d/
+    patterns: '*.conf'
+  register: prelim_pam_pwquality_confs
 
 - name: "PRELIM | AUDIT | Gather UID 0 accounts other than root"
   when: deb12cis_rule_5_4_2_1

@@ -55,7 +55,9 @@
     - rule_2.2.4
     - telnet
   ansible.builtin.package:
-    name: telnet
+    name:
+      - telnet
+      - inetutils-telnet
     state: absent
     purge: "{{ deb12cis_purge_apt }}"
 

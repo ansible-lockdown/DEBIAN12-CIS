@@ -54,6 +54,7 @@
     - deb12cis_rule_5_3_2_3
     - deb12cis_disruption_high
     - deb12cis_pam_create_pwquality_files
+    - deb12cis_pam_auth_pwquality
   tags:
     - level1-server
     - level1-workstation
@@ -75,6 +76,7 @@
     - deb12cis_rule_5_3_2_4
     - deb12cis_disruption_high
     - deb12cis_pam_create_pwhistory_files
+    - deb12cis_pam_auth_pwhistory
   tags:
     - level1-server
     - level1-workstation
