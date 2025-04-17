@@ -191,7 +191,7 @@
 
 - name: Run post remediation audit
   when: run_audit
-  tags: run_audit
+  tags: always
   ansible.builtin.import_tasks:
     file: post_remediation_audit.yml
 
