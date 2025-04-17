@@ -93,16 +93,11 @@
             run: |
               echo "OSVAR = $OSVAR"
               echo "benchmark_type = $benchmark_type"
-              echo "PRIVSUBNET_ID = $AWS_PRIVSUBNET_ID"
-              echo "VPC_ID" = $AWS_VPC_SECGRP_ID"
               pwd
-              ls
             env:
               # Imported from GitHub variables this is used to load the relevant OS.tfvars file
               OSVAR: ${{ vars.OSVAR }}
               benchmark_type: ${{ vars.BENCHMARK_TYPE }}
-              PRIVSUBNET_ID: ${{ secrets.AWS_PRIVSUBNET_ID }}
-              VPC_ID: ${{ secrets.AWS_VPC_SECGRP_ID }}
 
           - name: Tofu init
             id: init
