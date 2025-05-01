@@ -85,7 +85,7 @@
         line: "PASS_WARN_AGE {{ deb12cis_pass_warn_age }}"
 
     - name: "5.4.1.3 | AUDIT | Ensure password expiration warning days is configured | Get existing users WARN_DAYS"
-      ansible.builtin.shell: getent shadow | awk -F: -v warn={{ deb12cis_pass_warn_age }} '{if ($6 < warn && $2 !~ /^[!*]/) print $1}'
+      ansible.builtin.shell: "getent shadow | awk -F: -v warn={{ deb12cis_pass_warn_age }} '{if ($6 < warn && $2 !~ /^[!*]/) print $1}'"
       changed_when: false
       failed_when: false
       register: discovered_warn_days
