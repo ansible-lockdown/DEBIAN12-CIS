@@ -2,7 +2,7 @@
 
 ## 1.0.3
 - Issues Addressed
- - #61 thank you @elcign
+ - #61 & #63  thank you @elcign
 
 ## 1.0.2 - Based on CIS v1.0.1
 - New workflows
