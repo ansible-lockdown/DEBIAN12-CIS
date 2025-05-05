@@ -219,7 +219,7 @@ deb12cis_rule_1_7_8: true
 deb12cis_rule_1_7_9: true
 deb12cis_rule_1_7_10: true
 
-# Section 2 rules are controling Services (Special Purpose Services, and service clients)
+# Section 2 rules are controlling Services (Special Purpose Services, and service clients)
 ## Configure Server Services
 deb12cis_rule_2_1_1: true
 deb12cis_rule_2_1_2: true
@@ -521,7 +521,7 @@ deb12cis_rule_7_2_10: true
 # Default: false
 deb12cis_uas_remove: false
 
-## Ability to enabe debug on mounts to assist in troubleshooting
+## Ability to enable debug on mounts to assist in troubleshooting
 # Mount point changes are set based upon facts created in Prelim
 # these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.
 deb12cis_debug_mount_data: false
