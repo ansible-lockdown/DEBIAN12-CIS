@@ -733,15 +733,15 @@ deb12cis_ipv6_required: true
 deb12cis_is_router: false
 
 # This variable governs if the task which updates sysctl(including sysctl reload) is executed.
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 deb12cis_sysctl_update: false
 # This variable governs if the task which flushes the IPv4 routing table is executed(forcing subsequent connections to
 # use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 deb12cis_flush_ipv4_route: false
 # This variable governs if the task which flushes the IPv6 routing table is executed(forcing subsequent connections to
 # use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 deb12cis_flush_ipv6_route: false
 
 ##
