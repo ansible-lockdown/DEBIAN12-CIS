@@ -84,7 +84,7 @@ audit_capture_files_dir: /some/location to copy to on control node
 
 # How to retrieve audit binary
 # Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already dowmloaded
+# you will need to access to either github or the file already downloaded
 get_audit_binary_method: download
 
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
@@ -219,7 +219,7 @@ deb12cis_rule_1_7_8: true
 deb12cis_rule_1_7_9: true
 deb12cis_rule_1_7_10: true
 
-# Section 2 rules are controling Services (Special Purpose Services, and service clients)
+# Section 2 rules are controlling Services (Special Purpose Services, and service clients)
 ## Configure Server Services
 deb12cis_rule_2_1_1: true
 deb12cis_rule_2_1_2: true
@@ -521,7 +521,7 @@ deb12cis_rule_7_2_10: true
 # Default: false
 deb12cis_uas_remove: false
 
-## Ability to enabe debug on mounts to assist in troubleshooting
+## Ability to enable debug on mounts to assist in troubleshooting
 # Mount point changes are set based upon facts created in Prelim
 # these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.
 deb12cis_debug_mount_data: false
@@ -733,15 +733,15 @@ deb12cis_ipv6_required: true
 deb12cis_is_router: false
 
 # This variable governs if the task which updates sysctl(including sysctl reload) is executed.
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 deb12cis_sysctl_update: false
 # This variable governs if the task which flushes the IPv4 routing table is executed(forcing subsequent connections to
 # use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 deb12cis_flush_ipv4_route: false
 # This variable governs if the task which flushes the IPv6 routing table is executed(forcing subsequent connections to
 # use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 deb12cis_flush_ipv6_route: false
 
 ##
