@@ -76,6 +76,14 @@
     - NIST800-53R5_AU-12
   notify: Restart journald
   block:
+    - name: "6.2.1.1.3 | PATCH | Ensure journald.conf.d log exists | Create directory"
+      ansible.builtin.file:
+        path: /etc/systemd/journald.conf.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0750'
+
     - name: "6.2.1.1.3 | PATCH | Ensure journald log file rotation is configured | Add file"
       ansible.builtin.template:
         src: etc/systemd/journald.conf.d/rotation.conf.j2
