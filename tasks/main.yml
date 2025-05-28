@@ -100,6 +100,7 @@
     - name: "Ensure root password is set"
       ansible.builtin.shell: passwd -S root | grep 'root P'
       changed_when: false
+      failed_when: false
       register: prelim_check_root_passwd_set
 
     - name: "Ensure root password is set"
