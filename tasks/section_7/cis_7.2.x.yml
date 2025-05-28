@@ -232,7 +232,7 @@
     warn_control_id: '7.2.8'
   block:
     - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist | Check for duplicate group names"
-      ansible.builtin.shell: 'getent passwd | cut -d: -f1 | sort -n | uniq -d'
+      ansible.builtin.shell: 'getent group | cut -d: -f1 | sort -n | uniq -d'
       changed_when: false
       failed_when: false
       check_mode: false
