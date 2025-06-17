@@ -1,38 +1,38 @@
 ---
 
-- name: "6.3.1.1 | PATCH | Ensure auditd is installed"
-  when: deb12cis_rule_6_3_1_1
+- name: "6.2.1.1 | PATCH | Ensure auditd is installed"
+  when: deb12cis_rule_6_2_1_1
   tags:
     - level2-server
     - level2-workstation
     - patch
     - auditd
-    - rule_6.3.1.1
+    - rule_6.2.1.1
     - NIST800-53R5_AU-2
     - NIST800-53R5_AU-3
     - NIST800-53R5_AU-12
     - NIST800-53R5_SI-5
   block:
-    - name: "6.3.1.1 | PATCH | Ensure auditd is installed | Install auditd packages"
+    - name: "6.2.1.1 | PATCH | Ensure auditd is installed | Install auditd packages"
       when: '"auditd" not in ansible_facts.packages'
       ansible.builtin.package:
         name: auditd
         state: present
 
-    - name: "6.3.1.1 | PATCH | Ensure auditd is installed | Install audispd-plugins packages"
+    - name: "6.2.1.1 | PATCH | Ensure auditd is installed | Install audispd-plugins packages"
       when: '"audispd-plugins" not in ansible_facts.packages'
       ansible.builtin.package:
         name: audispd-plugins
         state: present
 
-- name: "6.3.1.2 | PATCH | Ensure auditd service is enabled and active"
-  when: deb12cis_rule_6_3_1_2
+- name: "6.2.1.2 | PATCH | Ensure auditd service is enabled and active"
+  when: deb12cis_rule_6_2_1_2
   tags:
     - level2-server
     - level2-workstation
     - patch
     - auditd
-    - rule_6.3.1.2
+    - rule_6.2.1.2
     - NIST800-53R5_AU-2
     - NIST800-53R5_AU-12
     - NIST800-53R5_SI-5
@@ -41,15 +41,15 @@
     state: started
     enabled: true
 
-- name: "6.3.1.3 | PATCH | Ensure auditing for processes that start prior to auditd is enabled"
-  when: deb12cis_rule_6_3_1_3
+- name: "6.2.1.3 | PATCH | Ensure auditing for processes that start prior to auditd is enabled"
+  when: deb12cis_rule_6_2_1_3
   tags:
     - level2-server
     - level2-workstation
     - patch
     - auditd
     - grub
-    - rule_6.3.1.3
+    - rule_6.2.1.3
   ansible.builtin.lineinfile:
     path: /etc/default/grub
     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?:(?!audit=\d).)*?)"$'
@@ -57,15 +57,15 @@
     backrefs: true
   notify: Update-grub
 
-- name: "6.3.1.4 | PATCH | Ensure audit_backlog_limit is sufficient"
-  when: deb12cis_rule_6_3_1_4
+- name: "6.2.1.4 | PATCH | Ensure audit_backlog_limit is sufficient"
+  when: deb12cis_rule_6_2_1_4
   tags:
     - level2-server
     - level2-workstation
     - patch
     - auditd
     - grub
-    - rule_6.3.1.4
+    - rule_6.2.1.4
     - NIST800-53R5_AU-2
     - NIST800-53R5_AU-3
     - NIST800-53R5_AU-12

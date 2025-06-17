@@ -11,7 +11,7 @@ os_check: true
 # Disruption is high
 ## Run tests that are considered higher risk and could have a system impact if not properly tested
 ## Default false
-## Will be fine if clean new un-configured build
+## Will be fine if clean new unconfigured build
 deb12cis_disruption_high: false
 
 ## Switching on/off specific baseline sections
@@ -41,10 +41,10 @@ deb12cis_selinux_disable: false
 # UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
 deb12cis_legacy_boot: false
 
-## Benchmark name used by audting control role
+## Benchmark name used by auditing control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
-benchmark_version: '1.0.1'
+benchmark_version: '1.1.0'
 
 benchmark: DEBIAN12-CIS
 
@@ -78,8 +78,6 @@ audit_run_heavy_tests: true
 ## Only run Audit do not remediate
 audit_only: false
 
-# Path to copy the files to will create dir structure in audit_only mode
-audit_capture_files_dir: /some/location to copy to on control node
 #############################
 
 # How to retrieve audit binary
@@ -99,7 +97,7 @@ audit_content: git
 # If using either archive, copy, get_url:
 ## Note will work with .tar files - zip will require extra configuration
 ### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/UBUNTU22-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
+### https://github.com/ansible-lockdown/DEBIAN12-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
 audit_conf_source: "some path or url to copy from"
 
 # Destination for the audit content to be placed on managed node
@@ -140,6 +138,8 @@ deb12cis_rule_1_1_1_5: true
 deb12cis_rule_1_1_1_6: true
 deb12cis_rule_1_1_1_7: true
 deb12cis_rule_1_1_1_8: true
+deb12cis_rule_1_1_1_9: true
+deb12cis_rule_1_1_1_10: true
 
 # Filesystems
 # /tmp
@@ -197,7 +197,6 @@ deb12cis_rule_1_4_2: true
 deb12cis_rule_1_5_1: true
 deb12cis_rule_1_5_2: true
 deb12cis_rule_1_5_3: true
-deb12cis_rule_1_5_4: true
 
 # Command line warning banners
 deb12cis_rule_1_6_1: true
@@ -300,15 +299,8 @@ deb12cis_rule_3_3_11: true
 
 # Section 4 Firewalls
 ### Section 4 Host Based Firewall
-# 4.1 Configure UncomplicatedFirewall
 deb12cis_rule_4_1_1: true
-deb12cis_rule_4_1_2: true
-deb12cis_rule_4_1_3: true
-deb12cis_rule_4_1_4: true
-deb12cis_rule_4_1_5: true
-deb12cis_rule_4_1_6: true
-deb12cis_rule_4_1_7: true
-# 4.2 Configure nftables
+# 4.1 Configure UncomplicatedFirewall
 deb12cis_rule_4_2_1: true
 deb12cis_rule_4_2_2: true
 deb12cis_rule_4_2_3: true
@@ -316,23 +308,31 @@ deb12cis_rule_4_2_4: true
 deb12cis_rule_4_2_5: true
 deb12cis_rule_4_2_6: true
 deb12cis_rule_4_2_7: true
-deb12cis_rule_4_2_8: true
-deb12cis_rule_4_2_9: true
-deb12cis_rule_4_2_10: true
+# 4.3 Configure nftables
+deb12cis_rule_4_3_1: true
+deb12cis_rule_4_3_2: true
+deb12cis_rule_4_3_3: true
+deb12cis_rule_4_3_4: true
+deb12cis_rule_4_3_5: true
+deb12cis_rule_4_3_6: true
+deb12cis_rule_4_3_7: true
+deb12cis_rule_4_3_8: true
+deb12cis_rule_4_3_9: true
+deb12cis_rule_4_3_10: true
 # Configure iptables software
-deb12cis_rule_4_3_1_1: true
-deb12cis_rule_4_3_1_2: true
-deb12cis_rule_4_3_1_3: true
+deb12cis_rule_4_4_1_1: true
+deb12cis_rule_4_4_1_2: true
+deb12cis_rule_4_4_1_3: true
 # Configure IPv4 iptables
-deb12cis_rule_4_3_2_1: true
-deb12cis_rule_4_3_2_2: true
-deb12cis_rule_4_3_2_3: true
-deb12cis_rule_4_3_2_4: true
+deb12cis_rule_4_4_2_1: true
+deb12cis_rule_4_4_2_2: true
+deb12cis_rule_4_4_2_3: true
+deb12cis_rule_4_4_2_4: true
 # Configure IPv5 iptables
-deb12cis_rule_4_3_3_1: true
-deb12cis_rule_4_3_3_2: true
-deb12cis_rule_4_3_3_3: true
-deb12cis_rule_4_3_3_4: true
+deb12cis_rule_4_4_3_1: true
+deb12cis_rule_4_4_3_2: true
+deb12cis_rule_4_4_3_3: true
+deb12cis_rule_4_4_3_4: true
 
 ## Section 5 Access Control
 # 5.1 Configure SSH Server
@@ -421,67 +421,85 @@ deb12cis_rule_5_4_3_2: true
 deb12cis_rule_5_4_3_3: true
 
 # Section 6 Logging and Auditing
-## 6.1 Configure Integrity Checking
-deb12cis_rule_6_1_1: true
-deb12cis_rule_6_1_2: true
-## 6.2.1.1.x Configure systemd-journald service
-deb12cis_rule_6_2_1_1_1: true
-deb12cis_rule_6_2_1_1_2: true
-deb12cis_rule_6_2_1_1_3: true
-deb12cis_rule_6_2_1_1_4: true
-deb12cis_rule_6_2_1_1_5: true
-deb12cis_rule_6_2_1_1_6: true
-## 6.2.1.2.x Configure journald
-deb12cis_rule_6_2_1_2_1: true
-deb12cis_rule_6_2_1_2_2: true
-deb12cis_rule_6_2_1_2_3: true
-deb12cis_rule_6_2_1_2_4: true
+
+## 6.1.1.x Configure systemd-journald service
+deb12cis_rule_6_1_1_1: true
+deb12cis_rule_6_1_1_2: true
+deb12cis_rule_6_1_1_3: true
+deb12cis_rule_6_1_1_4: true
+
+## 6.1.2.1.x Configure journald
+deb12cis_rule_6_1_2_1_1: true
+deb12cis_rule_6_1_2_1_2: true
+deb12cis_rule_6_1_2_1_3: true
+deb12cis_rule_6_1_2_1_4: true
+deb12cis_rule_6_1_2_2: true
+deb12cis_rule_6_1_2_3: true
+deb12cis_rule_6_1_2_4: true
+
+## 6.1.3.x Configure rsyslog
+deb12cis_rule_6_1_3_1: true
+deb12cis_rule_6_1_3_2: true
+deb12cis_rule_6_1_3_3: true
+deb12cis_rule_6_1_3_4: true
+deb12cis_rule_6_1_3_5: true
+deb12cis_rule_6_1_3_6: true
+deb12cis_rule_6_1_3_7: true
+deb12cis_rule_6_1_3_8: true
+
 ## 6.2.2 Configure Logfiles
-deb12cis_rule_6_2_2_1: true
-## 6.4 Configure Auditing
-## 6.4.1 Configure auditd Service
-deb12cis_rule_6_3_1_1: true
-deb12cis_rule_6_3_1_2: true
-deb12cis_rule_6_3_1_3: true
-deb12cis_rule_6_3_1_4: true
+deb12cis_rule_6_1_4_1: true
+
+## 6.2 Configure Auditing
+## 6.2.1 Configure auditd Service
+deb12cis_rule_6_2_1_1: true
+deb12cis_rule_6_2_1_2: true
+deb12cis_rule_6_2_1_3: true
+deb12cis_rule_6_2_1_4: true
+
 ## 6.4.2 Configure Data Retention
-deb12cis_rule_6_3_2_1: true
-deb12cis_rule_6_3_2_2: true
-deb12cis_rule_6_3_2_3: true
-deb12cis_rule_6_3_2_4: true
-## 6.3.3 Configure auditd Rules
-deb12cis_rule_6_3_3_1: true
-deb12cis_rule_6_3_3_2: true
-deb12cis_rule_6_3_3_3: true
-deb12cis_rule_6_3_3_4: true
-deb12cis_rule_6_3_3_5: true
-deb12cis_rule_6_3_3_6: true
-deb12cis_rule_6_3_3_7: true
-deb12cis_rule_6_3_3_8: true
-deb12cis_rule_6_3_3_9: true
-deb12cis_rule_6_3_3_10: true
-deb12cis_rule_6_3_3_11: true
-deb12cis_rule_6_3_3_12: true
-deb12cis_rule_6_3_3_13: true
-deb12cis_rule_6_3_3_14: true
-deb12cis_rule_6_3_3_15: true
-deb12cis_rule_6_3_3_16: true
-deb12cis_rule_6_3_3_17: true
-deb12cis_rule_6_3_3_18: true
-deb12cis_rule_6_3_3_19: true
-deb12cis_rule_6_3_3_20: true
-deb12cis_rule_6_3_3_21: true
-## 6.3.4 Configure auditd File Access
-deb12cis_rule_6_3_4_1: true
-deb12cis_rule_6_3_4_2: true
-deb12cis_rule_6_3_4_3: true
-deb12cis_rule_6_3_4_4: true
-deb12cis_rule_6_3_4_5: true
-deb12cis_rule_6_3_4_6: true
-deb12cis_rule_6_3_4_7: true
-deb12cis_rule_6_3_4_8: true
-deb12cis_rule_6_3_4_9: true
-deb12cis_rule_6_3_4_10: true
+deb12cis_rule_6_2_2_1: true
+deb12cis_rule_6_2_2_2: true
+deb12cis_rule_6_2_2_3: true
+deb12cis_rule_6_2_2_4: true
+## 6.2.3 Configure auditd Rules
+deb12cis_rule_6_2_3_1: true
+deb12cis_rule_6_2_3_2: true
+deb12cis_rule_6_2_3_3: true
+deb12cis_rule_6_2_3_4: true
+deb12cis_rule_6_2_3_5: true
+deb12cis_rule_6_2_3_6: true
+deb12cis_rule_6_2_3_7: true
+deb12cis_rule_6_2_3_8: true
+deb12cis_rule_6_2_3_9: true
+deb12cis_rule_6_2_3_10: true
+deb12cis_rule_6_2_3_11: true
+deb12cis_rule_6_2_3_12: true
+deb12cis_rule_6_2_3_13: true
+deb12cis_rule_6_2_3_14: true
+deb12cis_rule_6_2_3_15: true
+deb12cis_rule_6_2_3_16: true
+deb12cis_rule_6_2_3_17: true
+deb12cis_rule_6_2_3_18: true
+deb12cis_rule_6_2_3_19: true
+deb12cis_rule_6_2_3_20: true
+deb12cis_rule_6_2_3_21: true
+## 6.2.4 Configure auditd File Access
+deb12cis_rule_6_2_4_1: true
+deb12cis_rule_6_2_4_2: true
+deb12cis_rule_6_2_4_3: true
+deb12cis_rule_6_2_4_4: true
+deb12cis_rule_6_2_4_5: true
+deb12cis_rule_6_2_4_6: true
+deb12cis_rule_6_2_4_7: true
+deb12cis_rule_6_2_4_8: true
+deb12cis_rule_6_2_4_9: true
+deb12cis_rule_6_2_4_10: true
+
+## 6.3.2 Configure Integrity Checking
+deb12cis_rule_6_3_1: true
+deb12cis_rule_6_3_2: true
+deb12cis_rule_6_3_3: true
 
 # Section 7 System Maintenance
 ## 7.1 System File Permissions
@@ -583,7 +601,7 @@ deb12cis_sysctl_kernel_conf: /etc/sysctl.d/98_cis_kernel.conf
 # - 1.7.2 - Ensure local login warning banner is configured properly
 # - 1.7.3 - Ensure remote login warning banner is configured properly
 # This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
-deb12cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
+deb12cis_warning_banner: Authorized users only. All activity may be monitored and reported.
 # End Banner
 # This variable governs, whether dynamic motd is disabled (as required by control 1.7.1)
 deb12cis_disable_dynamic_motd: true
@@ -786,34 +804,9 @@ deb12cis_ufw_allow_out_ports:
 deb12cis_sshd_config_file: /etc/ssh/sshd_config
 
 ## Controls 5.1.x -- various sshd settings
-deb12cis_sshd_default_log_level: "INFO"
-deb12cis_sshd_default_max_auth_tries: 4
-deb12cis_sshd_default_max_sessions: 8
-deb12cis_sshd_default_login_grace_time: 60
-deb12cis_sshd_default_client_alive_interval: 15
-deb12cis_sshd_default_client_alive_count_max: 3
 # Removed chacha20-poly1305 due to cve2023-48795
 # all Ciphers, KEX and Macs set to FIPS 140
 # This will nee dto be adjusted according to your site requirements
-deb12cis_sshd_default_ciphers:
-  - aes256-gcm@openssh.com
-  - aes128-gcm@openssh.com
-  - aes256-ctr
-  - aes192-ctr
-  - aes128-ctr
-deb12cis_sshd_default_macs:
-  - hmac-sha1
-  - hmac-sha2-256
-  #  - hmac-sha2-384  # hashed out seen as bad ssh2 MAC
-  - hmac-sha2-512
-deb12cis_sshd_default_kex_algorithms:
-  - ecdh-sha2-nistp256
-  - ecdh-sha2-nistp384
-  - ecdh-sha2-nistp521
-  - diffie-hellman-group-exchange-sha256
-  - diffie-hellman-group16-sha512
-  - diffie-hellman-group18-sha512
-  - diffie-hellman-group14-sha256
 
 # SSHD settings
 # This variable is used to control the verbosity of the logging produced by the SSH server.
@@ -824,32 +817,57 @@ deb12cis_sshd_default_kex_algorithms:
 # - `INFO`: logs informational messages in addition to errors;
 # - `VERBOSE`: logs a higher level of detail, including login attempts and key exchanges;
 # - `DEBUG`: generates very detailed debugging information including sensitive information.
-deb12cis_sshd_log_level: "{{ deb12cis_sshd_default_log_level }}"
+deb12cis_sshd_log_level: "INFO"
+
 # This variable specifies the maximum number of authentication attempts that are
 # allowed for a single SSH session.
-deb12cis_sshd_max_auth_tries: "{{ deb12cis_sshd_default_max_auth_tries }}"
+deb12cis_sshd_max_auth_tries: 4
+
 # This variable specifies the encryption algorithms that can be used for securing
 # data transmission.
-deb12cis_sshd_ciphers: "{{ deb12cis_sshd_default_ciphers }}"
+deb12cis_sshd_ciphers:
+  - aes256-gcm@openssh.com
+  - aes128-gcm@openssh.com
+  - aes256-ctr
+  - aes192-ctr
+  - aes128-ctr
+
 # This variable specifies a list of message authentication code algorithms (MACs) that are allowed for verifying
 # the integrity of data exchanged.
-deb12cis_sshd_macs: "{{ deb12cis_sshd_default_macs }}"
+deb12cis_sshd_macs:
+  - hmac-sha1
+  - hmac-sha2-256
+  #  - hmac-sha2-384  # hashed out seen as bad ssh2 MAC
+  - hmac-sha2-512
+
 # This variable is used to state the key exchange algorithms used to establish secure encryption
 # keys during the initial connection setup.
-deb12cis_sshd_kex_algorithms: "{{ deb12cis_sshd_default_kex_algorithms }}"
+deb12cis_sshd_kex_algorithms:
+  - ecdh-sha2-nistp256
+  - ecdh-sha2-nistp384
+  - ecdh-sha2-nistp521
+  - diffie-hellman-group-exchange-sha256
+  - diffie-hellman-group16-sha512
+  - diffie-hellman-group18-sha512
+  - diffie-hellman-group14-sha256
+
 # This variable sets the time interval in seconds between sending "keep-alive"
 # messages from the server to the client. These types of messages are intended to
 # keep the connection alive and prevent it being terminated due to inactivity.
-deb12cis_sshd_client_alive_interval: "{{ deb12cis_sshd_default_client_alive_interval }}"
+deb12cis_sshd_client_alive_interval: 15
+
 # This variable sets the maximum number of unresponsive "keep-alive" messages
 # that can be sent from the server to the client before the connection is considered
 # inactive and thus, closed.
-deb12cis_sshd_client_alive_count_max: "{{ deb12cis_sshd_default_client_alive_count_max }}"
+deb12cis_sshd_client_alive_count_max: 3
+
 # This variable specifies the amount of seconds allowed for successful authentication to
 # the SSH server.
-deb12cis_sshd_login_grace_time: "{{ deb12cis_sshd_default_login_grace_time }}"
+deb12cis_sshd_login_grace_time: 60
+
 # This variables is used to set the maximum number of open sessions per connection.
-deb12cis_sshd_max_sessions: "{{ deb12cis_sshd_default_max_sessions }}"
+deb12cis_sshd_max_sessions: 8
+
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
 # access for users whose user name matches one of the patterns. This is done
 # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
@@ -857,12 +875,14 @@ deb12cis_sshd_max_sessions: "{{ deb12cis_sshd_default_max_sessions }}"
 # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
 # For more info, see https://linux.die.net/man/5/sshd_config
 deb12cis_sshd_allow_users: ""
+
 # (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
 # for users whose primary group or supplementary group list matches one of the patterns. This is done
 # by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
 # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
 # For more info, https://linux.die.net/man/5/sshd_config
 deb12cis_sshd_allow_groups: ""
+
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
 # for users whose user name matches one of the patterns. This is done
 # by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
@@ -870,6 +890,7 @@ deb12cis_sshd_allow_groups: ""
 # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
 # For more info, see https://linux.die.net/man/5/sshd_config
 deb12cis_sshd_deny_users: ""
+
 # This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to prevent SSH access
 # for users whose primary group or supplementary group list matches one of the patterns. This is done
 # by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
@@ -1208,23 +1229,23 @@ deb12cis_remote_log_retrycount: 100
 # of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
 deb12cis_remote_log_queuesize: 1000
 
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.1.4.1.2 - Ensure systemd-journal-remote is configured
 # 'deb12cis_journal_upload_url' is the ip address to upload the journal entries to
 #  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
 #  number may be specified after a colon (":"), otherwise 19532 will be used by default.
 deb12cis_journal_upload_url: 192.168.50.42
 ## The paths below have the default paths/files, but allow user to create custom paths/filenames
 
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.1.4.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to the private key file used by the remote journal
 # server to authenticate itself to the client. This key is used alongside the server's
 # public certificate to establish secure communication.
 deb12cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.1.4.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to the public certificate file of the remote journal
 # server. This certificate is used to verify the authenticity of the remote server.
 deb12cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 6.1.4.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to a file containing one or more public certificates
 # of certificate authorities (CAs) that the client trusts. These trusted certificates are used
 # to validate the authenticity of the remote server's certificate.
@@ -1319,7 +1340,7 @@ deb12cis_auditd_admin_space_left_action: halt
 # This value governs if the below extra-vars for auditd should be used by the role
 deb12cis_auditd_extra_conf_usage: false
 
-# 6.3.3.x allow exceptions for UID in auditd config
+# 6.2.3.x allow exceptions for UID in auditd config
 ## Advanced option found in auditd post
 # This variable governs if defining user exceptions for auditd logging is acceptable.
 deb12cis_allow_auditd_uid_user_exclusions: false

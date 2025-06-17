@@ -5,11 +5,11 @@
 
 
 # This template will set all of the auditd configurations via a handler in the role in one task instead of individually
-{% if deb12cis_rule_6_3_3_1 %}
+{% if deb12cis_rule_6_2_3_1 %}
 -w /etc/sudoers -p wa -k scope
 -w /etc/sudoers.d -p wa -k scope
 {% endif %}
-{% if deb12cis_rule_6_3_3_2 %}
+{% if deb12cis_rule_6_2_3_2 %}
 {% set syscalls = ["execve"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -20,10 +20,10 @@
 -a always,exit -F arch=b64 -C euid!=uid -F auid!=unset -S {{ arch_syscalls|join(',') }} -k user_emulation
 -a always,exit -F arch=b32 -C euid!=uid -F auid!=unset -S {{ arch_syscalls|join(',') }} -k user_emulation
 {% endif %}
-{% if deb12cis_rule_6_3_3_3 %}
+{% if deb12cis_rule_6_2_3_3 %}
 -w {{ deb12cis_sudolog_location }} -p wa -k sudo_log_file
 {% endif %}
-{% if deb12cis_rule_6_3_3_4 %}
+{% if deb12cis_rule_6_2_3_4 %}
 {% set syscalls = ["adjtimex","settimeofday","clock_settime"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -35,7 +35,7 @@
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -k time-change
 -w /etc/localtime -p wa -k time-change
 {% endif %}
-{% if deb12cis_rule_6_3_3_5 %}
+{% if deb12cis_rule_6_2_3_5 %}
 {% set syscalls = ["sethostname","setdomainname"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -43,8 +43,8 @@
 {{ arch_syscalls.append( syscall) }}
 {% endif %}
 {% endfor %}
--a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }}  -k system-locale
--a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }}  -k system-locale
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -k system-locale
+-a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -k system-locale
 -w /etc/issue -p wa -k system-locale
 -w /etc/issue.net -p wa -k system-locale
 -w /etc/hosts -p wa -k system-locale
@@ -52,14 +52,14 @@
 -w /etc/network -p wa -k system-locale
 -w /etc/netplan -p wa -k system-locale
 {% endif %}
-{% if deb12cis_rule_6_3_3_6 %}
+{% if deb12cis_rule_6_2_3_6 %}
 {% if discovered_privilege_processes is defined %}
 {% for proc in discovered_privilege_processes.stdout_lines -%}
 -a always,exit -F path={{ proc }} -F perm=x -F auid>=1000 -F auid!=unset -k privileged
 {% endfor %}
 {% endif %}
 {% endif %}
-{% if deb12cis_rule_6_3_3_7 %}
+{% if deb12cis_rule_6_2_3_7 %}
 {% set syscalls = ["creat","open","openat","truncate","ftruncate"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -72,7 +72,7 @@
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F exit=-EACCES -F auid>=1000 -F auid!=unset -k access
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F exit=-EPERM -F auid>=1000 -F auid!=unset -k access
 {% endif %}
-{% if deb12cis_rule_6_3_3_8 %}
+{% if deb12cis_rule_6_2_3_8 %}
 -w /etc/group -p wa -k identity
 -w /etc/passwd -p wa -k identity
 -w /etc/gshadow -p wa -k identity
@@ -82,7 +82,7 @@
 -w /etc/pam.conf -p wa -k identity
 -w /etc/pam.d -p wa -k identity
 {% endif %}
-{% if deb12cis_rule_6_3_3_9 %}
+{% if deb12cis_rule_6_2_3_9 %}
 {% set syscalls = ["chmod","fchmod","fchmodat"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -99,7 +99,7 @@
 {% endif %}
 {% endfor %}
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>=1000 -F auid!=unset -k perm_mod
-{% set syscalls = ["etxattr","lsetxattr","fsetxattr","removexattr","lremovexattr","fremovexattr"] %}
+{% set syscalls = ["setxattr","lsetxattr","fsetxattr","removexattr","lremovexattr","fremovexattr"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
 {% if syscall in supported_syscalls %}
@@ -132,7 +132,7 @@
 {% endfor %}
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>=1000 -F auid!=unset -k perm_mod
 {% endif %}
-{% if deb12cis_rule_6_3_3_10 %}
+{% if deb12cis_rule_6_2_3_10 %}
 {% set syscalls = ["mount"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -143,16 +143,16 @@
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>=1000 -F auid!=unset -k mounts
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>=1000 -F auid!=unset -k mounts
 {% endif %}
-{% if deb12cis_rule_6_3_3_11 %}
+{% if deb12cis_rule_6_2_3_11 %}
 -w /var/run/utmp -p wa -k session
 -w /var/log/wtmp -p wa -k session
 -w /var/log/btmp -p wa -k session
 {% endif %}
-{% if deb12cis_rule_6_3_3_12 %}
+{% if deb12cis_rule_6_2_3_12 %}
 -w /var/log/lastlog -p wa -k logins
 -w /var/run/faillock -p wa -k logins
 {% endif %}
-{% if deb12cis_rule_6_3_3_13 %}
+{% if deb12cis_rule_6_2_3_13 %}
 {% set syscalls = ["unlink","unlinkat","rename","renameat"] %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
@@ -163,23 +163,23 @@
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>=1000 -F auid!=unset -k delete
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid>=1000 -F auid!=unset -k delete
 {% endif %}
-{% if deb12cis_rule_6_3_3_14 %}
+{% if deb12cis_rule_6_2_3_14 %}
 -w /etc/apparmor/ -p wa -k MAC-policy
 -w /etc/apparmor.d/ -p wa -k MAC-policy
 {% endif %}
-{% if deb12cis_rule_6_3_3_15 %}
+{% if deb12cis_rule_6_2_3_15 %}
 -a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
 {% endif %}
-{% if deb12cis_rule_6_3_3_16 %}
+{% if deb12cis_rule_6_2_3_16 %}
 -a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
 {% endif %}
-{% if deb12cis_rule_6_3_3_17 %}
--a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k priv_chng
+{% if deb12cis_rule_6_2_3_17 %}
+-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
 {% endif %}
-{% if deb12cis_rule_6_3_3_18 %}
+{% if deb12cis_rule_6_2_3_18 %}
 -a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k usermod
 {% endif %}
-{% if deb12cis_rule_6_3_3_19 %}
+{% if deb12cis_rule_6_2_3_19 %}
 -a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>=1000 -F auid!=-1 -k kernel_modules
 {% set syscalls = ["init_module","finit_module","delete_module"] %}
 {% set arch_syscalls = [] %}
@@ -190,7 +190,7 @@
 {% endfor %}
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid>=1000 -F auid!=-1 -k kernel_modules
 {% endif %}
-{% if deb12cis_rule_6_3_3_20 %}
+{% if deb12cis_rule_6_2_3_20 %}
 -e 2
 
 {% endif %}

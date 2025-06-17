@@ -92,8 +92,7 @@
     mode: 'u-x,go-wx'
 
 - name: "1.6.5 | PATCH | Ensure permissions on /etc/issue are configured"
-  when:
-    - deb12cis_rule_1_6_5
+  when: deb12cis_rule_1_6_5
   tags:
     - level1-server
     - level1-workstation

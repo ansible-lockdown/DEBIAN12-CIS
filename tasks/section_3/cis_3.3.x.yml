@@ -84,8 +84,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
 - name: "3.3.4 | PATCH | Ensure broadcast ICMP requests are ignored"
-  when:
-    - deb12cis_rule_3_3_4
+  when: deb12cis_rule_3_3_4
   tags:
     - level1-server
     - level1-workstation
@@ -250,7 +249,7 @@
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
-- name: "3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled"
+- name: "3.3.10 | PATCH | Ensure tcp syn cookies is enabled"
   when: deb12cis_rule_3_3_10
   tags:
     - level1-server
@@ -264,12 +263,12 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled | Set Fact"
+    - name: "3.3.10 | PATCH | Ensure tcp syn cookies is enabled | Set Fact"
       ansible.builtin.set_fact:
         deb12cis_sysctl_update: true
         deb12cis_flush_ipv4_route: true
 
-    - name: "3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled"
+    - name: "3.3.10 | PATCH | Ensure tcp syn ookies is enabled"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 

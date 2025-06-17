@@ -262,7 +262,7 @@
   when: discovered_auditd_immutable_check.stdout == '1'
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"
-  notify: Change_requires_reboot
+  notify: Set reboot required
 
 - name: Stop auditd process
   ansible.builtin.command: systemctl kill auditd
@@ -275,6 +275,6 @@
     state: started
   listen: Restart auditd
 
-- name: Change_requires_reboot
+- name: Set reboot required
   ansible.builtin.set_fact:
     change_requires_reboot: true

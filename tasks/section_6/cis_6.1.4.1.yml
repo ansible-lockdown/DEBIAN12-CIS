@@ -1,0 +1,51 @@
+---
+
+- name: "6.1.4.1 | PATCH | Ensure access to all logfiles has been configured"
+  when: deb12cis_rule_6_1_4_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - logfiles
+    - rule_6.1.4.1
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
+  block:
+    - name: "6.1.4.1 | AUDIT | Ensure access to all logfiles has been configured | find log files"
+      ansible.builtin.shell: find /var/log/ -type f -exec ls {} \;
+      changed_when: false
+      failed_when: false
+      register: discovered_logfiles
+
+    - name: "6.1.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions SSSD min 660"
+      when:
+        - discovered_logfiles.stdout_lines | length > 0
+        - item is match("/var/log/(gdm|sssd)")
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'ug-x,o-rwx'
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.stdout_lines }}"
+
+    - name: "6.1.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions tmp min 664"
+      when:
+        - discovered_logfiles.stdout_lines | length > 0
+        - item is match("/var/log/((u|b|w)tmp*|lastlog)")
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'ug-x,o-wx'
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.stdout_lines }}"
+
+    - name: "6.1.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions else all 640"
+      when:
+        - discovered_logfiles.stdout_lines | length > 0
+        - item is not match("/var/log/((u|b|w)tmp*|lastlog|sssd)")
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'u-x,g-wx,o-rwx'
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.stdout_lines }}"

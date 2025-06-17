@@ -1,28 +1,32 @@
 ---
 
-- name: "SECTION | 4.1 | Configure UnComplicatedFirewall"
-  when: deb12cis_firewall_package == "ufw"
+- name: "SECTION | 4.1 | Single firewall"
   ansible.builtin.import_tasks:
-    file: cis_4.1.x.yml
+    file: cis_4.1.1.yml
 
-- name: "SECTION | 4.2 | Configure nftables software"
-  when: deb12cis_firewall_package == "nftables"
+- name: "SECTION | 4.2.x | Configure UnComplicatedFirewall"
+  when: deb12cis_firewall_package == "ufw"
   ansible.builtin.import_tasks:
     file: cis_4.2.x.yml
 
-- name: "SECTION | 4.3.1.x | Configure iptables software"
+- name: "SECTION | 4.3.x | Configure nftables software"
+  when: deb12cis_firewall_package == "nftables"
+  ansible.builtin.import_tasks:
+    file: cis_4.3.x.yml
+
+- name: "SECTION | 4.4.1.x | Configure iptables software"
   when: deb12cis_firewall_package == "iptables"
   ansible.builtin.import_tasks:
-    file: cis_4.3.1.x.yml
+    file: cis_4.4.1.x.yml
 
-- name: "SECTION | 4.3.2.x | Configure ipv4 iptables"
+- name: "SECTION | 4.4.2.x | Configure ipv4 iptables"
   when: deb12cis_firewall_package == "iptables"
   ansible.builtin.import_tasks:
-    file: cis_4.3.2.x.yml
+    file: cis_4.4.2.x.yml
 
-- name: "SECTION | 4.3.3.x | Configure ipv6 iptables"
+- name: "SECTION | 4.4.3.x | Configure ipv6 iptables"
   when:
     - deb12cis_firewall_package == "iptables"
     - deb12cis_ipv6_required
   ansible.builtin.import_tasks:
-    file: cis_4.3.3.x.yml
+    file: cis_4.4.3.x.yml

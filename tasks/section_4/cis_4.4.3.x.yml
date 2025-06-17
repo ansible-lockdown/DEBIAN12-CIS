@@ -1,17 +1,17 @@
 ---
 
-- name: "4.3.3.1 | PATCH | Ensure ip6tables default deny firewall policy"
-  when: deb12cis_rule_4_3_3_1
+- name: "4.4.3.1 | PATCH | Ensure ip6tables default deny firewall policy"
+  when: deb12cis_rule_4_4_3_1
   tags:
     - level1-server
     - level1-workstationå
     - patch
-    - rule_4.3.3.1
+    - rule_4.4.3.1
     - ip6tables
     - NIST800-53R5_CA-9
     - NIST800-53R5_SC-7
   block:
-    - name: "4.3.3.1 | PATCH | Ensure ip6tables default deny firewall policy | Configure SSH to be allowed out"
+    - name: "4.4.3.1 | PATCH | Ensure ip6tables default deny firewall policy | Configure SSH to be allowed out"
       ansible.builtin.iptables:
         chain: OUTPUT
         protocol: tcp
@@ -21,7 +21,7 @@
         ip_version: ipv6
       notify: Ip6tables persistent
 
-    - name: "4.3.3.1 | PATCH | Ensure ip6tables default deny firewall policy | Enable apt traffic"
+    - name: "4.4.3.1 | PATCH | Ensure ip6tables default deny firewall policy | Enable apt traffic"
       ansible.builtin.iptables:
         chain: INPUT
         ctstate: 'ESTABLISHED'
@@ -29,7 +29,7 @@
         ip_version: ipv6
       notify: Ip6tables persistent
 
-    - name: "4.3.3.1 | PATCH | Ensure ip6tables default deny firewall policy | Set drop items"
+    - name: "4.4.3.1 | PATCH | Ensure ip6tables default deny firewall policy | Set drop items"
       ansible.builtin.iptables:
         policy: DROP
         chain: "{{ item }}"
@@ -40,20 +40,20 @@
         - FORWARD
         - OUTPUT
 
-- name: "4.3.3.2 | PATCH | Ensure ip6tables loopback traffic is configured"
+- name: "4.4.3.2 | PATCH | Ensure ip6tables loopback traffic is configured"
   when:
-    - deb12cis_rule_4_3_3_2
+    - deb12cis_rule_4_4_3_2
     - not deb12cis_ipv4_required
   tags:
     - level1-server
     - level1-workstation
     - patch
-    - rule_4.3.3.2
+    - rule_4.4.3.2
     - ip6tables
     - NIST800-53R5_CA-9
     - NIST800-53R5_SC-7
   block:
-    - name: "4.3.3.2 | PATCH | Ensure ip6tables loopback traffic is configured | INPUT loopback ACCEPT"
+    - name: "4.4.3.2 | PATCH | Ensure ip6tables loopback traffic is configured | INPUT loopback ACCEPT"
       ansible.builtin.iptables:
         action: append
         chain: INPUT
@@ -62,7 +62,7 @@
         ip_version: ipv6
       notify: Ip6tables persistent
 
-    - name: "4.3.3.2 | PATCH | Ensure ip6tables loopback traffic is configured | OUTPUT loopback ACCEPT"
+    - name: "4.4.3.2 | PATCH | Ensure ip6tables loopback traffic is configured | OUTPUT loopback ACCEPT"
       ansible.builtin.iptables:
         action: append
         chain: OUTPUT
@@ -71,7 +71,7 @@
         ip_version: ipv6
       notify: Ip6tables persistent
 
-    - name: "4.3.3.2 | PATCH | Ensure ip6tables loopback traffic is configured | INPUT loopback drop"
+    - name: "4.4.3.2 | PATCH | Ensure ip6tables loopback traffic is configured | INPUT loopback drop"
       ansible.builtin.iptables:
         action: append
         chain: INPUT
@@ -80,15 +80,15 @@
         ip_version: ipv6
       notify: Ip6tables persistent
 
-- name: "4.3.3.3 | PATCH | Ensure ip6tables outbound and established connections are configured"
+- name: "4.4.3.3 | PATCH | Ensure ip6tables outbound and established connections are configured"
   when:
-    - deb12cis_rule_4_3_3_3
+    - deb12cis_rule_4_4_3_3
     - not deb12cis_ipv4_required
   tags:
     - level1-server
     - level1-workstation
     - patch
-    - rule_4.3.3.3
+    - rule_4.4.3.3
     - ip6tables
     - NIST800-53R5_CA-9
     - NIST800-53R5_SC-7
@@ -109,36 +109,36 @@
     - { chain: INPUT, protocol: udp, ctstate: 'ESTABLISHED' }
     - { chain: INPUT, protocol: icmp, ctstate: 'ESTABLISHED' }
 
-- name: "4.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports"
+- name: "4.4.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports"
   when:
-    - deb12cis_rule_4_3_3_4
+    - deb12cis_rule_4_4_3_4
     - not deb12cis_ipv4_required
   tags:
     - level1-server
     - level1-workstation
     - audit
-    - rule_4.3.3.4
+    - rule_4.4.3.4
     - ip6tables
     - NIST800-53R5_CA-9
     - NIST800-53R5_SC-7
   vars:
-    warn_control_id: '4.3.3.4'
+    warn_control_id: '4.4.3.4'
   block:
-    - name: "4.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Get list of open ports"
+    - name: "4.4.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Get list of open ports"
       ansible.builtin.command: ss -6tuln
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_ipv6_open_ports
 
-    - name: "4.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Get list of rules"
+    - name: "4.4.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Get list of rules"
       ansible.builtin.command: ip6tables -L INPUT -v -n
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_ipv6_iptables_current_rules
 
-    - name: "4.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Warn about settings"
+    - name: "4.4.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Warn about settings"
       ansible.builtin.debug:
         msg:
           - "Warning!! Below is the list the open ports and current rules"
@@ -148,6 +148,6 @@
           - "Current Rules:"
           - "{{ discovered_ipv6_iptables_current_rules.stdout_lines }}"
 
-    - name: "4.3.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Set warning count"
+    - name: "4.4.3.4 | AUDIT | Ensure ip6tables firewall rules exist for all open ports | Set warning count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
