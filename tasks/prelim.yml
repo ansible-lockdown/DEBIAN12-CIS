@@ -126,7 +126,8 @@
       failed_when: prelim_wireless_adapters.rc not in [ 0, 1 ]
 
     - name: "PRELIM | AUDIT | If wireless adapter present capture module"
-      when: prelim_wireless_adapters.rc == 0
+      when:
+        - prelim_wireless_adapters.rc == 0
       ansible.builtin.shell: |
         for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs -0 dirname);
           do basename "$(readlink -f "$driverdir"/device/driver/module)";
@@ -180,7 +181,8 @@
 - name: "PRELIM | AUDIT | Capture pam security related files"
   tags: always
   ansible.builtin.find:
-    paths: /etc/security/pwquality.conf.d/
+    paths:
+      - /etc/security/pwquality.conf.d/
     patterns: '*.conf'
   register: prelim_pam_pwquality_confs
 
@@ -199,7 +201,9 @@
 - name: "PRELIM | PATCH | Create journald config directory"
   when:
     - deb12cis_syslog == 'journald'
-    - deb12cis_rule_6_1_2_2 or deb12cis_rule_6_1_2_3 or deb12cis_rule_6_1_2_4
+    - deb12cis_rule_6_1_2_2 or
+      deb12cis_rule_6_1_2_3 or
+      deb12cis_rule_6_1_2_4
   tags: always
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d
@@ -235,7 +239,10 @@
   register: prelim_auditd_logfile
 
 - name: "PRELIM | AUDIT | Audit conf and rules files | list files"
-  when: deb12cis_rule_6_2_4_5 or deb12cis_rule_6_2_4_6 or deb12cis_rule_6_2_4_7
+  when:
+    - deb12cis_rule_6_2_4_5 or
+      deb12cis_rule_6_2_4_6 or
+      deb12cis_rule_6_2_4_7
   tags:
     - level2-server
     - level2-workstation

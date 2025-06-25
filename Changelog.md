@@ -2,6 +2,11 @@
 
 ## 1.2.0 Based on CIS v1.1.0
 
+June 2025 QA Updates
+  - Update to audit_only to allow fetching results
+  - resolved false warning for fetch audit
+  - Improved documentation and variable compilation for crypto policies
+
 - ADDED ITEMS:
   1.1.0 ADDED RECOMMENDATION: 1.1.1.6 - Ensure overlayfs kernel module is not available
   1.1.0 ADDED RECOMMENDATION: 1.1.1.10 - Ensure unused filesystems kernel modules are not available
