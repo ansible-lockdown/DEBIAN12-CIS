@@ -1,20 +1,20 @@
 ---
 
-- name: "4.3.2.1 | PATCH | Ensure iptables default deny firewall policy"
+- name: "4.4.2.1 | PATCH | Ensure iptables default deny firewall policy"
   when:
-    - deb12cis_rule_4_3_2_1
+    - deb12cis_rule_4_4_2_1
     - deb12cis_ipv4_required
     - not system_is_ec2
   tags:
     - level1-server
     - level1-workstation
     - patch
-    - rule_4.3.2.1
+    - rule_4.4.2.1
     - iptables
     - NIST800-53R5_CA-9
     - NIST800-53R5_SC-7
   block:
-    - name: "4.3.2.1 | PATCH | Ensure iptables default deny firewall policy | Configure SSH to be allowed in"
+    - name: "4.4.2.1 | PATCH | Ensure iptables default deny firewall policy | Configure SSH to be allowed in"
       ansible.builtin.iptables:
         chain: INPUT
         protocol: tcp
@@ -23,7 +23,7 @@
         ctstate: 'NEW,ESTABLISHED'
       notify: Iptables persistent
 
-    - name: "4.3.2.1 | PATCH | Ensure iptables default deny firewall policy | Configure SSH to be allowed out"
+    - name: "4.4.2.1 | PATCH | Ensure iptables default deny firewall policy | Configure SSH to be allowed out"
       ansible.builtin.iptables:
         chain: OUTPUT
         protocol: tcp
@@ -32,14 +32,14 @@
         ctstate: 'NEW,ESTABLISHED'
       notify: Iptables persistent
 
-    - name: "4.3.2.1 | PATCH | Ensure iptables default deny firewall policy | Enable apt traffic"
+    - name: "4.4.2.1 | PATCH | Ensure iptables default deny firewall policy | Enable apt traffic"
       ansible.builtin.iptables:
         chain: INPUT
         ctstate: 'ESTABLISHED'
         jump: ACCEPT
       notify: Iptables persistent
 
-    - name: "4.3.2.1 | PATCH | Ensure iptables default deny firewall policy | Set drop items"
+    - name: "4.4.2.1 | PATCH | Ensure iptables default deny firewall policy | Set drop items"
       ansible.builtin.iptables:
         policy: DROP
         chain: "{{ item }}"
@@ -49,21 +49,21 @@
         - FORWARD
         - OUTPUT
 
-- name: "4.3.2.2 | PATCH | Ensure iptables loopback traffic is configured"
+- name: "4.4.2.2 | PATCH | Ensure iptables loopback traffic is configured"
   when:
-    - deb12cis_rule_4_3_2_2
+    - deb12cis_rule_4_4_2_2
     - deb12cis_firewall_package == "iptables"
     - deb12cis_ipv4_required
   tags:
     - level1-server
     - level1-workstation
     - patch
-    - rule_4.3.2.2
+    - rule_4.4.2.2
     - iptables
     - NIST800-53R5_CA-9
     - NIST800-53R5_SC-7
   block:
-    - name: "4.3.2.2 | PATCH | Ensure iptables loopback traffic is configured | INPUT loopback ACCEPT"
+    - name: "4.4.2.2 | PATCH | Ensure iptables loopback traffic is configured | INPUT loopback ACCEPT"
       ansible.builtin.iptables:
         action: append
         chain: INPUT
@@ -71,7 +71,7 @@
         jump: ACCEPT
       notify: Iptables persistent
 
-    - name: "4.3.2.2 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
+    - name: "4.4.2.2 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
       ansible.builtin.iptables:
         action: append
         chain: OUTPUT
@@ -79,7 +79,7 @@
         jump: ACCEPT
       notify: Iptables persistent
 
-    - name: "4.3.2.2 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
+    - name: "4.4.2.2 | PATCH | Ensure iptables loopback traffic is configured | OUTPUT loopback ACCEPT"
       ansible.builtin.iptables:
         action: append
         chain: INPUT
@@ -87,16 +87,16 @@
         jump: DROP
       notify: Iptables persistent
 
-- name: "4.3.2.3 | PATCH | Ensure iptables outbound and established connections are configured"
+- name: "4.4.2.3 | PATCH | Ensure iptables outbound and established connections are configured"
   when:
-    - deb12cis_rule_4_3_2_3
+    - deb12cis_rule_4_4_2_3
     - deb12cis_firewall_package == "iptables"
     - deb12cis_ipv4_required
   tags:
     - level1-server
     - level1-workstation
     - patch
-    - rule_4.3.2.3
+    - rule_4.4.2.3
     - iptables
     - NIST800-53R5_CA-9
     - NIST800-53R5_SC-7
@@ -116,37 +116,37 @@
     - { chain: INPUT, protocol: udp, ctstate: 'ESTABLISHED' }
     - { chain: INPUT, protocol: icmp, ctstate: 'ESTABLISHED' }
 
-- name: "4.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports"
+- name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports"
   when:
-    - deb12cis_rule_4_3_2_4
+    - deb12cis_rule_4_4_2_4
     - deb12cis_firewall_package == "iptables"
     - deb12cis_ipv4_required
   tags:
     - level1-server
     - level1-workstation
     - audit
-    - rule_4.3.2.4
+    - rule_4.4.2.4
     - iptables
     - NIST800-53R5_CA-9
     - NIST800-53R5_SC-7
   vars:
-    warn_control_id: '4.3.2.4'
+    warn_control_id: '4.4.2.4'
   block:
-    - name: "4.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of open ports"
+    - name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of open ports"
       ansible.builtin.command: ss -4tuln
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_ipv4_open_ports
 
-    - name: "4.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of rules"
+    - name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Get list of rules"
       ansible.builtin.command: iptables -L INPUT -v -n
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_ipv4_iptables_current_rules
 
-    - name: "4.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Warn about settings"
+    - name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Warn about settings"
       ansible.builtin.debug:
         msg:
           - "Warning!! Below is the list the open ports and current rules"
@@ -156,6 +156,6 @@
           - "Current Rules:"
           - "{{ discovered_ipv4_iptables_current_rules.stdout_lines }}"
 
-    - name: "4.3.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Set warning count"
+    - name: "4.4.2.4 | AUDIT | Ensure iptables firewall rules exist for all open ports | Set warning count"
       ansible.builtin.import_tasks:
         file: warning_facts.yml

@@ -2,24 +2,22 @@
 # tasks file for DEB12-CIS
 
 - name: "Check OS version and family"
+  when: os_check
+  tags: always
   ansible.builtin.assert:
     that: ansible_facts.distribution == 'Debian' and ansible_facts.distribution_major_version is version_compare('12', '==')
     fail_msg: "This role can only be run against Supported OSs. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
     success_msg: "This role is running against a supported OS {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }}"
-  when: os_check
-  tags: always
 
 - name: "Check ansible version"
+  tags: always
   ansible.builtin.assert:
     that: ansible_version.full is version_compare(min_ansible_version, '>=')
     fail_msg: "You must use Ansible {{ min_ansible_version }} or greater"
     success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
-  tags: always
 
 - name: "Setup rules if container"
-  when:
-    - ansible_connection == 'docker' or
-      ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+  when: ansible_connection == 'docker' or ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - container_discovery
     - always
@@ -82,8 +80,7 @@
 
         - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"  # noqa name[template]
           ansible.builtin.assert:
-            that:
-              - not prelim_ansible_user_password_set.stdout.startswith("!")
+            that: not prelim_ansible_user_password_set.stdout.startswith("!")
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
             success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
 
@@ -174,7 +171,7 @@
   ansible.builtin.import_tasks:
     file: post.yml
 
-- name: Run post remediation audit
+- name: "Run post_remediation audit"
   when: run_audit
   tags: always
   ansible.builtin.import_tasks:
