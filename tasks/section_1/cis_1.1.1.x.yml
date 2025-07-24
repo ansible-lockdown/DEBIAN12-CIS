@@ -189,11 +189,14 @@
     - name: "1.1.1.6 | PATCH | Ensure overlayfs kernel module is not available | Disable overlayfs"
       when: not system_is_container
       community.general.modprobe:
-        name: squashfs
+        name: overlayfs
         state: absent
 
 - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available"
-  when: deb12cis_rule_1_1_1_7
+  when:
+    - deb12cis_rule_1_1_1_7
+    - not prelim_squashfs_builtin
+    - prelim_snap_pkg_mgr.rc != 0
   tags:
     - level2-server
     - level2-workstation

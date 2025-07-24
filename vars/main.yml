@@ -16,7 +16,7 @@ deb12cis_allowed_crypto_policies_modules:
   - 'OSPP'
   - 'AD-SUPPORT'
   - 'AD-SUPPORT-LEGACY'
-# The following are already included in 1.6.x controls
+  # The following are already included in 1.6.x controls
   - 'NO-SHA1'
   - 'NO-SSHCBC'
   - 'NO-SSHETM'
