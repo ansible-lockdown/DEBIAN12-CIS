@@ -53,7 +53,7 @@
     path: /etc/systemd/journald.conf
     regexp: ^ForwardToSyslog=
     line: ForwardToSyslog=yes
-  notify: Restart syslog service
+  notify: Restart rsyslog
 
 - name: "6.1.3.4 | PATCH | Ensure rsyslog log file creation mode is configured"
   when: deb12cis_rule_6_1_3_4
@@ -71,7 +71,7 @@
     path: /etc/rsyslog.conf
     regexp: '^\$FileCreateMode|^#\$FileCreateMode'
     line: '$FileCreateMode 0640'
-  notify: Restart syslog service
+  notify: Restart rsyslog
 
 - name: "6.1.3.5 | PATCH | Ensure logging is configured"
   when: deb12cis_rule_6_1_3_5
@@ -138,7 +138,7 @@
         - { regexp: '^local6,local7.\*|^#local6,local7.\*', line: 'local6,local7.*                 -/var/log/localmessages', insertafter: '^# First some standard log files' }
       loop_control:
         label: "{{ item.line }}"
-      notify: Restart syslog service
+      notify: Restart rsyslog
 
 - name: "6.1.3.6 | PATCH | Ensure rsyslog is configured to send logs to a remote log host"
   when:
@@ -182,7 +182,7 @@
       with_items:
         - '^(\$ModLoad|module(load="imtcp"))'
         - '^(\$(InputTCP|InputRELP|UDP)ServerRun|input(type="imtcp" port=".*"))'
-      notify: Restart syslog service
+      notify: Restart rsyslog
 
     - name: "6.1.3.7 | PATCH | Ensure rsyslog is not configured to receive logs from a remote client | When a log server"
       when: deb12cis_system_is_log_server
@@ -193,4 +193,4 @@
       with_items:
         - { regexp: '^\$ModLoad|^#\$ModLoad', line: '$ModLoad imtcp' }
         - { regexp: '^\$InputTCPServerRun|^#\$InputTCPServerRun', line: '$InputTCPServerRun 514' }
-      notify: Restart syslog service
+      notify: Restart rsyslog
