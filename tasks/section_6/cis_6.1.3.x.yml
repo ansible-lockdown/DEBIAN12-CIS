@@ -103,19 +103,19 @@
       register: discovered_rsyslog_config
 
     - name: "6.1.3.5 | AUDIT | Ensure logging is configured | Message out config"
-      when: not deb12cis_rsyslog_ansible_managed
+      when: not deb12cis_rsyslog_ansiblemanaged
       ansible.builtin.debug:
         msg:
           - "Warning!! Below is the current logging configurations for rsyslog, please review"
           - "{{ discovered_rsyslog_config.stdout_lines }}"
 
     - name: "6.1.3.5 | PATCH | Ensure logging is configured | Set warning count"
-      when: not deb12cis_rsyslog_ansible_managed
+      when: not deb12cis_rsyslog_ansiblemanaged
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
     - name: "6.1.3.5 | PATCH | Ensure logging is configured | Automated rsyslog configuration"
-      when: deb12cis_rsyslog_ansible_managed
+      when: deb12cis_rsyslog_ansiblemanaged
       ansible.builtin.lineinfile:
         path: "{{ discovered_rsyslog_config_path.stdout }}"
         regexp: "{{ item.regexp }}"
