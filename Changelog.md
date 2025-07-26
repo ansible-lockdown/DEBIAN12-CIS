@@ -2,6 +2,9 @@
 
 ## 1.2.0 Based on CIS v1.1.0
 
+July 2025 QA Updates
+  - Fix for #89 and #90, thank you @Arvyr
+
 June 2025 QA Updates
   - Update to audit_only to allow fetching results
   - resolved false warning for fetch audit
