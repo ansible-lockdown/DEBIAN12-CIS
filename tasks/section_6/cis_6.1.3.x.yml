@@ -156,7 +156,7 @@
     path: /etc/rsyslog.conf
     block: |
       ##Enable sending of logs over TCP add the following line:
-      *.* @@{{ deb12cis_remote_log_server }}
+      *.* @@{{ deb12cis_remote_log_host }}
     insertafter: EOF
 
 - name: "6.1.3.7 | PATCH | Ensure rsyslog is not configured to receive logs from a remote client"
