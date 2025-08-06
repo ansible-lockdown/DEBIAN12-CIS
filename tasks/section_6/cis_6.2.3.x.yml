@@ -77,8 +77,12 @@
     - rule_6.2.3.6
     - NIST800-53R5_AU-3
   block:
-    - name: "6.2.3.6 | PATCH | Ensure use of privileged commands is collected"
-      ansible.builtin.shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm /6000 2>/dev/null; done
+    - name: "6.3.3.6 | PATCH | Ensure use of privileged commands is collected"
+      ansible.builtin.shell: |
+        {%- set egrep_exclude = "(asdfmnop|{{ deb12cis_priv_command_excluded_mounts | join('|') }})" -%}
+        for i in $(df | grep '^/dev' | grep -Ev '{{ egrep_exclude }}' | awk '{ print $NF }'); do
+          find $i -xdev -type f -perm /6000 2>/dev/null;
+        done
       changed_when: false
       failed_when: false
       check_mode: false
