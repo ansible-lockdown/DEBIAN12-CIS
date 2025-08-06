@@ -65,7 +65,7 @@
         - deb12cis_force_user_mindays
       ansible.builtin.user:
         name: "{{ item }}"
-        password_expire_max: "{{ deb12cis_pass_min_days }}"
+        password_expire_min: "{{ deb12cis_pass_min_days }}"
       loop: "{{ discovered_min_days.stdout_lines }}"
 
 - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured"
@@ -88,16 +88,16 @@
       ansible.builtin.shell: "awk -F: '/^[^:]+:[^!*]/ && $6< {{ deb12cis_pass_warn_age }} {print $1}' /etc/shadow"
       changed_when: false
       failed_when: false
-      register: discovered_warn_days
+      register: discovered_users_with_low_warn_days
 
     - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured | Set existing users WARN_DAYS"
       when:
-        - discovered_warn_days.stdout_lines | length > 0
+        - discovered_users_with_low_warn_days.stdout_lines | length > 0
         - item in prelim_interactive_usernames.stdout
         - deb12cis_force_user_warnage
-      ansible.builtin.command: "chage --warndays {{ deb12cis_pass['warn_age'] }} {{ item }}"
+      ansible.builtin.command: "chage --warndays {{ deb12cis_pass_warn_age }} {{ item }}"
       changed_when: true
-      loop: "{{ discovered_warn_days.stdout_lines }}"
+      loop: "{{ discovered_users_with_low_warn_days.stdout_lines }}"
 
 - name: "5.4.1.4 | PATCH | Ensure strong password hashing algorithm is configured"
   when: deb12cis_rule_5_4_1_4

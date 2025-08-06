@@ -155,10 +155,15 @@
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
   ansible.builtin.file:
-    path: /etc/security/opasswd
+    path: "{{ item }}"
     owner: root
     group: root
-    mode: 'u-x,go-wx'
+    mode: 'u-x,go-rwx'
+  failed_when: discovered_file_exists.state not in '[ file, absent ]'
+  register: discovered_file_exists
+  loop:
+    - /etc/security/opasswd
+    - /etc/security/opasswd.old
 
 - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured"
   when: deb12cis_rule_7_1_11

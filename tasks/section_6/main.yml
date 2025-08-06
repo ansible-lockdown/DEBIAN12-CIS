@@ -1,34 +1,44 @@
 ---
 
-- name: "SECTION | 6.1 | Configure Integrity Checking"
+- name: "SECTION | 6.1.1 | Configure journald"
   ansible.builtin.import_tasks:
-    file: cis_6.1.x.yml
+    file: cis_6.1.1.x.yml
 
-- name: "SECTION | 6.2.1.1.x | Configure systemd-journald service"
-  ansible.builtin.import_tasks:
-    file: cis_6.2.1.1.x.yml
-
-- name: "SECTION | 6.2.1.2.x | Configure journald-remote"
+- name: "SECTION | 6.1.2.1.x | Configure journald-remote"
   when: deb12cis_syslog == 'journald'
   ansible.builtin.import_tasks:
-    file: cis_6.2.1.2.x.yml
+    file: cis_6.1.2.1.x.yml
 
-- name: "SECTION | 6.2. | Configure Logfiles"
+- name: "SECTION | 6.1.2.x | Configure journald"
+  when: deb12cis_syslog == 'journald'
+  ansible.builtin.import_tasks:
+    file: cis_6.1.2.x.yml
+
+- name: "SECTION | 6.1.3.x | Configure rsyslog"
+  when: deb12cis_syslog == 'rsyslog'
+  ansible.builtin.import_tasks:
+    file: cis_6.1.3.x.yml
+
+- name: "SECTION | 6.1.4.1 | Configure logfiles"
+  ansible.builtin.import_tasks:
+    file: cis_6.1.4.1.yml
+
+- name: "SECTION | 6.2.1.x | Configure auditd service"
+  ansible.builtin.import_tasks:
+    file: cis_6.2.1.x.yml
+
+- name: "SECTION | 6.2.2.x | Configure Data Retention"
   ansible.builtin.import_tasks:
     file: cis_6.2.2.x.yml
 
-- name: "SECTION | 6.3.1 | Configure auditd Service"
+- name: "SECTION | 6.2.3.x | Configure auditd Rules"
   ansible.builtin.import_tasks:
-    file: cis_6.3.1.x.yml
+    file: cis_6.2.3.x.yml
 
-- name: "SECTION | 6.3.2 | Configure Data Retention"
+- name: "SECTION | 6.2.4.x | Configure auditd File Access"
   ansible.builtin.import_tasks:
-    file: cis_6.3.2.x.yml
+    file: cis_6.2.4.x.yml
 
-- name: "SECTION | 6.3.3 | Configure auditd Rules"
+- name: "SECTION | 6.3.x | Configure Integrity Checking"
   ansible.builtin.import_tasks:
-    file: cis_6.3.3.x.yml
-
-- name: "SECTION | 6.3.4 | Configure auditd File Access"
-  ansible.builtin.import_tasks:
-    file: cis_6.3.4.x.yml
+    file: cis_6.3.x.yml

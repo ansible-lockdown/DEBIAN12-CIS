@@ -2,7 +2,7 @@
 
 ## Configure a Debian 12 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
-### Based on [ CIS Debian Linux 9 Benchmark v1.0.1 ](https://www.cisecurity.org/cis-benchmarks/)
+### Based on [ CIS Debian Linux 12 Benchmark v1.1.0 ](https://www.cisecurity.org/cis-benchmarks/)
 
 ---
 
@@ -27,6 +27,7 @@
 ![Issues Open](https://img.shields.io/github/issues-raw/ansible-lockdown/DEBIAN12-CIS?label=Open%20Issues)
 ![Issues Closed](https://img.shields.io/github/issues-closed-raw/ansible-lockdown/DEBIAN12-CIS?label=Closed%20Issues&&color=success)
 ![Pull Requests](https://img.shields.io/github/issues-pr/ansible-lockdown/DEBIAN12-CIS?label=Pull%20Requests)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/DEBIAN12-CIS?label=License)
 
@@ -34,9 +35,9 @@
 
 ## Looking for support?
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_RH9_cis)
+[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_DEB12_cis)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_RH9_cis)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_DEB12_cis)
 
 ### Community
 
@@ -94,10 +95,10 @@ Refer to [DEBIAN12-CIS-Audit](https://github.com/ansible-lockdown/DEBIAN12-CIS-A
 ## Documentation
 
 - [Read The Docs](https://ansible-lockdown.readthedocs.io/en/latest/)
-- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_RH9_cis)
-- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise#GH_AL_RH9_cis)
-- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_RH9_cis)
-- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_RH9_cis)
+- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_DEB12_cis)
+- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise#GH_AL_DEB12_cis)
+- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_DEB12_cis)
+- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_DEB12_cis)
 
 ## Requirements
 
@@ -105,7 +106,6 @@ Debian12 x86_64
 Debian12 arm64
 
 - Access to download or add the goss binary and content to the system if using auditing (other options are available on how to get the content to the system.)
-
 
 ```sh
 os_check: false
@@ -120,7 +120,7 @@ os_check: false
   - [Tower User Guide](https://docs.ansible.com/ansible-tower/latest/html/userguide/index.html)
   - [Ansible Community Info](https://docs.ansible.com/ansible/latest/community/index.html)
 - Functioning Ansible and/or Tower Installed, configured, and running. This includes all of the base Ansible/Tower configurations, needed packages installed, and infrastructure setup.
-- Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consiquences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
+- Please read through the tasks in this role to gain an understanding of what each control is doing. Some of the tasks are disruptive and can have unintended consequences in a live production system. Also familiarize yourself with the variables in the defaults/main.yml file.
 
 **Technical Dependencies:**
 
@@ -134,7 +134,7 @@ pre-commit is available if installed on your host for pull request testing.
 
 ## Role Variables
 
-This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done by overriding the required varaibles as found in defaults/main.yml file. e.g. using inventory, group_vars, extra_vars
+This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done by overriding the required variables as found in defaults/main.yml file. e.g. using inventory, group_vars, extra_vars
 
 ## Tags
 
@@ -168,7 +168,7 @@ We encourage you (the community) to contribute to this role. Please read the rul
 
 uses:
 
-- ansible-core 2.15
+- ansible-core 2.16
 - ansible collections - pulls in the latest version based on requirements file
 - Runs the audit using the devel branch
 - Runs the pre-commit setup on the PR to ensure everything is in place as expected.
@@ -181,6 +181,7 @@ uses:
   - ansible-base 2.10.17 - python 3.8
   - ansible-core 2.13.4  - python 3.10
   - ansible-core 2.15.1  - python 3.11
+  - ansible-core 2.16.6  - python 3.11
 
 ## Added Extras
 

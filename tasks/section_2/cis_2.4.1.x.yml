@@ -112,9 +112,8 @@
     group: root
     mode: 'u+x,go-rwx'
 
-- name: "2.4.1.8 | PATCH | Ensure cron is restricted to authorized users"
-  when:
-    - deb12cis_rule_2_4_1_8
+- name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users"
+  when: deb12cis_rule_2_4_1_8
   tags:
     - level1-server
     - level1-workstation
@@ -122,17 +121,17 @@
     - rule_2.4.1.8
     - cron
   block:
-    - name: "2.4.1.8 | PATCH | Ensure cron is restricted to authorized users | Remove cron.deny"
+    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Remove cron.deny"
       ansible.builtin.file:
         path: /etc/cron.deny
         state: absent
 
-    - name: "2.4.1.8 | PATCH | Ensure cron is restricted to authorized users | Check for cron.allow"
+    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Check for cron.allow"
       ansible.builtin.stat:
         path: /etc/cron.allow
       register: discovered_cron_allow_status
 
-    - name: "2.4.1.8 | PATCH | Ensure cron is restricted to authorized users | Create cron.allow if doesn't exist"
+    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Create cron.allow if doesn't exist"
       when: not discovered_cron_allow_status.stat.exists
       ansible.builtin.file:
         path: /etc/cron.allow
@@ -141,7 +140,7 @@
         mode: 'u-x,g-wx,o-rwx'
         state: touch
 
-    - name: "2.4.1.8 | PATCH | Ensure cron is restricted to authorized users |  Update cron.allow if exists"
+    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Update cron.allow if exists"
       when: discovered_cron_allow_status.stat.exists
       ansible.builtin.file:
         path: /etc/cron.allow

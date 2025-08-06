@@ -41,12 +41,12 @@ repos:
   - id: detect-secrets
 
 - repo: https://github.com/gitleaks/gitleaks
-  rev: v8.24.3
+  rev: v8.28.0
   hooks:
   - id: gitleaks
 
 - repo: https://github.com/ansible-community/ansible-lint
-  rev: v25.2.1
+  rev: v25.7.0
   hooks:
   - id: ansible-lint
     name: Ansible-lint
@@ -62,10 +62,10 @@ repos:
     # If you want to use specific version of ansible-core or ansible, feel
     # free to override `additional_dependencies` in your own hook config
     # file.
-    # - ansible-core>=2.10.1
+    # - ansible-core>=2.12.1
 
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.37.0  # or higher tag
+  rev: v1.37.1  # or higher tag
   hooks:
   - id: yamllint
     name: Check YAML Lint
