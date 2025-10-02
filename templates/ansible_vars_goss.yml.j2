@@ -526,7 +526,7 @@ deb12cis_time_sync_tool: {{ deb12cis_time_sync_tool }}
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
-deb12cis_time_pool_name:
+deb12cis_time_pool:
 {% for pool in deb12cis_time_pool %}
   - name: {{ pool.name }}
     options: {{ pool.options }}
