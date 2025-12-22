@@ -108,11 +108,11 @@
       community.general.ufw:
         rule: allow
         direction: out
-        to_port: '{{ item }}'
-      with_items:
-        - "{{ deb12cis_ufw_allow_out_ports }}"
-      notify: Reload ufw
-
+        proto: "{{ item.proto }}"
+        to_port: '{{ item.port }}'
+      loop: "{{ deb12cis_ufw_allow_out_ports }}"
+      loop_control:
+        label: "{{ item.port }}"
     - name: "4.2.5 | PATCH | Ensure ufw outbound connections are configured | Allow all"
       when: "'all' in deb12cis_ufw_allow_out_ports"
       community.general.ufw:
