@@ -86,18 +86,28 @@
         weekday: "{{ deb12cis_aide_cron_weekday }}"
         job: "{{ deb12cis_aide_cron_job }}"
 
-    - name: "6.3.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
-      when: deb12cis_aide_scan == "timer"
-      ansible.builtin.systemd:
-        name: aidecheck.service
-        enabled: true
+    - name: "6.3.2 | PATCH | Ensure filesystem integrity is regularly checked | timer template"
+      when: deb12cis_aide_scan == 'timer'
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
+        dest: "/{{ item }}"
+        owner: root
+        group: root
+        mode: 'go-wx'
+      loop:
+        - etc/systemd/system/dailyaidecheck.service
+        - etc/systemd/system/dailyaidecheck.timer
 
-    - name: "6.3.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
-      when: deb12cis_aide_scan == "timer"
+    - name: "6.3.2 | PATCH | Ensure filesystem integrity is regularly checked | timer service"
+      when: deb12cis_aide_scan == 'timer'
       ansible.builtin.systemd:
-        name: aidecheck.timer
+        name: "{{ item }}"
         state: started
         enabled: true
+        daemon_reload: true
+      loop:
+        - dailyaidecheck.service
+        - dailyaidecheck.timer
 
 - name: "6.3.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools"
   when: deb12cis_rule_6_3_3

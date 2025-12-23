@@ -1,6 +1,13 @@
 # Changes to DEB12CIS
 
 ## Based on CIS v1.1.0
+Dec25 updates
+
+pre-commit updates
+4.2.5 variable updates for ports and ntp added #124 thanks to Manngunner
+6.3.2 aide timer added and cron template updates
+
+## Based on CIS v1.1.0
 
 Oct25_updated
 
