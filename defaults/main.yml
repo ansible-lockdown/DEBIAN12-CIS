@@ -782,16 +782,22 @@ deb12cis_firewall_package: "ufw"
 # settings. If set to "true" the task will get done in the prelim section of the role.
 deb12cis_ufw_use_sysctl: true
 
-## Control 4.1.5 - Ensure ufw outbound connections are configured
-# The value of this variable represents the ports for the firewall to allow oubound traffic from.
+## Control 4.2.5 - Ensure ufw outbound connections are configured
+# The value of this variable represents the ports for the firewall to allow outbound traffic from.
 # If you want to allow outbound traffic on all ports, set the variable to  `all`, e.g.,
 # `deb12cis_ufw_allow_out_ports: "all"`.
 deb12cis_ufw_allow_out_ports:
-  - 53
-  - 80
-  - 443
-
-## Controls 4.2.x - nftables
+  - port: 53
+    proto: tcp
+  - port: 53
+    proto: udp
+  - port: 80
+    proto: tcp
+  - port: 123
+    proto: udp
+  - port: 443
+    proto: tcp
+## Controls 4.3.x - nftables
 # Nftables is not supported in this role. Some tasks have parts of them commented out, this is one example
 # of such a task.
 # "deb12cis_nftables_table_name" is the name of the table in nftables you want to create.

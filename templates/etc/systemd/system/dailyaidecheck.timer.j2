@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily AIDE check
+
+[Timer]
+OnCalendar={{ deb12cis_aide_cron_day }}-{{ deb12cis_aide_cron_month }}-{{ deb12cis_aide_cron_weekday }} {{ deb12cis_aide_cron_hour }}:{{ deb12cis_aide_cron_minute }}:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
