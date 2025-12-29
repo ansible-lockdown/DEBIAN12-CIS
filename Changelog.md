@@ -4,7 +4,7 @@
 Dec25 updates
 
 pre-commit updates
-4.2.5 variable updates for ports and ntp added #124 thanks to Manngunner
+4.2.5 variable updates for ports and ntp added #124 thanks to Manngunner and #128 thanks to @Arvyr
 6.3.2 aide timer added and cron template updates
 
 ## Based on CIS v1.1.0
