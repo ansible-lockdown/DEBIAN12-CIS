@@ -104,19 +104,18 @@
     - NIST800-53R5_SC-7
   block:
     - name: "4.2.5 | PATCH | Ensure ufw outbound connections are configured | Custom ports"
-      when: deb12cis_ufw_allow_out_ports != "all"
       community.general.ufw:
         rule: allow
         direction: out
         proto: "{{ item.proto }}"
         to_port: '{{ item.port }}'
-      loop: "{{ deb12cis_ufw_allow_out_ports }}"
+      loop: "{{ deb12cis_ufw_allow_out_ports if 'all' not in deb12cis_ufw_allow_out_ports else [] }}"
       loop_control:
         label: "{{ item.port }}"
       notify: Reload ufw
 
     - name: "4.2.5 | PATCH | Ensure ufw outbound connections are configured | Allow all"
-      when: "'all' in deb12cis_ufw_allow_out_ports"
+      when: deb12cis_ufw_allow_out_ports == "all"
       community.general.ufw:
         rule: allow
         direction: out
