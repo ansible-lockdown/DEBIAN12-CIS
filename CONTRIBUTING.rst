@@ -1,4 +1,4 @@
-Contributing to MindPoint Group Projects
+Contributing to Ansible-Lockdown Projects
 ========================================
 
 Rules
@@ -7,7 +7,7 @@ Rules
 2) All commits must have Signed-off-by (Signed-off-by: Joan Doe <joan.doe@email.com>) in the commit message (details in Signing section)
 3) All work is done in your own branch
 4) All pull requests go into the devel branch. There are automated checks for signed commits, signoff in commit message, and functional testing)
-5) Be open and nice to eachother
+5) Be open and nice to each other
 
 Workflow
 --------
@@ -20,7 +20,7 @@ Signing your contribution
 
 We've chosen to use the Developer's Certificate of Origin (DCO) method
 that is employed by the Linux Kernel Project, which provides a simple
-way to contribute to MindPoint Group projects.
+way to contribute to Ansible-Lockdown projects.
 
 The process is to certify the below DCO 1.1 text
 ::
