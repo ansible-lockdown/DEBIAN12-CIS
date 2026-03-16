@@ -131,7 +131,7 @@
         path: /etc/cron.allow
       register: discovered_cron_allow_status
 
-    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Create cron.allow if doesn't exist"
+    - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users"
       when: not discovered_cron_allow_status.stat.exists
       ansible.builtin.file:
         path: /etc/cron.allow

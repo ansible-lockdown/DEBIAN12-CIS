@@ -19,7 +19,7 @@
         path: /etc/at.allow
       register: discovered_at_allow_status
 
-    - name: "2.4.2.1 | PATCH | Ensure at is restricted to authorized users | Create at.allow if doesn't exist"
+    - name: "2.4.2.1 | PATCH | Ensure at is restricted to authorized users"
       when: not discovered_at_allow_status.stat.exists
       ansible.builtin.file:
         path: /etc/at.allow

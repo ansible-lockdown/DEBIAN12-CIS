@@ -529,18 +529,18 @@ deb12cis_time_sync_tool: {{ deb12cis_time_sync_tool }}
 deb12cis_time_pool_name:
 {% for pool in deb12cis_time_pool %}
   - name: {{ pool.name }}
-    options: {{ pool.options }}
+    pool_options: {{ pool.options }}
 {% endfor %}
 
 # The following variable represents a list of of time servers used
 # for configuring chrony and timesyncd
-# Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
-# The default setting for the `options` is `iburst` -- please refer to the documentation
+# Each list item contains two settings, `name` (the domain name of the server) and synchronization `server_options`.
+# The default setting for the `server_options` is `iburst` -- please refer to the documentation
 # of the time synchronization mechanism you are using.
 deb12cis_time_servers:
 {% for time_server in deb12cis_time_servers %}
 - name: {{ time_server.name }}
-  options: {{ time_server.options }}
+  server_options: {{ time_server.options }}
 {% endfor %}
 
 # Section 3

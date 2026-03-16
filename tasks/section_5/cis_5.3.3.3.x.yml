@@ -18,7 +18,7 @@
       changed_when: false
       failed_when: discovered_pwhistory_remember.rc not in [0, 1]
 
-    - name: "5.3.3.3.1 | PATCH | Ensure password number of changed characters is configured | Ensure remember is set"
+    - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured | Ensure remember is set"
       when: discovered_pwhistory_remember.stdout | length > 0
       ansible.builtin.lineinfile:
         path: "/{{ deb12cis_pam_confd_dir }}{{ deb12cis_pam_pwhistory_file }}"

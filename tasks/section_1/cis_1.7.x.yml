@@ -1,6 +1,6 @@
 ---
 
-- name: "1.7.1 | PATCH | Ensure GNOME Display Manager is removed"
+- name: "1.7.1 | PATCH | Ensure GDM is removed"
   when:
     - deb12cis_rule_1_7_1
     - not deb12cis_desktop_required
@@ -56,7 +56,7 @@
         - { regexp: 'banner-message-enable', line: 'banner-message-enable=true', insertafter: '\[org\/gnome\/login-screen\]'}
         - { regexp: 'banner-message-text', line: "banner-message-text='{{ deb12cis_warning_banner | regex_replace('\n', ' ') | trim }}'", insertafter: 'banner-message-enable' }
 
-- name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled"
+- name: "1.7.3 | PATCH | Ensure GDM disable-user-list option is enabled"
   when:
     - deb12cis_rule_1_7_3
     - deb12cis_desktop_required
@@ -73,7 +73,7 @@
     - NIST800-53R5_IA-5
   notify: Update dconf
   block:
-    - name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled | make directories"
+    - name: "1.7.3 | PATCH | Ensure GDM disable-user-list option is enabled | make directories"
       ansible.builtin.file:
         path: "{{ item }}"
         owner: root
@@ -84,7 +84,7 @@
         - /etc/dconf/db/{{ deb12cis_dconf_db_name }}.d
         - /etc/dconf/profile
 
-    - name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled | disable-user-list setting login-screen"
+    - name: "1.7.3 | PATCH | Ensure GDM disable-user-list option is enabled | disable-user-list setting login-screen"
       ansible.builtin.lineinfile:
         path: "/etc/dconf/db/{{ deb12cis_dconf_db_name }}.d/00-login-screen"
         regexp: "{{ item.regexp }}"
@@ -98,7 +98,7 @@
         - { regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]', insertafter: EOF }
         - { regexp: 'disable-user-list', line: 'disable-user-list=true', insertafter: '\[org\/gnome\/login-screen\]'}
 
-    - name: "1.7.3 | PATCH | Ensure disable-user-list option is enabled | disable-user-list setting profile"
+    - name: "1.7.3 | PATCH | Ensure GDM disable-user-list option is enabled | disable-user-list setting profile"
       ansible.builtin.lineinfile:
         path: "/etc/dconf/profile/{{ deb12cis_dconf_db_name }}"
         regexp: "{{ item.regexp }}"
@@ -320,7 +320,7 @@
         mode: 'u-x,go-wx'
       notify: Update dconf
 
-- name: "1.7.10 | PATCH | Ensure XDCMP is not enabled"
+- name: "1.7.10 | PATCH | Ensure XDMCP is not enabled"
   when: deb12cis_rule_1_7_10
   tags:
     - level1-server

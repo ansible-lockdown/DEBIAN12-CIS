@@ -48,7 +48,7 @@
         dest: /etc/issue
         mode: 'u-x,go-wx'
 
-    - name: "1.6.2 | PATCH | Ensure local login warning banner is kept on package upgrade | issue"
+    - name: "1.6.2 | PATCH | Ensure local login warning banner is configured properly | issue"
       community.general.dpkg_divert:
         path: /etc/issue
 
@@ -70,11 +70,11 @@
         dest: /etc/issue.net
         mode: 'u-x,go-wx'
 
-    - name: "1.6.3 | PATCH | Ensure remote login warning banner is kept on package upgrade | issue.net"
+    - name: "1.6.3 | PATCH | Ensure remote login warning banner is configured properly | issue.net"
       community.general.dpkg_divert:
         path: /etc/issue.net
 
-- name: "1.6.4 | PATCH | Ensure permissions on /etc/motd are configured"
+- name: "1.6.4 | PATCH | Ensure access to /etc/motd is configured"
   when: deb12cis_rule_1_6_4
   tags:
     - level1-server
@@ -91,7 +91,7 @@
     group: root
     mode: 'u-x,go-wx'
 
-- name: "1.6.5 | PATCH | Ensure permissions on /etc/issue are configured"
+- name: "1.6.5 | PATCH | Ensure access to /etc/issue is configured"
   when: deb12cis_rule_1_6_5
   tags:
     - level1-server
@@ -108,7 +108,7 @@
     group: root
     mode: 'u-x,go-wx'
 
-- name: "1.6.6 | PATCH | Ensure permissions on /etc/issue.net are configured"
+- name: "1.6.6 | PATCH | Ensure access to /etc/issue.net is configured"
   when: deb12cis_rule_1_6_6
   tags:
     - level1-server

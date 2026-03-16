@@ -55,7 +55,7 @@
   loop_control:
     label: "{{ item.path }}"
 
-- name: "6.2.4.6 | PATCH | Ensure audit configuration files are owned by root"
+- name: "6.2.4.6 | PATCH | Ensure audit configuration files owner is configured"
   when: deb12cis_rule_6_2_4_6
   tags:
     - level2-server
@@ -71,7 +71,7 @@
   loop_control:
     label: "{{ item.path }}"
 
-- name: "6.2.4.7 | PATCH | Ensure audit configuration files belong to group root"
+- name: "6.2.4.7 | PATCH | Ensure audit configuration files group owner is configured"
   when: deb12cis_rule_6_2_4_7
   tags:
     - level2-server
@@ -101,7 +101,7 @@
     mode: 'go-w'
   loop: "{{ audit_bins }}"
 
-- name: "6.2.4.9 | PATCH | Ensure audit tools are owned by root"
+- name: "6.2.4.9 | PATCH | Ensure audit tools owner is configured"
   when: deb12cis_rule_6_2_4_9
   tags:
     - level2-server
@@ -115,7 +115,7 @@
     group: root
   loop: "{{ audit_bins }}"
 
-- name: "6.2.4.10 | PATCH | Ensure audit tools belong to group root"
+- name: "6.2.4.10 | PATCH | Ensure audit tools group owner is configured"
   when: deb12cis_rule_6_2_4_10
   tags:
     - level2-server

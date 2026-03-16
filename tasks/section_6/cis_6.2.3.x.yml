@@ -67,7 +67,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.6 | PATCH | Ensure use of privileged commands is collected"
+- name: "6.2.3.6 | PATCH | Ensure use of privileged commands are collected"
   when: deb12cis_rule_6_2_3_6
   tags:
     - level2-server
@@ -88,7 +88,7 @@
       check_mode: false
       register: discovered_privileged_commands
 
-    - name: "6.2.3.6 | PATCH | Ensure use of privileged commands is collected"
+    - name: "6.2.3.6 | PATCH | Ensure use of privileged commands are collected"
       ansible.builtin.set_fact:
         update_audit_template: true
       notify: update auditd
@@ -201,7 +201,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.15 | PATCH | Ensure successful and unsuccessful attempts to use the chcon command are recorded"
+- name: "6.2.3.15 | PATCH | Ensure successful and unsuccessful attempts to use the chcon command are collected"
   when: deb12cis_rule_6_2_3_15
   tags:
     - level2-server
@@ -216,7 +216,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.16 | PATCH | Ensure successful and unsuccessful attempts to use the setfacl command are recorded"
+- name: "6.2.3.16 | PATCH | Ensure successful and unsuccessful attempts to use the setfacl command are collected"
   when: deb12cis_rule_6_2_3_16
   tags:
     - level2-server
@@ -231,7 +231,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.17 | PATCH | Ensure successful and unsuccessful attempts to use the chacl command are recorded"
+- name: "6.2.3.17 | PATCH | Ensure successful and unsuccessful attempts to use the chacl command are collected"
   when: deb12cis_rule_6_2_3_17
   tags:
     - level2-server
@@ -246,7 +246,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.18 | PATCH | Ensure successful and unsuccessful attempts to use the usermod command are recorded"
+- name: "6.2.3.18 | PATCH | Ensure successful and unsuccessful attempts to use the usermod command are collected"
   when: deb12cis_rule_6_2_3_18
   tags:
     - level2-server
@@ -261,7 +261,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.2.3.19 | PATCH | Ensure kernel module loading and unloading and modification is collected"
+- name: "6.2.3.19 | PATCH | Ensure kernel module loading unloading and modification is collected"
   when: deb12cis_rule_6_2_3_19
   tags:
     - level2-server
