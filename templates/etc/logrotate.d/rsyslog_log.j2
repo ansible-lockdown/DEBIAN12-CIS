@@ -1,0 +1,28 @@
+{{ file_managed_by_ansible }}
+
+/var/log/rsyslog/*.log {
+    {{ deb12cis_rsyslog_logrotate_rotated_when }}
+    rotate {{ deb12cis_rsyslog_logrotate_rotatation_keep }}
+{% if deb12cis_rsyslog_logrotate_compress %}
+    compress
+{% else %}
+    nocompress
+{% endif %}
+{% if deb12cis_rsyslog_logrotate_missingok %}
+    missingok
+{% else %}
+    nomissingok
+{% endif %}
+{% if deb12cis_rsyslog_logrotate_notifempty %}
+    notifempty
+{% else %}
+    ifempty
+{% endif %}
+{% if deb12cis_rsyslog_logrotate_create %}
+    create{% if deb12cis_rsyslog_logrotate_create_opts is defined %} {{ deb12cis_rsyslog_logrotate_create_opts }}{% endif %}
+{% endif %}
+
+    postrotate
+        /usr/bin/systemctl reload rsyslog.service >/dev/null || true
+    endscript
+}

@@ -1,8 +1,6 @@
-# Run AIDE integrity check
-## Ansible controlled file
-# Added as part of ansible-lockdown CIS baseline
-# provided by Mindpoint Group - A Tyto Athene Company
-### YOUR CHANGES WILL BE LOST!
-# CIS 6.3.2
+{{ file_managed_by_ansible }}
 
-{{ deb12cis_aide_cron['aide_minute'] }} {{ deb12cis_aide_cron['aide_hour'] }} {{ deb12cis_aide_cron['aide_month'] }} {{ deb12cis_aide_cron['aide_weekday'] }} {{ deb12cis_aide_cron['aide_job'] }}
+### YOUR CHANGES WILL BE LOST!
+# CIS 6.3
+
+{{ deb12cis_aide_cron_minute }} {{ deb12cis_aide_cron_hour }} {{ deb12cis_aide_cron_month }} {{ deb12cis_aide_cron_weekday }} {{ deb12cis_aide_cron_job }}
