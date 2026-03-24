@@ -1,8 +1,8 @@
 # DEBIAN 12 CIS
 
-## Configure a DEBIAN 12 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
+## Configure a Debian 12 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
-### Based on [CIS DEBIAN 12 Benchmark v1.1.0](https://www.cisecurity.org/cis-benchmarks/)
+### Based on [CIS Debian 12 Benchmark v1.1.0](https://www.cisecurity.org/cis-benchmarks/)
 
 ---
 
@@ -19,6 +19,7 @@
 
 ## Lint & Pre-Commit Tools 🔧
 
+[![Pre-Commit.ci](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/DEBIAN12-CIS/pre-commit-ci.json)](https://results.pre-commit.ci/latest/github/ansible-lockdown/DEBIAN12-CIS/devel)
 ![YamlLint](https://img.shields.io/badge/yamllint-Present-brightgreen?style=flat&logo=yaml&logoColor=white)
 ![Ansible-Lint](https://img.shields.io/badge/ansible--lint-Present-brightgreen?style=flat&logo=ansible&logoColor=white)
 
@@ -48,6 +49,7 @@
 ![Private Benchmark Version](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN12-CIS/benchmark-version.json)
 
 [![Private Remediate Pipeline](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN12-CIS/remediate.json)](https://github.com/ansible-lockdown/Private-DEBIAN12-CIS/actions/workflows/main_pipeline_validation.yml)
+[![Private GPO Pipeline](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN12-CIS/gpo.json)](https://github.com/ansible-lockdown/Private-DEBIAN12-CIS/actions/workflows/main_pipeline_validation_gpo.yml)
 
 ![Private Pull Requests](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN12-CIS/prs.json)
 ![Private Closed Issues](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-DEBIAN12-CIS/issues-closed.json)
@@ -56,9 +58,9 @@
 
 ## Looking for support? 🤝
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_DEBIAN12-CIS)
+[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_DEBIAN12_CIS)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_DEBIAN12-CIS)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_DEBIAN12_CIS)
 
 ### Community 💬
 
@@ -104,7 +106,6 @@ This is managed using tags:
 The control found in defaults main also need to reflect this as this control the testing that takes place if you are using the audit component.
 
 ---
-
 ## Requirements ✅
 
 **General:**
@@ -120,7 +121,7 @@ The control found in defaults main also need to reflect this as this control the
 
 **Technical Dependencies:**
 
-DEBIAN 12
+Debian 12 - Other versions are not supported.
 
 - Access to download or add the goss binary and content to the system if using auditing
 (other options are available on how to get the content to the system.)
@@ -165,10 +166,11 @@ default                    : ok=270  changed=23   unreachable=0    failed=0    s
 ## Documentation 📖
 
 - [Read The Docs](https://ansible-lockdown.readthedocs.io/en/latest/)
-- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_DEBIAN12_cis)
-- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise#GH_AL_DEBIAN12_cis)
-- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_DEBIAN12_cis)
-- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_DEBIAN12_cis)
+- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_DEB12_cis)
+- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise#GH_AL_DEB12_cis)
+- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_DEB12_cis)
+- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_DEB12_cis)
+
 
 ## Role Variables
 
@@ -181,14 +183,17 @@ There are many tags available for added control precision. Each control has its 
 ### Conversion Format for NIST References:
 
   1. Standard Prefix:
+
     - All references are prefixed with "NIST".
 
   2. Standard Types:
+
     - "800-53" references are formatted as NIST800-53.
     - "800-53r5" references are formatted as NIST800-53R5 (with 'R' capitalized).
     - "800-171" references are formatted as NIST800-171.
 
   3. Details:
+
     - Section and subsection numbers use periods (.) for numeric separators.
     - Parenthetical elements are separated by underscores (_), e.g., IA-5(1)(d) becomes IA-5_1_d.
     - Subsection letters (e.g., "b") are appended with an underscore.
@@ -204,6 +209,7 @@ Below is an example of the tag section from a control within this role. Using th
       - patch
       - rule_2.2.4
 ```
+
 
 ## Community Contribution 🧑‍🤝‍🧑
 
@@ -228,6 +234,7 @@ uses:
 
 Almalinux BaseOS, EPEL and many cloud providers repositories, do not allow gpgcheck(rule_1.2.1.2) or repo_gpgcheck (rule_1.2.1.3) this will cause issues during the playbook unless or a workaround is found.
 
+
 ## Local Testing 💻
 
 ### example
@@ -246,6 +253,7 @@ local testing uses:
 - molecule-podman 2.0.2
 - molecule-vagrant 1.0.0
 - molecule-azure 0.5.0
+
 
 ## Credits and Thanks 🙏
 

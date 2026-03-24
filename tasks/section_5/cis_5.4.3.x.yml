@@ -50,9 +50,10 @@
     - rule_5.4.3.3
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
-  ansible.builtin.template:
-    src: etc/profile.d/CIS.sh.j2
-    dest: /etc/profile.d/CIS.sh
-    mode: u=rw,g=r,o=r
-    owner: root
-    group: root
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: (?i)(umask\s+\d+)
+    replace: '{{ item.line }} {{ deb12cis_bash_umask }}'
+  loop:
+    - { path: '/etc/profile', line: 'umask' }
+    - { path: '/etc/login.defs', line: 'UMASK' }

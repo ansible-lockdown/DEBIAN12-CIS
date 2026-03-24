@@ -1,6 +1,6 @@
 ---
 
-- name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+- name: "1.5.1 | PATCH | Ensure address space layout randomization is enabled"
   when: deb12cis_rule_1_5_1
   tags:
     - level1-server
@@ -10,11 +10,11 @@
     - rule_1.5.1
     - NIST800-53R5_CM-6
   block:
-    - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+    - name: "1.5.1 | PATCH | Ensure address space layout randomization is enabled"
       ansible.builtin.set_fact:
         deb12cis_sysctl_update: true
 
-    - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
+    - name: "1.5.1 | PATCH | Ensure address space layout randomization is enabled"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
 

@@ -18,7 +18,7 @@
     file: audit.yml
 
 - name: "PRELIM | Include pre-remediation audit tasks"
-  when: run_audit or audit_only or setup_audit
+  when: run_audit or audit_only
   tags: run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
@@ -214,9 +214,16 @@
   check_mode: false
   register: prelim_uid_zero_accounts_except_root
 
+- name: "PRELIM | AUDIT | Discover if auditd is immutable"
+  tags: always
+  ansible.builtin.command: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
+  changed_when: false
+  failed_when: prelim_auditd_immutable_check.rc not in [ 0, 2 ]
+  register: prelim_auditd_immutable_check
+
 - name: "PRELIM | PATCH | Create journald config directory"
   when:
-    - deb12cis_syslog == 'journald'
+    - deb12cis_syslog_type == 'journald'
     - deb12cis_rule_6_1_2_2 or
       deb12cis_rule_6_1_2_3 or
       deb12cis_rule_6_1_2_4
