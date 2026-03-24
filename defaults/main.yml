@@ -53,7 +53,7 @@ benchmark: DEBIAN12-CIS
 # System will reboot if false, can give better audit results
 skip_reboot: true
 
-# default value will change to true but wont reboot if not enabled but will error
+# default value will change to true but won't reboot if not enabled but will error
 change_requires_reboot: false
 
 # Create managed not custom local_facts files
@@ -699,7 +699,7 @@ deb12cis_ftp_client: false
 deb12cis_time_sync_tool: "systemd-timesyncd"
 
 ## Controls 2.3.x - Configure time pools & servers for chrony and timesyncd
-# The following variable represents a list of of time server pools used
+# The following variable represents a list of time server pools used
 # for configuring chrony and timesyncd.
 # Each list item contains two settings, `name` (the domain name of the pool) and synchronization `options`.
 # The default setting for the `options` is `iburst maxsources 4` -- please refer to the documentation
@@ -707,7 +707,7 @@ deb12cis_time_sync_tool: "systemd-timesyncd"
 deb12cis_time_pool:
   - name: time.nist.gov
     options: iburst maxsources 4
-# The following variable represents a list of of time servers used
+# The following variable represents a list of time servers used
 # for configuring chrony and timesyncd
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
 # The default setting for the `options` is `iburst` -- please refer to the documentation
@@ -797,6 +797,7 @@ deb12cis_ufw_allow_out_ports:
     proto: udp
   - port: 443
     proto: tcp
+
 ## Controls 4.3.x - nftables
 # Nftables is not supported in this role. Some tasks have parts of them commented out, this is one example
 # of such a task.
@@ -833,33 +834,16 @@ deb12cis_sshd_log_level: "INFO"
 # allowed for a single SSH session.
 deb12cis_sshd_max_auth_tries: 4
 
-# This variable specifies the encryption algorithms that can be used for securing
-# data transmission.
-deb12cis_sshd_ciphers:
-  - aes256-gcm@openssh.com
-  - aes128-gcm@openssh.com
-  - aes256-ctr
-  - aes192-ctr
-  - aes128-ctr
+# This variable specifies the encryption algorithms that should be excluded from the SSHD configuration.
+deb12cis_sshd_ciphers: -3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,chacha20-poly1305@openssh.com
 
 # This variable specifies a list of message authentication code algorithms (MACs) that are allowed for verifying
 # the integrity of data exchanged.
-deb12cis_sshd_macs:
-  - hmac-sha1
-  - hmac-sha2-256
-  #  - hmac-sha2-384  # hashed out seen as bad ssh2 MAC
-  - hmac-sha2-512
+deb12cis_sshd_macs: -hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1-96,umac-64@openssh.com,hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha1-96-etm@openssh.com,umac-64-etm@openssh.com,umac-128-etm@openssh.com
 
 # This variable is used to state the key exchange algorithms used to establish secure encryption
 # keys during the initial connection setup.
-deb12cis_sshd_kex_algorithms:
-  - ecdh-sha2-nistp256
-  - ecdh-sha2-nistp384
-  - ecdh-sha2-nistp521
-  - diffie-hellman-group-exchange-sha256
-  - diffie-hellman-group16-sha512
-  - diffie-hellman-group18-sha512
-  - diffie-hellman-group14-sha256
+deb12cis_sshd_kex_algorithms: -diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1
 
 # This variable sets the time interval in seconds between sending "keep-alive"
 # messages from the server to the client. These types of messages are intended to
@@ -875,7 +859,7 @@ deb12cis_sshd_client_alive_count_max: 3
 # the SSH server.
 deb12cis_sshd_login_grace_time: 60
 
-# This variables is used to set the maximum number of open sessions per connection.
+# This variable is used to set the maximum number of open sessions per connection.
 deb12cis_sshd_max_sessions: 8
 
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
@@ -974,8 +958,6 @@ deb12cis_pam_pwhistory_file: 'pwhistory'
 # Allow new file to be created or overwrite existing with same name
 # filepath also affects controls 5.3.3.3.1, 5.3.3.3.2, 5.3.3.3.3
 deb12cis_pam_create_pwhistory_files: true
-# Allow pam-auth-update --enable deb12cis_pam_pwhistory_file
-deb12cis_pam_auth_pwhistory: true
 
 # 5.3.3.1.1 - faillock_deny
 deb12cis_faillock_deny: 3
@@ -1056,7 +1038,7 @@ deb12cis_force_user_mindays: false
 # This variable governs, how many days before a password expires, the user will be warned.
 # CIS requires a value of at least 7.
 deb12cis_pass_warn_age: 7
-## 5Allow the forcing of of number of days before warning users of password expiry
+## Allow the forcing of number of days before warning users of password expiry
 # This can break current connecting user access
 deb12cis_force_user_warnage: false
 
@@ -1075,8 +1057,6 @@ deb12cis_root_umask: '0027'  # 0027 or more restrictive
 ## Control 5.4.4
 # deb12cis_passwd_hash_algo is the hashing algorithm used
 deb12cis_passwd_hash_algo: yescrypt  # pragma: allowlist secret
-# Set pam as well as login defs if PAM is required
-deb12cis_passwd_setpam_hash_algo: false
 
 ## Control 5.4.3 - Default user mask
 # The following variable specifies the "umask" to set in the `/etc/bash.bashrc` and `/etc/profile`.
@@ -1189,7 +1169,7 @@ deb12cis_aide_cron_weekday: '*'
 # This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
 # or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
 # practices are written wholly independent of each other.
-deb12cis_syslog: journald
+deb12cis_syslog_type: journald
 
 ## Control 6.2.2.x & 6.2.3.x - Ensure rsyslog is not configured to receive logs from a remote client
 # This variable expresses whether the system is used as a log server or not. If set to:
@@ -1239,6 +1219,32 @@ deb12cis_remote_log_retrycount: 100
 # of rsyslog forwarding must be enabled('deb12cis_remote_log_server: true').
 deb12cis_remote_log_queuesize: 1000
 
+## Control 6.1.3.8 rsyslog rotate
+# This variable configures whether to set your own rsyslog logrotate setting
+# alternate to logrotate default settings. Please refer to logrotate options
+# to match your site requirements
+# This variable sets when to rotate
+deb12cis_rsyslog_logrotate_rotated_when: weekly
+# This variable sets how many rotations of the file to keep
+deb12cis_rsyslog_logrotate_rotatation_keep: 4
+# The following variable defines whether to set the compress option
+# or not. Setting it to `true` will carry out the setting.
+deb12cis_rsyslog_logrotate_compress: true
+# The following variable defines whether to set the missingok option
+# or not. Setting it to `true` will carry out the setting.
+deb12cis_rsyslog_logrotate_missingok: true
+# The following variable defines whether to set the notifempty option
+# or not. Setting it to `true` will carry out the setting.
+deb12cis_rsyslog_logrotate_notifempty: true
+# The following variable defines whether to set extra options that can
+# be defined in the `deb12cis_rsyslog_logrotate_create_opts` variable
+# The variable can be found underneath this variable, in a commented
+# state.
+deb12cis_rsyslog_logrotate_create: true
+# Extra options that can be added according to rsyslog documentation
+# Uncomment and add the required options e.g. mode owner group
+# deb12cis_rsyslog_logrotate_create_opts: "0640 root adm"
+
 ## Control 6.1.4.1.2 - Ensure systemd-journal-remote is configured
 # 'deb12cis_journal_upload_url' is the ip address to upload the journal entries to
 #  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
@@ -1285,7 +1291,7 @@ deb12cis_journald_runtimekeepfree: 100G
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
-# The given values is interpreted as seconds, unless suffixed with the units
+# The given value is interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
 # ATTENTION: Uncomment the keyword below when values are set!
@@ -1309,7 +1315,7 @@ deb12cis_auditd_max_log_file_size: 10
 ## Control 6.4.2.2
 # This variable determines what action the audit system should take when the maximum
 # size of a log file is reached.
-# The options for setting this variable are as follows:
+# The variable can be set using the following optional values:
 # - `ignore`: the system does nothing when the size of a log file is full;
 # - `syslog`: a message is sent to the system log indicating the problem;
 # - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;
@@ -1363,7 +1369,7 @@ deb12cis_auditd_uid_exclude:
 deb12cis_auditd_extra_conf:
   admin_space_left: '10%'
 
-# 6.3.3.6 exclude listed mountpoints from the find command to locate privileged binaries
+# 6.2.3.6 exclude listed mountpoints from the find command to locate privileged binaries
 # Allows operator to exclude mounted devices from being considered as within scope to find privileged binaries; mainly in the case of
 # external/temporary mounted USB drives.
 #   deb12cis_priv_command_excluded_mounts: ["/mnt/backup_disk", "/mnt/usb_external_storage"]
@@ -1373,7 +1379,7 @@ deb12cis_priv_command_excluded_mounts: []
 
 # 7.1.12
 # Ensure no files or directories without an owner and a group exist
-# Extend the list as required adding the the current list e.g. "-a ! -path "/somedir/*"
+# Extend the list as required adding to the current list e.g. "-a ! -path "/somedir/*"
 # Note Ensure to document all exclusions that do not match the benchmark
 deb12cis_exclude_unowned_search_path: '\( ! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*" \)'
 

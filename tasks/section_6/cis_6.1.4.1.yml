@@ -24,8 +24,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'ug-x,o-rwx'
-      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
-      register: discovered_logfile_list
+      failed_when: discovered_logfile_list_sssd.state not in '[ file, absent ]'
+      register: discovered_logfile_list_sssd
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.1.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions tmp min 664"
@@ -35,8 +35,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'ug-x,o-wx'
-      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
-      register: discovered_logfile_list
+      failed_when: discovered_logfile_list_tmp.state not in '[ file, absent ]'
+      register: discovered_logfile_list_tmp
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.1.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions else all 640"
@@ -46,6 +46,6 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-x,g-wx,o-rwx'
-      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
-      register: discovered_logfile_list
+      failed_when: discovered_logfile_list_else.state not in '[ file, absent ]'
+      register: discovered_logfile_list_else
       loop: "{{ discovered_logfiles.stdout_lines }}"

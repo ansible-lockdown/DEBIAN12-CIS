@@ -76,22 +76,9 @@
     - auditd
     - rule_6.2.3.6
     - NIST800-53R5_AU-3
-  block:
-    - name: "6.3.3.6 | PATCH | Ensure use of privileged commands is collected"
-      ansible.builtin.shell: |
-        {%- set egrep_exclude = "(asdfmnop|{{ deb12cis_priv_command_excluded_mounts | join('|') }})" -%}
-        for i in $(df | grep '^/dev' | grep -Ev '{{ egrep_exclude }}' | awk '{ print $NF }'); do
-          find $i -xdev -type f -perm /6000 2>/dev/null;
-        done
-      changed_when: false
-      failed_when: false
-      check_mode: false
-      register: discovered_privileged_commands
-
-    - name: "6.2.3.6 | PATCH | Ensure use of privileged commands are collected"
-      ansible.builtin.set_fact:
-        update_audit_template: true
-      notify: update auditd
+  ansible.builtin.set_fact:
+    update_audit_template: true
+  notify: update auditd
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.2.3.7 | PATCH | Ensure unsuccessful file access attempts are collected"

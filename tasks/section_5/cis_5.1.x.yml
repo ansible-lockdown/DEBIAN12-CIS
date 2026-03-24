@@ -152,7 +152,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: (?i)^(#|)\s*Ciphers
-    line: "Ciphers {{ deb12cis_sshd_ciphers | join(',') }}"
+    line: "Ciphers {{ deb12cis_sshd_ciphers }}"
     insertafter: '^# Ciphers and keying'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -268,7 +268,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*KexAlgorithms'
-    line: "KexAlgorithms {{ deb12cis_sshd_kex_algorithms | join(',') }}"
+    line: "KexAlgorithms {{ deb12cis_sshd_kex_algorithms }}"
     insertafter: '^# Ciphers and keying'
     validate: 'sshd -t -f %s'
   notify: Restart sshd
@@ -325,7 +325,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '(?i)^(#|)\s*MACs'
-    line: "MACs {{ deb12cis_sshd_macs | join(',') }}"
+    line: "MACs {{ deb12cis_sshd_macs }}"
     insertafter: '^# Ciphers and keying'
     validate: 'sshd -t -f %s'
   notify: Restart sshd

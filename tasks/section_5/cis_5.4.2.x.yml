@@ -164,7 +164,7 @@
             - item.stat.exists
             - item.stat.isdir
             - item.stat.pw_name != 'root' or item.stat.gr_name != 'root' or item.stat.woth or item.stat.wgrp
-            - (item != 'root') and (not deb12cis_uses_root)
+            - (item != 'root')
           ansible.builtin.file:
             path: "{{ item.stat.path }}"
             state: directory
@@ -212,7 +212,6 @@
   ansible.builtin.user:
     name: "{{ item.id }}"
     shell: /usr/sbin/nologin
-    create_home: false
   loop: "{{ prelim_captured_passwd_data }}"
   loop_control:
     label: "{{ item.id }}"
