@@ -39,14 +39,16 @@ repos:
   rev: v1.5.0
   hooks:
   - id: detect-secrets
+    name: Detect Secrets test
 
 - repo: https://github.com/gitleaks/gitleaks
   rev: v8.30.0
   hooks:
   - id: gitleaks
+    name: Run Gitleaks test
 
 - repo: https://github.com/ansible-community/ansible-lint
-  rev: v26.1.1
+  rev: v26.4.0
   hooks:
   - id: ansible-lint
     name: Ansible-lint
@@ -62,7 +64,7 @@ repos:
     # If you want to use specific version of ansible-core or ansible, feel
     # free to override `additional_dependencies` in your own hook config
     # file.
-    # - ansible-core>=2.12.1
+    # - ansible-core>=2.10.1
 
 - repo: https://github.com/adrienverge/yamllint.git
   rev: v1.38.0  # or higher tag

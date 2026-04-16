@@ -3,7 +3,7 @@
 - name: "6.1.1.1 | PATCH | Ensure journald service is enabled and active"
   when:
     - deb12cis_rule_6_1_1_1
-    - deb12cis_syslog == 'journald'
+    - deb12cis_syslog_type == 'journald'
   tags:
     - level1-server
     - level1-workstation
@@ -17,11 +17,12 @@
     name: systemd-journald.service
     masked: false
     state: started
+    enabled: true
 
 - name: "6.1.1.2 | PATCH | Ensure journald log file access is configured"
   when:
     - deb12cis_rule_6_1_1_2
-    - deb12cis_syslog == 'journald'
+    - deb12cis_syslog_type == 'journald'
   tags:
     - level1-server
     - level1-workstation
@@ -70,7 +71,7 @@
 - name: "6.1.1.3 | PATCH | Ensure journald log file rotation is configured"
   when:
     - deb12cis_rule_6_1_1_3
-    - deb12cis_syslog == 'journald'
+    - deb12cis_syslog_type == 'journald'
   tags:
     - level1-server
     - level1-workstation
@@ -124,7 +125,7 @@
   block:
     - name: "6.1.1.4 | PATCH | Ensure only one logging system is in use | when system uses journald"
       when:
-        - deb12cis_syslog == 'journald'
+        - deb12cis_syslog_type == 'journald'
         - "'rsyslog' in ansible_facts.packages"
       ansible.builtin.systemd_service:
         name: rsyslog
@@ -133,7 +134,7 @@
 
     - name: "6.1.1.4 | PATCH | Ensure only one logging system is in use | when system uses rsyslog"
       when:
-        - deb12cis_syslog == 'rsyslog'
+        - deb12cis_syslog_type == 'rsyslog'
         - "'journald' in ansible_facts.packages"
       ansible.builtin.systemd_service:
         name: journald

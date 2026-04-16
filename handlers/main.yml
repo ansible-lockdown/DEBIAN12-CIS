@@ -22,8 +22,6 @@
   listen: "Remount /tmp"
 
 - name: "Remounting /tmp systemd"
-  when: deb12cis_tmp_svc
-  ignore_errors: true # noqa ignore-errors
   vars:
     mount_point: '/tmp'
   ansible.builtin.systemd:
@@ -158,7 +156,7 @@
     name: net.ipv4.route.flush
     value: '1'
     sysctl_set: true
-  ignore_errors: true # noqa ignore-errors
+  ignore_errors: true  # noqa ignore-errors
 
 - name: Sysctl flush ipv6 route table
   when:
@@ -201,14 +199,14 @@
     name: postfix
     state: restarted
 
-- name: Reload dconf
+- name: Update dconf
   ansible.builtin.command: dconf update
   changed_when: true
 
 - name: Update-grub
   ansible.builtin.command: "update-grub"
   changed_when: true
-  ignore_errors: true # noqa ignore-errors
+  ignore_errors: true  # noqa ignore-errors
 
 - name: Reload ufw
   community.general.ufw:
@@ -255,16 +253,16 @@
 
 ## Auditd tasks note order for handlers to run
 
-- name: Auditd immutable check
-  ansible.builtin.command: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
-  changed_when: false
-  register: discovered_auditd_immutable_check
+- name: Auditd rules reload
+  when: not prelim_auditd_immutable_check
+  ansible.builtin.command: augenrules --load
+  changed_when: true
 
 - name: Audit immutable fact
-  when: discovered_auditd_immutable_check.stdout == '1'
+  when: prelim_auditd_immutable_check is defined
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"
-  notify: Change_requires_reboot
+  notify: Set reboot  required
 
 - name: Stop auditd process
   ansible.builtin.command: systemctl kill auditd
@@ -277,6 +275,6 @@
     state: started
   listen: Restart auditd
 
-- name: Change_requires_reboot
+- name: Set reboot required
   ansible.builtin.set_fact:
     change_requires_reboot: true

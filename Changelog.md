@@ -1,5 +1,34 @@
 # Changes to DEB12CIS
 
+
+## Based on CIS v1.1.0
+
+March26
+
+- renamed several variables inline with remediation role
+- deb12cis_gui to deb12cis_desktop_required
+- deb12_time_pool_name to deb12_time_pool
+- aligned var names with audit to match remediate
+- removed unnecessary file and variables
+- tidy up
+- meta alignment
+- title alignment with documentation
+- linting and standards
+
+Feb 2026 QA Updates
+
+  - QA updates and linting fixes
+    - Updated .ansible-lint config (removed deprecated `parseable` and `verbosity` options)
+    - Updated .yamllint config (`comments-indentation` set to `false` for ansible-lint compatibility)
+    - Fixed grammar issues across multiple files
+      - defaults/main.yml: `wont` -> `won't`, `of of` -> `of`, `variables is` -> `variable is`, `values is` -> `value is`, `5Allow` -> `Allow`, `the the` -> `to the`
+      - templates/ansible_vars_goss.yml.j2: `of of` -> `of`
+    - Fixed audit template indentation for time_servers block consistency (templates/ansible_vars_goss.yml.j2)
+- Added corresponding task to 6.1.3.x `deb12cis_rule_6_1_3_8`
+- pre-commit updates
+- 4.2.5 variable updates for ports and ntp added logic improved thanks to @Aryvr
+- 6.3.2 aide timer added and cron template updates
+
 ## Based on CIS v1.1.0
 Dec25 updates
 

@@ -106,7 +106,7 @@
   ansible.builtin.debug:
     msg: "This is set as an assert in tasks/main"
 
-- name: "5.4.2.5 | PATCH | Ensure root PATH Integrity"
+- name: "5.4.2.5 | PATCH | Ensure root path integrity"
   when: deb12cis_rule_5_4_2_5
   tags:
     - level1-server
@@ -164,7 +164,7 @@
             - item.stat.exists
             - item.stat.isdir
             - item.stat.pw_name != 'root' or item.stat.gr_name != 'root' or item.stat.woth or item.stat.wgrp
-            - (item != 'root') and (not deb12cis_uses_root)
+            - (item != 'root')
           ansible.builtin.file:
             path: "{{ item.stat.path }}"
             state: directory
@@ -212,7 +212,6 @@
   ansible.builtin.user:
     name: "{{ item.id }}"
     shell: /usr/sbin/nologin
-    create_home: false
   loop: "{{ prelim_captured_passwd_data }}"
   loop_control:
     label: "{{ item.id }}"
