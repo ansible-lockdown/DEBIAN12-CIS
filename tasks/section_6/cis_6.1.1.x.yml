@@ -48,9 +48,9 @@
     - name: "6.1.1.2 | AUDIT | Ensure journald log file access is configured | If override file check for journal"
       when: discovered_journald_tmpfile_override.stat.exists
       ansible.builtin.shell: grep -E 'z /var/log/journal/%m/system.journal \d*' /usr/lib/tmpfiles.d/systemd.conf
-      register: discovered_journald_fileperms_override
       changed_when: false
       failed_when: discovered_journald_fileperms_override.rc not in [ 0, 1 ]
+      register: discovered_journald_fileperms_override
 
     - name: "6.1.1.2 | AUDIT | Ensure journald log file access is configured | Warning if override found"
       when:

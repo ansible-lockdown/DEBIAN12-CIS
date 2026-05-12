@@ -14,6 +14,8 @@
   block:
     - name: "5.3.3.4.1 | PATCH | Ensure pam_unix does not include nullok | capture state"
       ansible.builtin.shell: grep -E "pam_unix.so.*nullok" /etc/pam.d/common-* /usr/share/pam-configs/* | cut -d ':' -f1 | uniq
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: discovered_pam_unix_nullok.rc not in [ 0, 1 ]
       register: discovered_pam_unix_nullok
@@ -38,7 +40,9 @@
     - NIST800-53R5_NA
   block:
     - name: "5.3.3.4.2 | AUDIT | Ensure pam_unix does not include remember | capture state"
-      ansible.builtin.shell: grep -PH -- '^\h*^\h*[^#\n\r]+\h+pam_unix\.so\b' /etc/pam.d/common-{password,auth,account,session,session-noninteractive} | grep -Pv -- '\bremember=\d\b'
+      ansible.builtin.shell: grep -E "pam_unix.so.*remember=" /etc/pam.d/common-{password,auth,account,session,session-noninteractive} /usr/share/pam-configs/pam_unix 2>/dev/null | cut -d ':' -f1 | uniq
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: discovered_pam_unix_remember.rc not in [ 0, 1 ]
       register: discovered_pam_unix_remember
@@ -46,9 +50,10 @@
     - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember | Ensure remember removed"
       when: discovered_pam_unix_remember.stdout | length > 0
       ansible.builtin.replace:
-        path: "/{{ deb12cis_pam_confd_dir }}{{ deb12cis_pam_pwunix_file }}"
+        path: "{{ item }}"
         regexp: remember=\d+
         replace: ''
+      loop: "{{ discovered_pam_unix_remember.stdout_lines }}"
       notify: Pam_auth_update_pwunix
 
 - name: "5.3.3.4.3 | PATCH | Ensure pam_unix includes a strong password hashing algorithm"
@@ -62,7 +67,9 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.3.3.4.3 | AUDIT | Ensure pam_unix includes a strong password hashing algorithm | capture state"
-      ansible.builtin.shell: grep -PH -- '^\h*password\h+([^#\n\r]+)\h+pam_unix\.so\h+([^#\n\r]+\h+)?("{{ deb12cis_passwd_hash_algo }}")\b' /etc/pam.d/common-password
+      ansible.builtin.shell: grep -E "pam_unix.so.*(md5|bigcrypt|sha256|blowfish|gost_yescrypt|sha512|yescrypt)" /etc/pam.d/common-password /usr/share/pam-configs/pam_unix 2>/dev/null | cut -d ':' -f1 | uniq
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: discovered_pam_unix_pwhash.rc not in [ 0, 1 ]
       register: discovered_pam_unix_pwhash
@@ -70,9 +77,10 @@
     - name: "5.3.3.4.3 | PATCH | Ensure pam_unix includes a strong password hashing algorithm | Ensure hash algorithm set"
       when: discovered_pam_unix_pwhash.stdout | length > 0
       ansible.builtin.replace:
-        path: "/{{ deb12cis_pam_confd_dir }}{{ deb12cis_pam_pwunix_file }}"
+        path: "{{ item }}"
         regexp: "(md5|bigcrypt|sha256|blowfish|gost_yescrypt|sha512|yescrypt)"
         replace: '{{ deb12cis_passwd_hash_algo }}'
+      loop: "{{ discovered_pam_unix_pwhash.stdout_lines }}"
       notify: Pam_auth_update_pwunix
 
 - name: "5.3.3.4.4 | PATCH | Ensure pam_unix includes use_authtok"

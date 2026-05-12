@@ -33,11 +33,6 @@ deb12cis_section7: true
 deb12cis_level_1: true
 deb12cis_level_2: true
 
-## Section 1.6 - Mandatory Access Control
-# This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
-# 'deb12cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
-deb12cis_selinux_disable: false
-
 # This variable is used in a preliminary task, handling grub2 paths either in case of
 # UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
 deb12cis_legacy_boot: false

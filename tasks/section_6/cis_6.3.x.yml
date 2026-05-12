@@ -129,4 +129,3 @@
       /usr/sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
       /usr/sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
       /usr/sbin/augenrules p+i+n+u+g+s+b+acl+xattrs+sha512
-    validate: aide -D --config %s

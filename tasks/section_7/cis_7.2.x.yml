@@ -43,6 +43,7 @@
   block:
     - name: "7.2.2 | AUDIT | Ensure /etc/shadow password fields are not empty | Find users with no password"
       ansible.builtin.shell: awk -F":" '($2 == "" ) { print $1 }' /etc/shadow
+      no_log: true
       changed_when: false
       check_mode: false
       register: discovered_empty_password_acct
@@ -73,6 +74,8 @@
   block:
     - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Check /etc/passwd entries"
       ansible.builtin.shell: pwck -r | grep 'no group' | awk '{ gsub("[:\47]",""); print $2}'
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       check_mode: false
@@ -134,6 +137,8 @@
   block:
     - name: "7.2.5 | AUDIT | Ensure no duplicate UIDs exist | Check for duplicate UIDs"
       ansible.builtin.shell: "pwck -r | awk -F: '{if ($3 in uid) print $1 ; else uid[$3]}' /etc/passwd"
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       check_mode: false
@@ -167,6 +172,8 @@
   block:
     - name: "7.2.6 | AUDIT | Ensure no duplicate GIDs exist | Check for duplicate GIDs"
       ansible.builtin.shell: "pwck -r | awk -F: '{if ($3 in users) print $1 ; else users[$3]}' /etc/group"
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       check_mode: false
@@ -200,6 +207,8 @@
   block:
     - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist | Check for duplicate User Names"
       ansible.builtin.shell: "pwck -r | awk -F: '{if ($1 in users) print $1 ; else users[$1]}' /etc/passwd"
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       check_mode: false
@@ -233,6 +242,8 @@
   block:
     - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist | Check for duplicate group names"
       ansible.builtin.shell: 'getent group | cut -d: -f1 | sort -n | uniq -d'
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       check_mode: false

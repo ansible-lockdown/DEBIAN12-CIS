@@ -24,9 +24,8 @@
     - NIST800-53R5_AC-6
   ansible.builtin.lineinfile:
     path: /etc/sudoers
-    regexp: ^(Defaults\s*)use_pty
-    line: \1use_pty
-    backrefs: true
+    regexp: '^Defaults\s+use_pty'
+    line: Defaults use_pty
     validate: '/usr/sbin/visudo -cf %s'
 
 - name: "5.2.3 | PATCH | Ensure sudo log file exists"
@@ -57,6 +56,8 @@
   block:
     - name: "5.2.4 | AUDIT | Ensure users must provide password for escalation | discover accts with NOPASSWD"
       ansible.builtin.shell: grep -Ei '(nopasswd)' /etc/sudoers /etc/sudoers.d/* | cut -d':' -f1
+      args:
+        executable: /bin/bash
       become: true
       changed_when: false
       failed_when: false
@@ -83,6 +84,8 @@
   block:
     - name: "5.2.5 | AUDIT | Ensure re-authentication for privilege escalation is not disabled globally"
       ansible.builtin.shell: grep -Ei '(!authenticate)' /etc/sudoers /etc/sudoers.d/* | cut -d':' -f1
+      args:
+        executable: /bin/bash
       become: true
       changed_when: false
       failed_when: false
@@ -109,6 +112,8 @@
   block:
     - name: "5.2.6 | AUDIT | Ensure sudo authentication timeout is configured correctly | Get files with timeout set"
       ansible.builtin.shell: grep -is 'timestamp_timeout' /etc/sudoers /etc/sudoers.d/* | cut -d":" -f1 | uniq | sort
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       register: discovered_sudo_timeout_files

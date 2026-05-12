@@ -1,0 +1,67 @@
+---
+
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install sudo first (container runs as root)
+      ansible.builtin.raw: apt-get update && apt-get install -y sudo python3
+      changed_when: true
+
+    - name: Gather facts now that sudo is available
+      ansible.builtin.setup:
+
+    - name: Install required packages
+      ansible.builtin.package:
+        name:
+          - openssh-server
+          - libpam-pwquality
+          - cron
+          - chrony
+          - rsyslog
+          - aide
+          - logrotate
+          - ufw
+          - nftables
+          - auditd
+          - git
+          - procps
+          - apparmor
+          - apparmor-utils
+          - autofs
+        state: present
+
+    - name: Start services for audit compliance
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop:
+        - ssh
+        - cron
+        - chrony
+        - rsyslog
+      loop_control:
+        label: "{{ item }}"
+
+    - name: Ensure /etc/ssh/sshd_config.d exists
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d
+        state: directory
+        mode: 'go-w'
+
+    - name: Ensure /etc/sysctl.d exists
+      ansible.builtin.file:
+        path: /etc/sysctl.d
+        state: directory
+        mode: 'go-w'
+
+    - name: Ensure /run/sshd exists
+      ansible.builtin.file:
+        path: /run/sshd
+        state: directory
+        mode: 'go-w'
+
+    - name: Set root password for audit compliance
+      ansible.builtin.shell: echo 'root:P@ssw0rd123!' | chpasswd
+      changed_when: true

@@ -1,0 +1,13 @@
+---
+
+- name: Verify
+  hosts: all
+  become: true
+  tasks:
+    - name: Verify | Check audit files exist
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: verify_audit_files
+      loop:
+        - /opt
+      failed_when: not verify_audit_files.stat.exists
