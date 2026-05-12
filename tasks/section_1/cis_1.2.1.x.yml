@@ -44,8 +44,8 @@
       ansible.builtin.command: apt-cache policy
       changed_when: false
       failed_when: false
-      register: discovered_apt_config
       check_mode: false
+      register: discovered_apt_config
 
     - name: "1.2.1.2 | AUDIT | Ensure package manager repositories are configured | Display repo list"
       ansible.builtin.debug:
