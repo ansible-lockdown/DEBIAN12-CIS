@@ -5,16 +5,20 @@
 # This task passed the syscalls table to the auditd template and updates the auditd rules
 - name: "POST | AUDITD | Set supported_syscalls variable"
   ansible.builtin.shell: ausyscall --dump |  awk  '{print $2}'
+  args:
+    executable: /bin/bash
   changed_when: false
   failed_when: discovered_auditd_syscalls.rc not in [ 0, 1 ]
   register: discovered_auditd_syscalls
 
 - name: "POST | AUDITD | Ensure use of privileged commands is collected"
   ansible.builtin.shell: |
-    {%- set egrep_exclude = "(asdfmnop|{{ ubtu24cis_priv_command_excluded_mounts | join('|') }})" -%}
+    {%- set egrep_exclude = "(asdfmnop|{{ deb12cis_priv_command_excluded_mounts | join('|') }})" -%}
     for i in $(df | grep '^/dev' | grep -Ev '{{ egrep_exclude }}' | awk '{ print $NF }'); do
       find $i -xdev -type f -perm /6000 2>/dev/null;
     done
+  args:
+    executable: /bin/bash
   changed_when: false
   failed_when: false
   check_mode: false

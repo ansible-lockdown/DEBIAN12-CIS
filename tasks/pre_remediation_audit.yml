@@ -84,6 +84,8 @@
   block:
     - name: Pre Audit | Capture audit data if json format
       ansible.builtin.shell: grep -E '\"summary-line.*Count:.*Failed' "{{ pre_audit_outfile }}" | cut -d'"' -f4
+      args:
+        executable: /bin/bash
       changed_when: false
       register: pre_audit_summary_json
 
@@ -96,6 +98,8 @@
   block:
     - name: Pre Audit | Capture audit data if documentation format
       ansible.builtin.shell: tail -2 "{{ pre_audit_outfile }}"  | tac | tr '\n' ' '
+      args:
+        executable: /bin/bash
       changed_when: false
       register: pre_audit_summary_documentation
 

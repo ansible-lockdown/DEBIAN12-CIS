@@ -124,6 +124,8 @@
   block:
     - name: "5.4.1.5 | AUDIT | Ensure inactive password lock is configured | Check current settings"
       ansible.builtin.shell: useradd -D | grep INACTIVE={{ deb12cis_inactivelock_lock_days }} | cut -f2 -d=
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       check_mode: false
@@ -166,6 +168,8 @@
 
     - name: "5.4.1.6 | AUDIT | Ensure all users last password change date is in the past | Get list of users with last changed pw date in the future"
       ansible.builtin.shell: "cat /etc/shadow | awk -F: '{if($3>{{ discovered_current_epoch.stdout }})print$1}'"
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       check_mode: false

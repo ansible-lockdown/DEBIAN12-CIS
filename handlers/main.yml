@@ -189,7 +189,13 @@
     name: firewalld
     state: restarted
 
-- name: Restart sshd
+- name: Restart sshd | Validate sshd configuration
+  listen: Restart sshd
+  ansible.builtin.command: sshd -t
+  changed_when: false
+
+- name: Restart sshd | Restart sshd service
+  listen: Restart sshd
   ansible.builtin.systemd:
     name: sshd
     state: restarted
@@ -254,22 +260,28 @@
 ## Auditd tasks note order for handlers to run
 
 - name: Auditd rules reload
-  when: not prelim_auditd_immutable_check
+  when:
+    - not prelim_auditd_immutable_check
+    - not system_is_container
   ansible.builtin.command: augenrules --load
   changed_when: true
 
 - name: Audit immutable fact
-  when: prelim_auditd_immutable_check is defined
+  when:
+    - prelim_auditd_immutable_check is defined
+    - not system_is_container
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"
-  notify: Set reboot  required
+  notify: Set reboot required
 
 - name: Stop auditd process
+  when: not system_is_container
   ansible.builtin.command: systemctl kill auditd
   changed_when: true
   listen: Restart auditd
 
 - name: Start auditd process
+  when: not system_is_container
   ansible.builtin.systemd_service:
     name: auditd
     state: started

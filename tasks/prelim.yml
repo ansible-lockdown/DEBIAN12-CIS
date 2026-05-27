@@ -26,6 +26,8 @@
   when: deb12cis_rule_1_1_1_7
   tags: always
   ansible.builtin.shell: df -h | grep -wc "/snap"
+  args:
+    executable: /bin/bash
   changed_when: false
   failed_when: prelim_snap_pkg_mgr.rc not in [ 0, 1 ]
   register: prelim_snap_pkg_mgr
@@ -34,6 +36,8 @@
   when: deb12cis_rule_1_1_1_7
   tags: always
   ansible.builtin.shell: cat /lib/modules/$(uname -r)/modules.builtin | grep -c "squashfs"
+  args:
+    executable: /bin/bash
   changed_when: false
   failed_when: prelim_squashfs_builtin.rc not in [ 0, 1 ]
   register: prelim_squashfs_builtin
@@ -42,6 +46,8 @@
   tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1 }'
+  args:
+    executable: /bin/bash
   changed_when: false
   check_mode: false
   register: prelim_interactive_usernames
@@ -50,6 +56,8 @@
   tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
+  args:
+    executable: /bin/bash
   changed_when: false
   check_mode: false
   register: prelim_interactive_users_home
@@ -58,6 +66,8 @@
   tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
+  args:
+    executable: /bin/bash
   changed_when: false
   check_mode: false
   register: prelim_interactive_uids
@@ -84,6 +94,8 @@
     - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - call mount  # noqa command-instead-of-module
       ansible.builtin.shell: |
         mount | awk '{print $1, $3, $5, $6}'
+      args:
+        executable: /bin/bash
       changed_when: false
       check_mode: false
       register: prelim_mount_output
@@ -137,9 +149,9 @@
   block:
     - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.shell: find /sys/class/net/*/ -type d -name wireless
-      register: prelim_wireless_adapters
       changed_when: false
       failed_when: prelim_wireless_adapters.rc not in [ 0, 1 ]
+      register: prelim_wireless_adapters
 
     - name: "PRELIM | AUDIT | If wireless adapter present capture module"
       when:
@@ -148,6 +160,8 @@
         for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs -0 dirname);
           do basename "$(readlink -f "$driverdir"/device/driver/module)";
         done | sort -u
+      args:
+        executable: /bin/bash
       changed_when: false
       check_mode: false
       failed_when: prelim_wireless_modules.rc not in [ 0, 1 ]
@@ -188,8 +202,8 @@
     mode: 'g-w,o-rwx'
     modification_time: preserve
     access_time: preserve
-  register: prelim_pwquality_dummy
   changed_when: prelim_pwquality_dummy.diff is defined and prelim_pwquality_dummy.diff == "absent"
+  register: prelim_pwquality_dummy
   loop:
     - { path: '/etc/security/pwquality.conf.d', state: 'directory' }
     - { path: '/etc/security/pwquality.conf.d/cis_dummy.conf', state: 'touch' }
@@ -210,6 +224,8 @@
     - level1-workstation
     - users
   ansible.builtin.shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
+  args:
+    executable: /bin/bash
   changed_when: false
   check_mode: false
   register: prelim_uid_zero_accounts_except_root
@@ -257,6 +273,8 @@
       deb12cis_rule_6_2_4_4
   tags: always
   ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
+  args:
+    executable: /bin/bash
   changed_when: false
   check_mode: false
   register: prelim_auditd_logfile
@@ -287,12 +305,16 @@
   block:
     - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
       ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+      args:
+        executable: /bin/bash
       changed_when: false
       check_mode: false
       register: prelim_uid_min_id
 
     - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
       ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+      args:
+        executable: /bin/bash
       changed_when: false
       check_mode: false
       register: prelim_uid_max_id
@@ -317,6 +339,8 @@
   block:
     - name: "Optional | AUDIT | Check if UAS kernel module is running"
       ansible.builtin.shell: "lsmod | grep uas"
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       ignore_errors: true

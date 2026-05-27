@@ -17,7 +17,7 @@
     success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
 
 - name: "Setup rules if container"
-  when: ansible_connection == 'docker' or ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+  when: ansible_connection in ['docker', 'community.docker.docker'] or ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - container_discovery
     - always
@@ -57,9 +57,12 @@
   block:
     - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"  # noqa name[template]
       ansible.builtin.shell: "(grep {{ ansible_env.SUDO_USER }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'"
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       check_mode: false
+      no_log: true
       register: prelim_ansible_user_password_set
 
     - name: "Check for local account {{ ansible_env.SUDO_USER }} | Check for local account"  # noqa name[template]
@@ -96,6 +99,8 @@
   block:
     - name: "Ensure root password is set"
       ansible.builtin.shell: passwd -S root | grep 'root P'
+      args:
+        executable: /bin/bash
       changed_when: false
       failed_when: false
       register: prelim_check_root_passwd_set

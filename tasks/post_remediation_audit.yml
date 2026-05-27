@@ -13,6 +13,8 @@
   block:
     - name: Post Audit | Capture audit data if json format
       ansible.builtin.shell: grep -E '"summary-line.*Count:.*Failed' "{{ post_audit_outfile }}" | cut -d'"' -f4
+      args:
+        executable: /bin/bash
       changed_when: false
       register: post_audit_summary_json
 
@@ -25,6 +27,8 @@
   block:
     - name: Post Audit | Capture audit data if documentation format
       ansible.builtin.shell: tail -2 "{{ post_audit_outfile }}"  | tac | tr '\n' ' '
+      args:
+        executable: /bin/bash
       changed_when: false
       register: post_audit_summary_documentation
 

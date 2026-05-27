@@ -1,0 +1,12 @@
+---
+
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    system_is_container: true
+    skip_reboot: true
+    setup_audit: true
+    run_audit: true
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
