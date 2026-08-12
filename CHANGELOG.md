@@ -2,6 +2,14 @@
 
 ## Based on CIS v1.1.0 - Branch align_1.1.0
 
+- 7.2.9 set default ACLs on home directories but never removed excessive permissions from the
+  directory itself, so /home/<user> stayed at 0755 while the audit expects 0750 or tighter
+- prelim_interactive_users was declared as an empty list in vars/main.yml and never populated, so
+  the 7.2.9 ACL and permission tasks looped over nothing and silently did nothing
+- Added the acl package to prelim; ansible.posix.acl needs it and the empty loop had been hiding
+  the missing dependency
+- Corrected the section 4.3.3.x comment in defaults, "Configure IPv5 iptables" - these are the
+  ip6tables controls
 - align_1.1.0 branch
   - ansible_facts bracket notation applied
   - Audit constants moved to vars/audit.yml
