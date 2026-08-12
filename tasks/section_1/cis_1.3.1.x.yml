@@ -59,22 +59,30 @@
       changed_when: false
 
     - name: "1.3.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing | Get pre apply enforce count"
-      ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
+      ansible.builtin.shell: |
+        set -o pipefail
+        apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: discovered_apparmor_pre_enforce_count
 
     - name: "1.3.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing | Apply enforcing to /etc/apparmor.d profiles"
-      ansible.builtin.shell: aa-enforce /etc/apparmor.d/*
+      ansible.builtin.shell: |
+        set -o pipefail
+        aa-enforce /etc/apparmor.d/*
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
 
     - name: "1.3.1.4 | PATCH | Ensure all AppArmor Profiles are enforcing | Get post apply enforce count"
-      ansible.builtin.shell: apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
+      ansible.builtin.shell: |
+        set -o pipefail
+        apparmor_status |  grep "profiles are in enforce mode" | tr -d -c 0-9
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: discovered_apparmor_post_enforce_count
@@ -111,22 +119,30 @@
       changed_when: false
 
     - name: "1.3.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | Get pre apply enforce count"
-      ansible.builtin.shell: apparmor_status |  grep "profiles are in {{ deb12cis_apparmor_mode }} mode" | tr -d -c 0-9
+      ansible.builtin.shell: |
+        set -o pipefail
+        apparmor_status |  grep "profiles are in {{ deb12cis_apparmor_mode }} mode" | tr -d -c 0-9
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: discovered_apparmor_pre_count
 
     - name: "1.3.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | Apply complaining/enforcing to /etc/apparmor.d profiles"
-      ansible.builtin.shell: aa-{{ deb12cis_apparmor_mode }} /etc/apparmor.d/*
+      ansible.builtin.shell: |
+        set -o pipefail
+        aa-{{ deb12cis_apparmor_mode }} /etc/apparmor.d/*
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
 
     - name: "1.3.1.3 | PATCH | Ensure all AppArmor Profiles are in enforce or complain mode | Get post apply enforce count"
-      ansible.builtin.shell: apparmor_status |  grep "profiles are in {{ deb12cis_apparmor_mode }} mode" | tr -d -c 0-9
+      ansible.builtin.shell: |
+        set -o pipefail
+        apparmor_status |  grep "profiles are in {{ deb12cis_apparmor_mode }} mode" | tr -d -c 0-9
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: discovered_apparmor_post_count

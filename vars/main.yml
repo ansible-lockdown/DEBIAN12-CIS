@@ -34,6 +34,9 @@ container_vars_file: is_container.yml
 # system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
 system_is_ec2: false
 
+# Shell used by shell tasks that require pipefail
+deb12cis_shell_executable: /bin/bash
+
 # Aide initiate command for new DB creation
 aide_initiate_command: aideinit -y -f
 
