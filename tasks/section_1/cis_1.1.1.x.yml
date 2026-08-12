@@ -193,10 +193,7 @@
         state: absent
 
 - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available"
-  when:
-    - deb12cis_rule_1_1_1_7
-    - prelim_squashfs_builtin.rc != 0
-    - prelim_snap_pkg_mgr.rc != 0
+  when: deb12cis_rule_1_1_1_7
   tags:
     - level2-server
     - level2-workstation
@@ -205,27 +202,52 @@
     - squashfs
     - NIST800-53R5_CM-7
   block:
-    - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | Edit modprobe config"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/CIS.conf
-        regexp: "^(#)?install squashfs(\\s|$)"
-        line: "install squashfs /bin/true"
-        create: true
-        mode: 'u-x,go-rwx'
+    - name: "1.1.1.7 | AUDIT | Ensure squashfs kernel module is not available | discover package"
+      ansible.builtin.shell: |
+        set -o pipefail
+        cat /lib/modules/$(uname -r)/modules.builtin | grep -c "squashfs"
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
+      changed_when: false
+      failed_when: discovered_squashfs_builtin.rc not in [ 0, 1 ]
+      register: discovered_squashfs_builtin
 
-    - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | blacklist"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/blacklist.conf
-        regexp: "^(#)?blacklist squashfs(\\s|$)"
-        line: "blacklist squashfs"
-        create: true
-        mode: 'u-x,go-rwx'
+    - name: "1.1.1.7 | AUDIT | Ensure squashfs kernel module is not available | Register if snap being used"
+      ansible.builtin.shell: |
+        set -o pipefail
+        df -h | grep -wc "/snap"
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
+      changed_when: false
+      failed_when: discovered_snap_pkg_mgr.rc not in [ 0, 1 ]
+      register: discovered_snap_pkg_mgr
 
-    - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | Disable squashfs"
-      when: not system_is_container
-      community.general.modprobe:
-        name: squashfs
-        state: absent
+    - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available ~ if not using snap"
+      when:
+        - discovered_squashfs_builtin.rc != 0
+        - discovered_snap_pkg_mgr.rc != 0
+      block:
+        - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | Edit modprobe config"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/CIS.conf
+            regexp: "^(#)?install squashfs(\\s|$)"
+            line: "install squashfs /bin/true"
+            create: true
+            mode: 'u-x,go-rwx'
+
+        - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | blacklist"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist squashfs(\\s|$)"
+            line: "blacklist squashfs"
+            create: true
+            mode: 'u-x,go-rwx'
+
+        - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available | Disable squashfs"
+          when: not system_is_container
+          community.general.modprobe:
+            name: squashfs
+            state: absent
 
 - name: "1.1.1.8 | PATCH | Ensure udf kernel module is not available"
   when: deb12cis_rule_1_1_1_8
@@ -304,7 +326,7 @@
           - "Removing UAS may cause performance issues or prevent certain USB devices from functioning correctly."
           - "UAS provides higher speeds and better I/O performance compared to traditional USB mass storage."
           - "Ensure that this action is intentional and consider testing on non-critical systems before applying in production."
-          - "Please review your setting for variable debian12cis_uas_remove and make sure it is set to true."
+          - "Please review your setting for variable deb12cis_uas_remove and make sure it is set to true."
           - "And rerun the Ansible playbook to properly remove usb_storage."
 
     - name: "1.1.1.9 | WARN | Ensure usb-storage kernel module is not available | Increment Warning Count"

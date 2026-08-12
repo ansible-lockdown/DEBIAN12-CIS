@@ -13,7 +13,11 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.3.3.3.1 | AUDIT | Ensure password history remember is configured | Check existing files"
-      ansible.builtin.shell: grep -Psi -- '^\s*password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+([^#\n\r]+\s+)?remember=\d+\b' /etc/pam.d/common-password
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -Psi -- '^\s*password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+([^#\n\r]+\s+)?remember=\d+\b' /etc/pam.d/common-password
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pwhistory_remember.rc not in [0, 1]
       register: discovered_pwhistory_remember
@@ -40,7 +44,11 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.3.3.3.2 | AUDIT | Ensure password history is enforced for the root user | Check existing files"
-      ansible.builtin.shell: grep -Psi -- '^\s*password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+([^#\n\r]+\s+)?enforce_for_root\b' /etc/pam.d/common-password
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -Psi -- '^\s*password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+([^#\n\r]+\s+)?enforce_for_root\b' /etc/pam.d/common-password
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pwhistory_enforce_for_root.rc not in [0, 1]
       register: discovered_pwhistory_enforce_for_root
@@ -67,7 +75,11 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.3.3.3.3 | AUDIT | Ensure pam_pwhistory includes use_authtok | Check existing files"
-      ansible.builtin.shell: grep -Psi -- '^\s*password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+([^#\n\r]+\s+)?use_authtok\b' /etc/pam.d/common-password
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -Psi -- '^\s*password\s+[^#\n\r]+\s+pam_pwhistory\.so\s+([^#\n\r]+\s+)?use_authtok\b' /etc/pam.d/common-password
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pwhistory_use_authtok.rc not in [0, 1]
       register: discovered_pwhistory_use_authtok

@@ -14,6 +14,7 @@
   listen: "Remount /tmp"
 
 - name: "Remounting /tmp"
+  when: not deb12cis_tmp_svc
   vars:
     mount_point: '/tmp'
   ansible.posix.mount:
@@ -22,11 +23,10 @@
   listen: "Remount /tmp"
 
 - name: "Remounting /tmp systemd"
-  vars:
-    mount_point: '/tmp'
+  when: deb12cis_tmp_svc
   ansible.builtin.systemd:
     name: tmp.mount
-    state: restarted
+    state: reloaded
     daemon_reload: true
   listen: "Remount /tmp"
 
@@ -143,6 +143,10 @@
     path: "{{ mount_point }}"
     state: remounted
   listen: "Remount /var/log/audit"
+
+- name: Update_Initramfs
+  ansible.builtin.command: update-initramfs -u
+  changed_when: true
 
 - name: Reload sysctl
   ansible.builtin.command: sysctl --system
@@ -261,14 +265,14 @@
 
 - name: Auditd rules reload
   when:
-    - not prelim_auditd_immutable_check
+    - not discovered_auditd_immutable_check
     - not system_is_container
   ansible.builtin.command: augenrules --load
   changed_when: true
 
 - name: Audit immutable fact
   when:
-    - prelim_auditd_immutable_check is defined
+    - discovered_auditd_immutable_check is defined
     - not system_is_container
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"

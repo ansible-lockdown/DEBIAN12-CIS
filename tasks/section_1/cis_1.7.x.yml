@@ -5,7 +5,7 @@
     - deb12cis_rule_1_7_1
     - not deb12cis_desktop_required
     - deb12cis_disruption_high
-    - "'gdm3' in ansible_facts.packages"
+    - "'gdm3' in ansible_facts['packages']"
   tags:
     - level2-server
     - patch

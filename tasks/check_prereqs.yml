@@ -1,7 +1,7 @@
 ---
 
 - name: "PREREQ | Ensure python3-apt is installed for package management"
-  when: '"python3-apt" not in ansible_facts.packages'
+  when: '"python3-apt" not in ansible_facts["packages"]'
   ansible.builtin.package:
     name: python3-apt
     state: present

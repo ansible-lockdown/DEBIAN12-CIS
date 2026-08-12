@@ -71,40 +71,10 @@ run_audit: false
 # Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
 audit_run_heavy_tests: true
 
-# Ability to limit the number of concurrent processes used by goss (default 50)
-audit_max_concurrent: 50
-
 ## Only run Audit do not remediate
 audit_only: false
 
 #############################
-
-# How to retrieve audit binary
-# Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already downloaded
-get_audit_binary_method: download
-
-## if get_audit_binary_method - copy the following needs to be updated for your environment
-## it is expected that it will be copied from somewhere accessible to the control node
-## e.g copy from ansible control node to remote host
-audit_bin_copy_location: /some/accessible/path
-
-# how to get audit files onto host options
-# options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
-audit_content: git
-
-# If using either archive, copy, get_url:
-## Note will work with .tar files - zip will require extra configuration
-### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/DEBIAN12-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
-audit_conf_source: "some path or url to copy from"
-
-# Destination for the audit content to be placed on managed node
-# note may not need full path e.g. /opt with the directory being the {{ benchmark }}-Audit directory
-audit_conf_dest: "/opt"
-
-# Where the audit logs are stored
-audit_log_dir: '/opt'
 
 # Method of getting,uploading the summary files
 ## Enable the collection of audit files
@@ -117,6 +87,9 @@ audit_output_collection_method: fetch
 
 # Location to put the audit files
 audit_output_destination: /opt/audit_summaries/
+
+# Where the audit logs are stored
+audit_log_dir: '/opt'
 
 ### Goss Settings ##
 ####### END ########
@@ -327,7 +300,7 @@ deb12cis_rule_4_4_2_1: true
 deb12cis_rule_4_4_2_2: true
 deb12cis_rule_4_4_2_3: true
 deb12cis_rule_4_4_2_4: true
-# Configure IPv5 iptables
+# Configure IPv6 iptables
 deb12cis_rule_4_4_3_1: true
 deb12cis_rule_4_4_3_2: true
 deb12cis_rule_4_4_3_3: true
@@ -720,6 +693,8 @@ deb12cis_time_servers:
 # This will also purge any packages not removed via this playbook
 deb12cis_purge_apt: false
 
+deb12cis_apt_lock_timeout: 180
+
 ## Section 3 vars
 ## Sysctl
 # Service configuration
@@ -901,6 +876,7 @@ deb12cis_sudolog_location: "/var/log/sudo.log"
 # for escalation. Feel free to edit it according to your needs.
 deb12cis_sudoers_exclude_nopasswd_list:
   - admin
+  - vagrant
 
 ##  Control 5.2.6
 # This variable sets the duration (in minutes) during which a user's authentication credentials
@@ -1347,6 +1323,12 @@ deb12cis_auditd_disk_error_action: syslog
 # Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
 deb12cis_auditd_space_left_action: email
 deb12cis_auditd_admin_space_left_action: halt
+
+# Controls 6.2.4.1 - 6.2.4.3
+# Group owner applied to the auditd log files.
+# The benchmark accepts root or adm; auditd re-applies the log_group value
+# from /etc/audit/auditd.conf on every restart, so this must match it.
+deb12cis_auditd_log_group: adm
 
 # This value governs if the below extra-vars for auditd should be used by the role
 deb12cis_auditd_extra_conf_usage: false

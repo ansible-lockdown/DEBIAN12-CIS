@@ -1,5 +1,52 @@
 # Changes to DEB12CIS
 
+## Based on CIS v1.1.0 - Branch align_1.1.0
+
+- 7.2.9 set default ACLs on home directories but never removed excessive permissions from the
+  directory itself, so /home/<user> stayed at 0755 while the audit expects 0750 or tighter
+- prelim_interactive_users was declared as an empty list in vars/main.yml and never populated, so
+  the 7.2.9 ACL and permission tasks looped over nothing and silently did nothing
+- Added the acl package to prelim; ansible.posix.acl needs it and the empty loop had been hiding
+  the missing dependency
+- Corrected the section 4.3.3.x comment in defaults, "Configure IPv5 iptables" - these are the
+  ip6tables controls
+- align_1.1.0 branch
+  - ansible_facts bracket notation applied
+  - Audit constants moved to vars/audit.yml
+  - audit_bin_validate_certs added and wired to goss download
+  - goss updated to v0.5.0, links moved to krameff
+  - ansible_vars_goss.yml.j2 renamed lockdown_audit.yml.j2
+  - deb12cis_shell_executable added, pipefail applied
+  - 3.1.2: orphan warn_control_id removed
+  - 1.1.1.9: foreign var prefix corrected
+  - 5.2.4: vagrant added to deb12cis_sudoers_exclude_nopasswd_list
+  - 5.4.2.7: create_home false added, fixes idempotency for accounts with tmpfs homes
+  - benchmark facts gate now tests post_audit_results, post_audit_summary was never defined
+  - /tmp handlers made mutually exclusive on deb12cis_tmp_svc
+  - tmp.mount.j2: managed-by-Ansible warning typo corrected
+  - 1.1.2.x: aligned mount logic and naming
+    - redundant prelim_mount_names gate removed from 1.1.2.2.1 - 1.1.2.7.1
+    - 1.1.2.1.1 absent/present condition aligned with siblings
+    - 1.1.2.3.1 - 1.1.2.7.1 audit sub-task names corrected to benchmark wording
+    - 1.1.2.3.1 - 1.1.2.7.1 retagged level2, matching benchmark and audit repo
+    - /tmp systemd branch kept as a full tmp.mount unit
+  - Update_Initramfs handler added, prelim UAS removal notified a handler that did not exist
+  - 6.2.3.6: stray notify to undefined handler 'update auditd' removed
+  - 6.1.1.3: journald.conf.d mode converted from octal to symbolic
+  - actions/checkout pinned to v7.0.0
+  - 5.4.1.x fix file path fro debian pam unix
+  - 5.4.1.5: user list detection now compares against deb12cis_inactivelock_lock_days
+    - was a fixed 30 day regex, so the 45 day default was re-applied every run
+    - stale 30 days or less wording removed from the sub-task name
+  - 6.2.4.1: mode corrected to u-x,g-wx,o-rwx, o-x was a typo for u-x
+  - 6.2.4.1 - 6.2.4.3: log file group now deb12cis_auditd_log_group, default adm
+    - auditd re-applies log_group on every restart, forcing root looped forever
+  - auditd template: 99_auditd.rules mode tightened to u-x,g-wx,o-rwx
+    - go-wx left the rules world readable until the next run
+  - readme updated
+  - 7.2.8 updated to exclude non-interactive users
+  - many prelim takss moved closer to required tasks
+
 ## Based on CIS v1.1.0 - Branch 2026_May_QA
 
 - Update min_ansible_version to 2.16.1
