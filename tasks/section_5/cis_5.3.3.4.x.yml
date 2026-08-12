@@ -40,7 +40,7 @@
     - NIST800-53R5_NA
   block:
     - name: "5.3.3.4.2 | AUDIT | Ensure pam_unix does not include remember | capture state"
-      ansible.builtin.shell: grep -E "pam_unix.so.*remember=" /etc/pam.d/common-{password,auth,account,session,session-noninteractive} /usr/share/pam-configs/pam_unix 2>/dev/null | cut -d ':' -f1 | uniq
+      ansible.builtin.shell: grep -E "pam_unix.so.*remember=" /etc/pam.d/common-* /usr/share/pam-configs/* | cut -d ':' -f1 | uniq
       args:
         executable: /bin/bash
       changed_when: false
@@ -67,7 +67,7 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.3.3.4.3 | AUDIT | Ensure pam_unix includes a strong password hashing algorithm | capture state"
-      ansible.builtin.shell: grep -E "pam_unix.so.*(md5|bigcrypt|sha256|blowfish|gost_yescrypt|sha512|yescrypt)" /etc/pam.d/common-password /usr/share/pam-configs/pam_unix 2>/dev/null | cut -d ':' -f1 | uniq
+      ansible.builtin.shell: grep -E "pam_unix.so.*(md5|bigcrypt|sha256|blowfish|gost_yescrypt|sha512|yescrypt)" /etc/pam.d/common-password /usr/share/pam-configs/* | cut -d ':' -f1 | uniq
       args:
         executable: /bin/bash
       changed_when: false
