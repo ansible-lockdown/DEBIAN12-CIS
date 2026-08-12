@@ -44,6 +44,33 @@
   check_mode: false
   register: prelim_interactive_users_home
 
+- name: "PRELIM | AUDIT | Interactive Users | Gather username, uid and home"
+  tags: always
+  ansible.builtin.shell: |
+    set -o pipefail
+    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1":"$3":"$6 }'
+  args:
+    executable: "{{ deb12cis_shell_executable }}"
+  changed_when: false
+  check_mode: false
+  register: prelim_interactive_users_raw
+
+- name: "PRELIM | AUDIT | Interactive Users | Reformat to list of dicts"
+  tags: always
+  ansible.builtin.set_fact:
+    prelim_interactive_users: "{{ prelim_interactive_users | default([]) + [dict([('username', item.split(':')[0]), ('uid', item.split(':')[1]), ('home', item.split(':')[2])])] }}" # noqa: yaml[line-length]
+  loop: "{{ prelim_interactive_users_raw.stdout_lines }}"
+
+- name: "PRELIM | PATCH | Install acl"
+  when:
+    - deb12cis_rule_7_2_9
+    - not system_is_container
+  tags: always
+  ansible.builtin.package:
+    name: acl
+    state: present
+    lock_timeout: "{{ deb12cis_apt_lock_timeout }}"
+
 - name: "PRELIM | AUDIT | Capture /etc/password variables"
   tags: always
   ansible.builtin.include_tasks:
