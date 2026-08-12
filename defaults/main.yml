@@ -300,7 +300,7 @@ deb12cis_rule_4_4_2_1: true
 deb12cis_rule_4_4_2_2: true
 deb12cis_rule_4_4_2_3: true
 deb12cis_rule_4_4_2_4: true
-# Configure IPv5 iptables
+# Configure IPv6 iptables
 deb12cis_rule_4_4_3_1: true
 deb12cis_rule_4_4_3_2: true
 deb12cis_rule_4_4_3_3: true
