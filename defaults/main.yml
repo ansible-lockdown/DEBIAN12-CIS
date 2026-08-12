@@ -693,6 +693,8 @@ deb12cis_time_servers:
 # This will also purge any packages not removed via this playbook
 deb12cis_purge_apt: false
 
+deb12cis_apt_lock_timeout: 180
+
 ## Section 3 vars
 ## Sysctl
 # Service configuration
