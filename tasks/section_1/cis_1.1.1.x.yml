@@ -221,7 +221,7 @@
       changed_when: false
       failed_when: discovered_snap_pkg_mgr.rc not in [ 0, 1 ]
       register: discovered_snap_pkg_mgr
-    
+
     - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available ~ if not using snap"
       when:
         - discovered_squashfs_builtin.rc != 0
