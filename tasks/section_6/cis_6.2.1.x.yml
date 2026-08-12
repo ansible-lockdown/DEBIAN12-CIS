@@ -14,13 +14,13 @@
     - NIST800-53R5_SI-5
   block:
     - name: "6.2.1.1 | PATCH | Ensure auditd packages are installed | Install auditd packages"
-      when: '"auditd" not in ansible_facts.packages'
+      when: '"auditd" not in ansible_facts["packages"]'
       ansible.builtin.package:
         name: auditd
         state: present
 
     - name: "6.2.1.1 | PATCH | Ensure auditd packages are installed | Install audispd-plugins packages"
-      when: '"audispd-plugins" not in ansible_facts.packages'
+      when: '"audispd-plugins" not in ansible_facts["packages"]'
       ansible.builtin.package:
         name: audispd-plugins
         state: present
