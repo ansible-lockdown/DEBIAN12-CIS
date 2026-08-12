@@ -60,7 +60,7 @@
       check_mode: false
       failed_when: discovered_wireless_modules.rc not in [ 0, 1 ]
       register: discovered_wireless_modules
-    
+
     - name: 3.1.2 | PATCH | Ensure wireless interfaces are disabled | if wireless present"
       when: discovered_wireless_modules is defined
       block:
