@@ -5,9 +5,10 @@
   when: os_check
   tags: always
   ansible.builtin.assert:
-    that: ansible_facts.distribution == 'Debian' and ansible_facts.distribution_major_version is version_compare('12', '==')
-    fail_msg: "This role can only be run against Supported OSs. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
-    success_msg: "This role is running against a supported OS {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }}"
+    that: ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_major_version'] is version_compare('12', '==')
+    fail_msg: "This role can only be run against Supported OSs.
+      {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }} is not supported."
+    success_msg: "This role is running against a supported OS {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }}"
 
 - name: "Check ansible version"
   tags: always
@@ -17,7 +18,8 @@
     success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
 
 - name: "Setup rules if container"
-  when: ansible_connection in ['docker', 'community.docker.docker'] or ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+  when: ansible_connection in ['docker', 'community.docker.docker'] or
+        ansible_facts['virtualization_type'] in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - container_discovery
     - always
@@ -56,9 +58,11 @@
     sudo_password_rule: deb12cis_rule_5_2_4  # pragma: allowlist secret
   block:
     - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"  # noqa name[template]
-      ansible.builtin.shell: "(grep {{ ansible_env.SUDO_USER }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'"
+      ansible.builtin.shell: |
+        set -o pipefail
+        (grep {{ ansible_env.SUDO_USER }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false
@@ -98,9 +102,11 @@
     - rule_5.4.2.4
   block:
     - name: "Ensure root password is set"
-      ansible.builtin.shell: passwd -S root | grep 'root P'
+      ansible.builtin.shell: |
+        set -o pipefail
+        passwd -S root | grep 'root P'
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: prelim_check_root_passwd_set
@@ -119,7 +125,7 @@
 - name: "Include OS specific variables"
   tags: always
   ansible.builtin.include_vars:
-    file: "{{ ansible_facts.distribution }}.yml"
+    file: "{{ ansible_facts['distribution'] }}.yml"
 
 - name: "Include preliminary steps"
   tags:
@@ -185,8 +191,8 @@
 - name: Add ansible file showing Benchmark and levels applied if audit details not present
   when:
     - create_benchmark_facts
-    - (post_audit_summary is defined) or
-      (ansible_local['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_summary is undefined)
+    - (post_audit_results is defined) or
+      (ansible_local['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_results is undefined)
   tags:
     - always
     - benchmark
