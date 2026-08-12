@@ -1,8 +1,8 @@
 ---
 
 - name: "5.3.3.2.x | AUDIT | Capture pam security related files"
-  when: 
-    - deb12cis_rule_5_3_3_2_1 or 
+  when:
+    - deb12cis_rule_5_3_3_2_1 or
       deb12cis_rule_5_3_3_2_2 or
       deb12cis_rule_5_3_3_2_3 or
       deb12cis_rule_5_3_3_2_4 or
@@ -31,8 +31,8 @@
   register: discovered_pam_pwquality_confs
 
 - name: "5.3.3.2.x | PATCH | Ensure conf.d directory exists required for 5.3.3.2.x"
-  when: 
-    - deb12cis_rule_5_3_3_2_1 or 
+  when:
+    - deb12cis_rule_5_3_3_2_1 or
       deb12cis_rule_5_3_3_2_2 or
       deb12cis_rule_5_3_3_2_3 or
       deb12cis_rule_5_3_3_2_4 or
