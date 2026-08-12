@@ -78,7 +78,6 @@
     - NIST800-53R5_AU-3
   ansible.builtin.set_fact:
     update_audit_template: true
-  notify: update auditd
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.2.3.7 | PATCH | Ensure unsuccessful file access attempts are collected"
