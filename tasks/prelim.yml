@@ -9,14 +9,6 @@
   ansible.builtin.package:
     update_cache: true
 
-- name: "PRELIM | Include audit specific variables"
-  when: run_audit or audit_only or setup_audit
-  tags:
-    - setup_audit
-    - run_audit
-  ansible.builtin.include_vars:
-    file: audit.yml
-
 - name: "PRELIM | Include pre-remediation audit tasks"
   when: run_audit or audit_only
   tags: run_audit

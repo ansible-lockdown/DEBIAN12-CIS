@@ -12,7 +12,7 @@
   ip6tables controls
 - align_1.1.0 branch
   - ansible_facts bracket notation applied
-  - Audit constants moved to vars/audit.yml
+  - Audit constants moved to defaults/main//audit.yml
   - audit_bin_validate_certs added and wired to goss download
   - goss updated to v0.5.0, links moved to krameff
   - ansible_vars_goss.yml.j2 renamed lockdown_audit.yml.j2

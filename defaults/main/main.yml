@@ -61,35 +61,8 @@ ansible_facts_path: /etc/ansible/facts.d
 
 ###########################################
 ### Goss is required on the remote host ###
-### vars/audit.yml for other settings  ###
 
-# Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
-setup_audit: false
-
-# enable audits to run - this runs the audit and get the latest content
-run_audit: false
-# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
-audit_run_heavy_tests: true
-
-## Only run Audit do not remediate
-audit_only: false
-
-#############################
-
-# Method of getting,uploading the summary files
-## Enable the collection of audit files
-fetch_audit_output: false
-## Ensure access and permissions are available for these to occur.
-## options are
-# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
-# copy - copies file to a location available to the managed node
-audit_output_collection_method: fetch
-
-# Location to put the audit files
-audit_output_destination: /opt/audit_summaries/
-
-# Where the audit logs are stored
-audit_log_dir: '/opt'
+# Moved to defaults/main/audit.yml
 
 ### Goss Settings ##
 ####### END ########
