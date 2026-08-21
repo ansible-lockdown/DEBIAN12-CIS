@@ -46,6 +46,7 @@
   - readme updated
   - 7.2.8 updated to exclude non-interactive users
   - many prelim takss moved closer to required tasks
+  - README updates and updated contributing and contributors
 
 ## Based on CIS v1.1.0 - Branch 2026_May_QA
 
