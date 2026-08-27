@@ -28,33 +28,59 @@
 - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled"
   when:
     - deb12cis_rule_3_1_2
-    - prelim_wireless_modules is defined
+    - not system_is_container
   tags:
     - level1-server
     - patch
     - rule_3.1.2
     - wireless
     - NIST800-53R5_CM-7
-  vars:
-    warn_control_id: '3.1.2'
   block:
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Create modprobe.d file"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/{{ item }}.conf
-        regexp: '^(#)?install true(\\s|$)'
-        line: install {{ item }} true
-        mode: 'u-x,go-wx'
-        create: true
-      loop: "{{ prelim_wireless_modules.stdout_lines }}"
+    - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | Wireless adapter pre-requisites"
+      ansible.builtin.shell: |
+        set -o pipefail
+        find /sys/class/net/*/ -type d -name wireless
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
+      changed_when: false
+      failed_when: discovered_wireless_adapters.rc not in [ 0, 1 ]
+      register: discovered_wireless_adapters
 
-    - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled  | blacklist"
-      ansible.builtin.lineinfile:
-        path: /etc/modprobe.d/blacklist.conf
-        regexp: "^(#)?blacklist {{ item }}(\\s|$)"
-        line: "blacklist {{ item }}"
-        create: true
-        mode: 'u-x,go-rwx'
-      loop: "{{ prelim_wireless_modules.stdout_lines }}"
+    - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | If wireless adapter present capture module"
+      when:
+        - discovered_wireless_adapters.rc == 0
+      ansible.builtin.shell: |
+        set -o pipefail
+        for driverdir in $(find /sys/class/net/*/ -type d -name wireless | xargs -0 dirname);
+          do basename "$(readlink -f "$driverdir"/device/driver/module)";
+        done | sort -u
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
+      changed_when: false
+      check_mode: false
+      failed_when: discovered_wireless_modules.rc not in [ 0, 1 ]
+      register: discovered_wireless_modules
+
+    - name: 3.1.2 | PATCH | Ensure wireless interfaces are disabled | if wireless present"
+      when: discovered_wireless_modules is defined
+      block:
+        - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Create modprobe.d file"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/{{ item }}.conf
+            regexp: '^(#)?install true(\\s|$)'
+            line: install {{ item }} true
+            mode: 'u-x,go-wx'
+            create: true
+          loop: "{{ discovered_wireless_modules.stdout_lines }}"
+
+        - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled  | blacklist"
+          ansible.builtin.lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist {{ item }}(\\s|$)"
+            line: "blacklist {{ item }}"
+            create: true
+            mode: 'u-x,go-rwx'
+          loop: "{{ discovered_wireless_modules.stdout_lines }}"
 
 - name: "3.1.3 | PATCH | Ensure bluetooth services are not in use"
   when: deb12cis_rule_3_1_3

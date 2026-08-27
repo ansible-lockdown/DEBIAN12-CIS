@@ -13,7 +13,11 @@
     warn_control_id: '7.2.1'
   block:
     - name: "7.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Get users not using shadowed passwords"
-      ansible.builtin.shell: awk -F':' '($2 != "x" ) { print $1}' /etc/passwd
+      ansible.builtin.shell: |
+        set -o pipefail
+        awk -F':' '($2 != "x" ) { print $1}' /etc/passwd
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: discovered_nonshadowed_users
@@ -42,7 +46,11 @@
     - NIST800-53R5_IA-5
   block:
     - name: "7.2.2 | AUDIT | Ensure /etc/shadow password fields are not empty | Find users with no password"
-      ansible.builtin.shell: awk -F":" '($2 == "" ) { print $1 }' /etc/shadow
+      ansible.builtin.shell: |
+        set -o pipefail
+        awk -F":" '($2 == "" ) { print $1 }' /etc/shadow
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
       no_log: true
       changed_when: false
       check_mode: false
@@ -73,9 +81,11 @@
     warn_control_id: '7.2.3'
   block:
     - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Check /etc/passwd entries"
-      ansible.builtin.shell: pwck -r | grep 'no group' | awk '{ gsub("[:\47]",""); print $2}'
+      ansible.builtin.shell: |
+        set -o pipefail
+        pwck -r | grep 'no group' | awk '{ gsub("[:\47]",""); print $2}'
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false
@@ -110,12 +120,12 @@
         key: shadow
 
     - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
-      when: ansible_facts.getent_group.shadow[2] | length > 0
+      when: ansible_facts['getent_group']['shadow'][2] | length > 0
       ansible.builtin.debug:
         msg: "Warning!! - You have users in the shadow group"
 
     - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
-      when: ansible_facts.getent_group.shadow[2] | length > 0
+      when: ansible_facts['getent_group']['shadow'][2] | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
@@ -136,9 +146,11 @@
     warn_control_id: '7.2.5'
   block:
     - name: "7.2.5 | AUDIT | Ensure no duplicate UIDs exist | Check for duplicate UIDs"
-      ansible.builtin.shell: "pwck -r | awk -F: '{if ($3 in uid) print $1 ; else uid[$3]}' /etc/passwd"
+      ansible.builtin.shell: |
+        set -o pipefail
+        pwck -r | awk -F: '{if ($3 in uid) print $1 ; else uid[$3]}' /etc/passwd
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false
@@ -171,9 +183,11 @@
     warn_control_id: '7.2.6'
   block:
     - name: "7.2.6 | AUDIT | Ensure no duplicate GIDs exist | Check for duplicate GIDs"
-      ansible.builtin.shell: "pwck -r | awk -F: '{if ($3 in users) print $1 ; else users[$3]}' /etc/group"
+      ansible.builtin.shell: |
+        set -o pipefail
+        pwck -r | awk -F: '{if ($3 in users) print $1 ; else users[$3]}' /etc/group
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false
@@ -206,9 +220,11 @@
     warn_control_id: '7.2.7'
   block:
     - name: "7.2.7 | AUDIT | Ensure no duplicate user names exist | Check for duplicate User Names"
-      ansible.builtin.shell: "pwck -r | awk -F: '{if ($1 in users) print $1 ; else users[$1]}' /etc/passwd"
+      ansible.builtin.shell: |
+        set -o pipefail
+        pwck -r | awk -F: '{if ($1 in users) print $1 ; else users[$1]}' /etc/passwd
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false
@@ -241,9 +257,11 @@
     warn_control_id: '7.2.8'
   block:
     - name: "7.2.8 | AUDIT | Ensure no duplicate group names exist | Check for duplicate group names"
-      ansible.builtin.shell: 'getent group | cut -d: -f1 | sort -n | uniq -d'
+      ansible.builtin.shell: |
+        set -o pipefail
+        getent group | cut -d: -f1 | sort -n | uniq -d
       args:
-        executable: /bin/bash
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false
@@ -269,6 +287,7 @@
     - rule_7.2.9
   block:
     - name: "7.2.9 | PATCH | Ensure local interactive user home directories are configured | Create dir if absent" # noqa risky-file-permissions
+      when: item.id in prelim_interactive_usernames.stdout
       ansible.builtin.file:
         path: "{{ item.dir }}"
         state: directory
@@ -277,6 +296,13 @@
       loop: "{{ prelim_captured_passwd_data | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', prelim_max_int_uid | int) | list }}"
       loop_control:
         label: "{{ item.id }}"
+
+    - name: "7.2.9 | PATCH | Ensure local interactive user home directories are configured | Remove excessive permissions"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: 'g-w,o-rwx'
+      loop: "{{ prelim_interactive_users | map(attribute='home') | list }}"
 
     # set default ACLs so the homedir has an effective umask of 0027
     - name: "7.2.9 | PATCH | Ensure local interactive user home directories are configured | Set group ACL"
@@ -318,7 +344,11 @@
     warn_control_id: '7.2.10'
   block:
     - name: "7.2.10 | AUDIT | Ensure local interactive user dot files access is configured"
-      ansible.builtin.shell: find {{ prelim_interactive_users_home.stdout_lines | list | join(' ') }} -name "\.*" -type f
+      ansible.builtin.shell: |
+        set -o pipefail
+        find {{ prelim_interactive_users_home.stdout_lines | list | join(' ') }} -name "\.*" -type f
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_homedir_hidden_files.rc not in [ 0, 1 ]
       check_mode: false

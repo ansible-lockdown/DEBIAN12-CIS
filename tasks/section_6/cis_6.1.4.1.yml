@@ -12,7 +12,11 @@
     - NIST800-53R5_MP-2
   block:
     - name: "6.1.4.1 | AUDIT | Ensure access to all logfiles has been configured | find log files"
-      ansible.builtin.shell: find /var/log/ -type f -exec ls {} \;
+      ansible.builtin.shell: |
+        set -o pipefail
+        find /var/log/ -type f -exec ls {} \;
+      args:
+        executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: discovered_logfiles
