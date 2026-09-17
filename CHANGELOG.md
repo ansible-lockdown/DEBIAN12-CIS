@@ -1,5 +1,10 @@
 # Changes to DEB12CIS
 
+## Based on CIS v1.1.0 - Branch sept_auditd_update
+
+- sept_auditd_update branch
+  - fixed the collection of audit privileged commands
+
 ## Based on CIS v1.1.0 - Branch align_1.1.0
 
 - 7.2.9 set default ACLs on home directories but never removed excessive permissions from the
