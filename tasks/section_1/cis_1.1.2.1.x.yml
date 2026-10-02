@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - mounts
     - rule_1.1.2.1.1
@@ -17,15 +18,16 @@
       ansible.builtin.command: findmnt -kn "{{ required_mount }}"
       changed_when: false
       failed_when: discovered_tmp_mount.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_tmp_mount
 
     - name: "1.1.2.1.1 | AUDIT | Ensure /tmp is a separate partition | Absent"
-      when: discovered_tmp_mount is undefined
+      when: discovered_tmp_mount.stdout | length == 0
       ansible.builtin.debug:
         msg: "Warning!! {{ required_mount }} is not mounted on a separate partition"
 
     - name: "1.1.2.1.1 | AUDIT | Ensure /tmp is a separate partition | Present"
-      when: discovered_tmp_mount is undefined
+      when: discovered_tmp_mount.stdout | length == 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
@@ -39,6 +41,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - mounts
     - rule_1.1.2.1.2
@@ -64,6 +67,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - mounts
     - rule_1.1.2.1.3
@@ -86,6 +90,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - mounts
     - rule_1.1.2.1.4
@@ -111,6 +116,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - mounts
     - rule_1.1.2.1.1

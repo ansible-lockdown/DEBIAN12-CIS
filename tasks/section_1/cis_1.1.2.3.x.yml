@@ -4,6 +4,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - audit
     - mounts
     - rule_1.1.2.3.1
@@ -16,6 +17,7 @@
       ansible.builtin.command: findmnt -kn "{{ required_mount }}"
       changed_when: false
       failed_when: discovered_home_mount.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_home_mount
 
     - name: "1.1.2.3.1 | AUDIT | Ensure separate partition exists for /home | Absent"
@@ -35,6 +37,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - mounts
     - rule_1.1.2.3.2
@@ -58,6 +61,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - mounts
     - rule_1.1.2.3.3

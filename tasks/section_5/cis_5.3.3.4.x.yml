@@ -7,6 +7,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.4.1
     - pam
@@ -20,6 +21,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pam_unix_nullok.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_pam_unix_nullok
 
     - name: "5.3.3.4.1 | PATCH | Ensure pam_unix does not include nullok | Ensure nullok removed"
@@ -36,6 +38,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - pam
     - rule_5.3.3.4.2
@@ -49,6 +52,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pam_unix_remember.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_pam_unix_remember
 
     - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember | Ensure remember removed"
@@ -65,6 +69,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - pam
     - rule_5.3.3.4.3
@@ -78,6 +83,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pam_unix_pwhash.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_pam_unix_pwhash
 
     - name: "5.3.3.4.3 | PATCH | Ensure pam_unix includes a strong password hashing algorithm | Ensure hash algorithm set"
@@ -94,6 +100,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - pam
     - rule_5.3.3.4.4
@@ -107,6 +114,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pam_unix_authtok.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_pam_unix_authtok
 
     - name: "5.3.3.4.4 | PATCH | Ensure pam_unix includes use_authtok | pam_files"

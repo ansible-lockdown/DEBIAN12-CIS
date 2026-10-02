@@ -12,6 +12,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.4.1.1
     - cron
@@ -30,6 +31,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.4.1.2
     - cron
@@ -46,6 +48,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.4.1.3
     - cron
@@ -62,6 +65,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.4.1.4
     - cron
@@ -78,6 +82,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.4.1.5
     - cron
@@ -94,6 +99,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.4.1.6
     - cron
@@ -110,6 +116,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.4.1.7
     - cron
@@ -124,6 +131,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.4.1.8
     - cron

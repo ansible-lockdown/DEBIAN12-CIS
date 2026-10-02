@@ -427,6 +427,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - automation
     - patch
     - samba
@@ -457,6 +458,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - automation
     - patch
     - snmp
@@ -517,6 +519,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - automation
     - patch
     - squid

@@ -3,7 +3,7 @@
 galaxy_info:
   author: "Ansible-Lockdown Team"
   description: "Apply the Debian 12 CIS"
-  company: "MindPoint Group - A Tyto Athene Company"
+  company: "MindPoint Group - A Quantum Sky Company"
   license: MIT
   role_name: deb12_cis
   namespace: mindpointgroup

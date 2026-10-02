@@ -5,6 +5,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - audit
     - mounts
     - rule_1.1.2.5.1
@@ -17,6 +18,7 @@
       ansible.builtin.command: findmnt -kn "{{ required_mount }}"
       changed_when: false
       failed_when: discovered_var_tmp_mount.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_var_tmp_mount
 
     - name: "1.1.2.5.1 | AUDIT | Ensure separate partition exists for /var/tmp | Absent"
@@ -36,6 +38,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - mounts
     - rule_1.1.2.5.2
@@ -59,6 +62,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - mounts
     - rule_1.1.2.5.3
@@ -79,6 +83,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - mounts
     - rule_1.1.2.5.4

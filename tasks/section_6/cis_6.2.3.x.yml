@@ -6,6 +6,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.1
@@ -19,6 +20,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.2
@@ -32,6 +34,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.3
@@ -44,6 +47,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.4
@@ -58,6 +62,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.5
@@ -72,6 +77,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.6
@@ -85,6 +91,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.7
@@ -98,6 +105,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.8
@@ -111,6 +119,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.9
@@ -125,6 +134,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.10
@@ -138,6 +148,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.11
@@ -151,6 +162,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.12
@@ -164,6 +176,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.13
@@ -178,6 +191,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.14
@@ -191,6 +205,7 @@
   when: deb12cis_rule_6_2_3_15
   tags:
     - level2-server
+    - automated
     - level2- workstation
     - patch
     - auditd
@@ -207,6 +222,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.16
@@ -222,6 +238,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.17
@@ -237,6 +254,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.18
@@ -252,6 +270,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.19
@@ -266,6 +285,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.3.20

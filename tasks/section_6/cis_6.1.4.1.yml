@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - logfiles
     - rule_6.1.4.1
@@ -19,6 +20,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_logfiles
 
     - name: "6.1.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions SSSD min 660"

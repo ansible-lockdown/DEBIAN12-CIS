@@ -4,6 +4,7 @@
   when: deb12cis_rule_4_4_3_1
   tags:
     - level1-server
+    - automated
     - level1-workstationå
     - patch
     - rule_4.4.3.1
@@ -47,6 +48,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.4.3.2
     - ip6tables
@@ -87,6 +89,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - manual
     - patch
     - rule_4.4.3.3
     - ip6tables
@@ -116,6 +119,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.4.3.4
     - ip6tables
