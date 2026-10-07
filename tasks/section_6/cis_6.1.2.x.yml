@@ -9,6 +9,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - journald
     - syslog
@@ -28,6 +29,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - journald
     - syslog
@@ -55,6 +57,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - journald
     - rule_6.1.2.3
@@ -80,6 +83,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - journald
     - rule_6.1.2.4

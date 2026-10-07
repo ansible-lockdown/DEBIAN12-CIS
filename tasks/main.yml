@@ -18,8 +18,10 @@
     success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
 
 - name: "Setup rules if container"
-  when: ansible_connection in ['docker', 'community.docker.docker'] or
-        ansible_facts['virtualization_type'] in ["docker", "lxc", "openvz", "podman", "container"]
+  when:
+    - ansible_connection in ['docker', 'community.docker.docker'] or
+      (ansible_facts['virtualization_type'] is defined and
+       ansible_facts['virtualization_type'] in ["docker", "lxc", "openvz", "podman", "container"])
   tags:
     - container_discovery
     - always
@@ -46,10 +48,10 @@
     that: deb12cis_bootloader_password_hash.find('grub.pbkdf2.sha512') != -1 and deb12cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
     msg: "This role will not be able to run single user password commands as deb12cis_bootloader_password_hash variable has not been set correctly"
 
-- name: "Check password set for {{ ansible_env.SUDO_USER }}"
+- name: "Check password set for {{ ansible_facts['env']['SUDO_USER'] }}"
   when:
     - deb12cis_rule_5_2_4
-    - ansible_env.SUDO_USER is defined
+    - ansible_facts['env']['SUDO_USER'] is defined
     - not system_is_ec2
   tags:
     - user_passwd
@@ -57,10 +59,10 @@
   vars:
     sudo_password_rule: deb12cis_rule_5_2_4  # pragma: allowlist secret
   block:
-    - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"  # noqa name[template]
+    - name: "Check password set for {{ ansible_facts['env']['SUDO_USER'] }} | password state"  # noqa name[template]
       ansible.builtin.shell: |
         set -o pipefail
-        (grep {{ ansible_env.SUDO_USER }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'
+        (grep {{ ansible_facts['env']['SUDO_USER'] }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'
       args:
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
@@ -69,27 +71,27 @@
       no_log: true
       register: prelim_ansible_user_password_set
 
-    - name: "Check for local account {{ ansible_env.SUDO_USER }} | Check for local account"  # noqa name[template]
+    - name: "Check for local account {{ ansible_facts['env']['SUDO_USER'] }} | Check for local account"  # noqa name[template]
       when: prelim_ansible_user_password_set.stdout == "not found"
       ansible.builtin.debug:
-        msg: "No local account found for {{ ansible_env.SUDO_USER }} user. Skipping local account checks."
+        msg: "No local account found for {{ ansible_facts['env']['SUDO_USER'] }} user. Skipping local account checks."
 
     - name: "Check local account"
       when: prelim_ansible_user_password_set.stdout != "not found"
       block:
-        - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"  # noqa name[template]
+        - name: "Check password set for {{ ansible_facts['env']['SUDO_USER'] }} | Assert local password set"  # noqa name[template]
           ansible.builtin.assert:
             that:
               - prelim_ansible_user_password_set.stdout | length != 0
               - prelim_ansible_user_password_set.stdout != "!!"
-            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
-            success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
+            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_facts['env']['SUDO_USER'] }} has no password set - It can break access"
+            success_msg: "You have a password set for the {{ ansible_facts['env']['SUDO_USER'] }} user"
 
-        - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"  # noqa name[template]
+        - name: "Check account is not locked for {{ ansible_facts['env']['SUDO_USER'] }} | Assert local account not locked"  # noqa name[template]
           ansible.builtin.assert:
             that: not prelim_ansible_user_password_set.stdout.startswith("!")
-            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
-            success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
+            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_facts['env']['SUDO_USER'] }} is locked - It can break access"
+            success_msg: "The local account is not locked for {{ ansible_facts['env']['SUDO_USER'] }} user"
 
 - name: "Ensure root password is set"
   when: deb12cis_rule_5_4_2_4
@@ -109,6 +111,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: prelim_check_root_passwd_set
 
     - name: "Ensure root password is set"
@@ -192,7 +195,7 @@
   when:
     - create_benchmark_facts
     - (post_audit_results is defined) or
-      (ansible_local['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_results is undefined)
+      (ansible_facts['local']['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_results is undefined)
   tags:
     - always
     - benchmark

@@ -31,6 +31,7 @@
     - not system_is_container
   tags:
     - level1-server
+    - automated
     - patch
     - rule_3.1.2
     - wireless
@@ -44,6 +45,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_wireless_adapters.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_wireless_adapters
 
     - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | If wireless adapter present capture module"
@@ -67,8 +69,8 @@
         - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Create modprobe.d file"
           ansible.builtin.lineinfile:
             path: /etc/modprobe.d/{{ item }}.conf
-            regexp: '^(#)?install true(\\s|$)'
-            line: install {{ item }} true
+            regexp: "^(#)?install {{ item }}(\\s|$)"
+            line: "install {{ item }} /bin/true"
             mode: 'u-x,go-wx'
             create: true
           loop: "{{ discovered_wireless_modules.stdout_lines }}"
@@ -87,6 +89,7 @@
   tags:
     - level1-server
     - level2-workstation
+    - automated
     - patch
     - bluetooth
     - rule_3.1.3

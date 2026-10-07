@@ -554,7 +554,9 @@ deb12cis_disable_dynamic_motd: true
 ## Control 1.7.x - Settings for GDM
 ## 1.7 GDM graphical interface
 deb12cis_desktop_required: false
-# This variable specifies the GNOME configuration database file to which configurations are written.
+# This variable specifies the GNOME configuration database used by the user profile
+# (/etc/dconf/profile/user) for the session settings in 1.7.4 to 1.7.9.
+# Login screen settings (1.7.2, 1.7.3) always use the gdm profile and the gdm database.
 # (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
 # The default database is 'local'.
 deb12cis_dconf_db_name: local
@@ -871,7 +873,7 @@ deb12cis_pam_confd_dir: 'usr/share/pam-configs/'
 
 # Controls 5.3.2.1 - pam_unix
 # Name of file
-deb12cis_pam_pwunix_file: 'pam_unix'
+deb12cis_pam_pwunix_file: 'unix'
 # Should NOT be enabled if allowing custom config that enabled pam_faillock
 deb12cis_pam_create_pamunix_file: false
 # Allow pam-auth-update --enable deb12cis_pam_pwunix_file to run

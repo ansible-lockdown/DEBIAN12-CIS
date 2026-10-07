@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.3.1.1
     - chrony
@@ -31,7 +32,9 @@
       when:
         - deb12cis_time_sync_tool != "systemd-timesyncd"
         - "'systemd-timesyncd' in ansible_facts['packages']"
-      ansible.builtin.service:
+      ansible.builtin.systemd:
         name: systemd-timesyncd
+        state: stopped
+        enabled: false
         masked: true
         daemon_reload: true

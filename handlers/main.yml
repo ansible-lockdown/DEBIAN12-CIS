@@ -27,6 +27,8 @@
   ansible.builtin.systemd:
     name: tmp.mount
     state: reloaded
+    enabled: true
+    masked: false
     daemon_reload: true
   listen: "Remount /tmp"
 
