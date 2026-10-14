@@ -9,6 +9,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.1
@@ -36,6 +37,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.1
@@ -53,6 +55,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.4
@@ -70,6 +73,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.5
@@ -80,13 +84,14 @@
     file_type: file
     recurse: true
     patterns: '*.conf,*.rules'
-  register: prelim_auditd_conf_files
+  register: discovered_auditd_conf_files
 
 - name: "6.2.4.5 | PATCH | Ensure audit configuration files mode is configured"
   when: deb12cis_rule_6_2_4_5
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.5
@@ -96,7 +101,7 @@
     mode: 'u-x,g-wx,o-rwx'
   failed_when: discovered_auditd_file_list.state not in '[ file, absent ]'
   register: discovered_auditd_file_list
-  loop: "{{ prelim_auditd_conf_files.files }}"
+  loop: "{{ discovered_auditd_conf_files.files }}"
   loop_control:
     label: "{{ item.path }}"
 
@@ -105,6 +110,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.6
@@ -112,7 +118,7 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     owner: root
-  loop: "{{ prelim_auditd_conf_files.files | default([]) }}"
+  loop: "{{ discovered_auditd_conf_files.files | default([]) }}"
   loop_control:
     label: "{{ item.path }}"
 
@@ -121,6 +127,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.7
@@ -128,7 +135,7 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     group: root
-  loop: "{{ prelim_auditd_conf_files.files | default([]) }}"
+  loop: "{{ discovered_auditd_conf_files.files | default([]) }}"
   loop_control:
     label: "{{ item.path }}"
 
@@ -137,6 +144,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.8
@@ -151,6 +159,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.9
@@ -165,6 +174,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.4.10

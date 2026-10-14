@@ -11,6 +11,7 @@
     executable: "{{ deb12cis_shell_executable }}"
   changed_when: false
   failed_when: discovered_auditd_syscalls.rc not in [ 0, 1 ]
+  check_mode: false
   register: discovered_auditd_syscalls
 
 - name: "POST | AUDIT | Discover if auditd is immutable"
@@ -18,6 +19,7 @@
   ansible.builtin.command: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
   changed_when: false
   failed_when: discovered_auditd_immutable_check.rc not in [ 0, 2 ]
+  check_mode: false
   register: discovered_auditd_immutable_check
 
 - name: "POST | AUDITD | Ensure use of privileged commands is collected"

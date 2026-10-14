@@ -7,6 +7,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.2.1
     - apt
@@ -23,6 +24,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.2.2
     - ufw
@@ -37,6 +39,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.2.3
     - ufw
@@ -59,6 +62,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.2.4
     - ufw
@@ -98,6 +102,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - manual
     - patch
     - rule_4.2.5
     - ufw
@@ -126,6 +131,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.2.6
     - ufw
@@ -166,6 +172,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.2.7
     - ufw
@@ -188,6 +195,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.2.1
     - apt

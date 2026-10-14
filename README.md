@@ -57,9 +57,9 @@
 
 ## Looking for support?
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_DEBIAN12_CIS)
+[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_DEBIAN12_cis)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_DEBIAN12_CIS)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_DEBIAN12_cis)
 
 ### Community
 
@@ -170,10 +170,10 @@ default                    : ok=270  changed=23   unreachable=0    failed=0    s
 ## Documentation
 
 - [Read The Docs](https://ansible-lockdown.readthedocs.io/en/latest/)
-- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_DEB12_cis)
-- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise#GH_AL_DEB12_cis)
-- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_DEB12_cis)
-- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_DEB12_cis)
+- [Getting Started](https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_DEBIAN12_cis)
+- [Customizing Roles](https://www.lockdownenterprise.com/docs/customizing-lockdown-enterprise#GH_AL_DEBIAN12_cis)
+- [Per-Host Configuration](https://www.lockdownenterprise.com/docs/per-host-lockdown-enterprise-configuration#GH_AL_DEBIAN12_cis)
+- [Getting the Most Out of the Role](https://www.lockdownenterprise.com/docs/get-the-most-out-of-lockdown-enterprise#GH_AL_DEBIAN12_cis)
 
 
 ## Role Variables
@@ -235,8 +235,6 @@ uses:
 - self-hosted runners using OpenTofu
 
 ## Known Issues
-
-Almalinux BaseOS, EPEL and many cloud providers repositories, do not allow gpgcheck(rule_1.2.1.2) or repo_gpgcheck (rule_1.2.1.3) this will cause issues during the playbook unless or a workaround is found.
 
 
 ## Local Testing

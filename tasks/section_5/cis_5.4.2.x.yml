@@ -7,6 +7,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - accounts
     - users
@@ -41,6 +42,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.4.2.2
     - user
@@ -59,6 +61,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_gid0_members.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_gid0_members
 
     - name: "5.4.2.2 | PATCH | Ensure root is the only GID 0 account | Remove users not root from gid 0"
@@ -76,6 +79,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.4.2.3
     - user
@@ -94,6 +98,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_gid0_groups.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_gid0_groups
 
     - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Warning if others gid 0 groups"
@@ -119,6 +124,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - shadow_suite
     - rule_5.4.2.4
@@ -131,6 +137,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - paths
     - rule_5.4.2.5
@@ -147,6 +154,7 @@
       args:
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
+      check_mode: false
       register: discovered_root_paths
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Get root paths"
@@ -157,6 +165,7 @@
       args:
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
+      check_mode: false
       register: discovered_root_paths_split
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Set fact"
@@ -173,17 +182,19 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_root_path_empty_dir.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_root_path_empty_dir
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Check for trailing ':'"
       when: discovered_root_paths is defined
       ansible.builtin.shell: |
         set -o pipefail
-        {{ root_paths }} | cut -d= -f2 | grep -q ":$" && echo "roots path contains a trailing (:)"
+        echo "{{ root_paths }}" | grep -q ":$" && echo "roots path contains a trailing (:)"
       args:
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_root_path_trailing_colon.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_root_path_trailing_colon
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Check for owner and permissions"
@@ -217,6 +228,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - shadow_suite
     - rule_5.4.2.6
@@ -238,6 +250,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - shadow_suite
     - rule_5.4.2.7
@@ -262,6 +275,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - shadow_suite
     - rule_5.4.2.8

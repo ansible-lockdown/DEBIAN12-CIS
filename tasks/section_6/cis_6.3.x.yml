@@ -7,6 +7,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_6.3.1
     - aide
@@ -67,6 +68,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - aide
     - file_integrity
     - patch
@@ -114,6 +116,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - aide
     - file_integrity
     - patch

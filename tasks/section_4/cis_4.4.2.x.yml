@@ -8,6 +8,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.4.2.1
     - iptables
@@ -57,6 +58,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_4.4.2.2
     - iptables
@@ -95,6 +97,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - manual
     - patch
     - rule_4.4.2.3
     - iptables
@@ -124,6 +127,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - audit
     - rule_4.4.2.4
     - iptables

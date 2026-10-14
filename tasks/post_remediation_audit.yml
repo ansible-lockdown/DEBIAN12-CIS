@@ -22,6 +22,7 @@
       args:
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
+      check_mode: false
       register: post_audit_summary_json
 
     - name: Post Audit | Set Fact for audit summary
@@ -38,6 +39,7 @@
       args:
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
+      check_mode: false
       register: post_audit_summary_documentation
 
     - name: Post Audit | Set Fact for audit summary

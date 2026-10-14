@@ -7,6 +7,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.3.1
     - pam
@@ -20,6 +21,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pwhistory_remember.rc not in [0, 1]
+      check_mode: false
       register: discovered_pwhistory_remember
 
     - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured | Ensure remember is set"
@@ -38,6 +40,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.3.2
     - pam
@@ -51,6 +54,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pwhistory_enforce_for_root.rc not in [0, 1]
+      check_mode: false
       register: discovered_pwhistory_enforce_for_root
 
     - name: "5.3.3.3.2 | PATCH | Ensure password history is enforced for the root user | Ensure remember is set"
@@ -69,6 +73,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_5.3.3.3.3
     - pam
@@ -82,6 +87,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pwhistory_use_authtok.rc not in [0, 1]
+      check_mode: false
       register: discovered_pwhistory_use_authtok
 
     - name: "5.3.3.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok | Ensure remember is set"

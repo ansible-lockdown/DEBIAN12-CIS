@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_1.1.1.1
     - cramfs
@@ -37,6 +38,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_1.1.1.2
     - freevxfs
@@ -69,6 +71,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_1.1.1.3
     - hfs
@@ -101,6 +104,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_1.1.1.4
     - hfsplus
@@ -133,6 +137,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_1.1.1.5
     - jffs2
@@ -165,6 +170,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - rule_1.1.1.6
     - overlayfs
@@ -197,6 +203,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - rule_1.1.1.7
     - squashfs
@@ -210,6 +217,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_squashfs_builtin.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_squashfs_builtin
 
     - name: "1.1.1.7 | AUDIT | Ensure squashfs kernel module is not available | Register if snap being used"
@@ -220,6 +228,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_snap_pkg_mgr.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_snap_pkg_mgr
 
     - name: "1.1.1.7 | PATCH | Ensure squashfs kernel module is not available ~ if not using snap"
@@ -254,6 +263,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - rule_1.1.1.8
     - udf
@@ -286,6 +296,7 @@
   tags:
     - level1-server
     - level2-workstation
+    - automated
     - patch
     - rule_1.1.1.9
     - usb
@@ -339,6 +350,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - manual
     - patch
     - rule_1.1.1.10
     - filesystems
@@ -357,6 +369,7 @@
       ansible.builtin.command: /var/fs_with_cves.sh
       changed_when: false
       failed_when: discovered_fs_modules_loaded.rc not in [ 0, 99 ]
+      check_mode: false
       register: discovered_fs_modules_loaded
 
     - name: "1.1.1.10 | AUDIT | Ensure unused filesystems kernel modules are not available | Output Warning"

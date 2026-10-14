@@ -1,9 +1,46 @@
 # Changes to DEB12CIS
 
+## Based on CIS v1.1.0 - October 2026 Updates
+
+- pam-configs templates: managed-by-ansible header removed
+- unix.j2 Password line ends {% endif +%}
+- pwquality.j2 Password-Initial module line added
+- pwhistory.j2 hardcoded enforce_for_root and try_first_pass removed
+- pam_unix profile renamed to unix, deb12cis_pam_pwunix_file default unix
+- 3.2.1 to 3.2.4 modprobe loops converted to per-item regexp and line pairs
+- 3.1.2 wireless modprobe regexp and install line corrected
+- 7.1.13 SUID/SGID find expression corrected
+- 7.2.7 duplicate user warning register name corrected
+- 2.3.1.1 mask task uses ansible.builtin.systemd
+- 2.2.1, 2.3.2.2 and 2.3.3.3 given the patch tag
+- uas removal moved out of tags: always, tagged rule_1.1.1.9
+- uas blacklist given a regexp, create and mode (same as ansible-lockdown/DEBIAN13-CIS#12) - Thank you @masterjanic
+- 1.3.1.3 and 1.3.1.4 report changed only when the profile count changes
+- 1.1.2.1.1 missing /tmp warning now fires
+- 5.4.2.5 trailing colon check reads the PATH value instead of running it
+- 6.1.2.1.2 journal-upload.conf changes restart systemd-journal-upload
+- /tmp systemd handler enables and unmasks tmp.mount
+- sysctl route table flush handlers notified from post
+- 6.2.4.5 to 6.2.4.7 register renamed to discovered_auditd_conf_files
+- Boot type detection moved before the pre-remediation audit
+- Container discovery guarded when virtualization_type is undefined
+- ansible_env and ansible_local replaced with ansible_facts
+- check_mode false added to read-only discovery tasks
+- automated and manual tags added from the benchmark
+- Company name updated to MindPoint Group - A Quantum Sky Company
+- README tracking tags aligned, RHEL-only known issue removed
+- ansible-lint pre-commit hook v26.9.0
+- 1.7.2 and 1.7.3 write the gdm profile and the gdm dconf database
+- 1.7.4 to 1.7.9 use the user profile with system-db deb12cis_dconf_db_name
+- deb12cis_force_user_maxdays, mindays and warnage passed to the audit
+- 7.1.12 unowned search path no longer double-wrapped in the audit bridge
+
 ## Based on CIS v1.1.0 - Branch sept_auditd_update
 
 - sept_auditd_update branch
   - fixed the collection of audit privileged commands
+  - 6.2.3.6 registered discovered_privileged_commands but the template reads discovered_privilege_processes, so no rules were written
+  - Audit: 6.2.3.6 placeholder replaced with conf and running checks
 
 ## Based on CIS v1.1.0 - Branch align_1.1.0
 
@@ -50,7 +87,8 @@
     - go-wx left the rules world readable until the next run
   - readme updated
   - 7.2.8 updated to exclude non-interactive users
-  - many prelim takss moved closer to required tasks
+  - many prelim tasks moved closer to required tasks
+  - pre-commit updates
   - README updates and updated contributing and contributors
 
 ## Based on CIS v1.1.0 - Branch 2026_May_QA

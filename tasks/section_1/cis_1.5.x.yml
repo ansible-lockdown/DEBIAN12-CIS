@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - sysctl
     - rule_1.5.1
@@ -23,6 +24,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - sysctl
     - rule_1.5.2
@@ -41,6 +43,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_1.5.3
     - coredump

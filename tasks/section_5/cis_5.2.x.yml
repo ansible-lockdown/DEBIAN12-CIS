@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - sudo
     - rule_5.2.1
@@ -18,6 +19,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - sudo
     - rule_5.2.2
@@ -33,6 +35,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - sudo
     - rule_5.2.3
@@ -49,6 +52,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - sudo
     - rule_5.2.4
@@ -63,6 +67,7 @@
       become: true
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_sudo_nopasswd
 
     - name: "5.2.4 | PATCH | Ensure users must provide password for privilege escalation"
@@ -79,6 +84,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - sudo
     - rule_5.2.5
@@ -93,6 +99,7 @@
       become: true
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_sudo_reauthenticate
 
     - name: "5.2.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
@@ -109,6 +116,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - sudo
     - rule_5.2.6
@@ -122,6 +130,7 @@
         executable: "{{ deb12cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_sudo_timeout_files
 
     - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if no results"
@@ -146,6 +155,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - sudo
     - rule_5.2.7

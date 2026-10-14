@@ -5,6 +5,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.1.1
@@ -30,6 +31,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - rule_6.2.1.2
@@ -46,6 +48,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - grub
@@ -62,6 +65,7 @@
   tags:
     - level2-server
     - level2-workstation
+    - automated
     - patch
     - auditd
     - grub

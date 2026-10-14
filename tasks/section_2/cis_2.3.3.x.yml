@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.3.3.1
     - chrony
@@ -35,6 +36,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.3.3.2
     - chrony
@@ -49,6 +51,8 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
+    - patch
     - rule_2.3.3.3
     - chrony
     - NIST800-53R5_AU-8

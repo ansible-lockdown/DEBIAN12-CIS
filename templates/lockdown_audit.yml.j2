@@ -603,6 +603,9 @@ deb12cis_passwd_complex_option: {{ deb12cis_passwd_complex_option }}
 deb12cis_pass_max_days: {{ deb12cis_pass_max_days }}
 deb12cis_pass_min_days: {{ deb12cis_pass_min_days }}
 deb12cis_pass_warn_age: {{ deb12cis_pass_warn_age }}
+deb12cis_force_user_maxdays: {{ deb12cis_force_user_maxdays }}
+deb12cis_force_user_mindays: {{ deb12cis_force_user_mindays }}
+deb12cis_force_user_warnage: {{ deb12cis_force_user_warnage }}
 
 # Section 6
 
@@ -630,4 +633,4 @@ deb12cis_remote_log_queuesize: {{ deb12cis_remote_log_queuesize }}
 
 
 # Control 7.1.12
-deb12cis_exclude_unowned_search_path: \({{deb12cis_exclude_unowned_search_path}}\)
+deb12cis_exclude_unowned_search_path: {{ deb12cis_exclude_unowned_search_path }}

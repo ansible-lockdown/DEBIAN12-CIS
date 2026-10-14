@@ -5,6 +5,7 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
     - patch
     - rule_2.3.2.1
     - timesyncd
@@ -35,6 +36,8 @@
   tags:
     - level1-server
     - level1-workstation
+    - automated
+    - patch
     - rule_2.3.2.2
     - timesyncd
     - NIST800-53R5_AU-7
